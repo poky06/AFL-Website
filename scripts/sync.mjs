@@ -102,6 +102,55 @@ function pickLicenseClass(licenses, seasonYear, optionNames) {
   return null;
 }
 
+function statColumns(header, rows) {
+  const keys = new Set();
+  for (const r of rows) for (const k of Object.keys(r.stats || {})) keys.add(k);
+  const entries = Object.entries(header || {}).filter(([k]) => keys.size === 0 || keys.has(k));
+  const cols = entries.map(([key, h]) => ({
+    key,
+    label: typeof h === "string" ? h : (h?.translate_acronym || h?.short || h?.abbreviation || h?.translate || h?.label || h?.name || key),
+    title: typeof h === "object" && h ? (h.translate_name || h.translate || h.label || "") : ""
+  }));
+  for (const k of keys) if (!cols.some(c => c.key === k)) cols.push({ key: k, label: k, title: "" });
+  return cols;
+}
+
+function statValue(v) {
+  if (v && typeof v === "object") v = v.value ?? v.total ?? null;
+  if (v === null || v === undefined || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+// Eine Statistik-Kategorie (Spieler oder Teams) komplett holen – nur Name, IDs und Zahlen
+async function fetchStatCategory(cat, kind) {
+  const limit = 200;
+  let header = null;
+  const raw = [];
+  for (let offset = 0; offset < 5000; offset += limit) {
+    const page = await api(`/competitions/${COMPETITION_ID}/seasons/${SEASON_ID}/stats/categories/${cat.id}/${kind}?_limit=${limit}&_offset=${offset}`);
+    header = header || page?.header;
+    const rows = page?.rows || [];
+    raw.push(...rows);
+    if (rows.length < limit || raw.length >= (page?.total ?? 0)) break;
+  }
+  const columns = statColumns(header, raw);
+  const rows = raw.map(r => {
+    const values = columns.map(c => statValue(r.stats?.[c.key]));
+    if (kind === "players") {
+      const u = r.user || {};
+      return {
+        user_id: u.id ?? null,
+        name: `${u.firstname || ""} ${u.lastname || ""}`.trim(),
+        team_id: r.group?.id ?? null,
+        values
+      };
+    }
+    return { team_id: r.group?.id ?? null, name: r.group?.name || "", values };
+  }).filter(r => r.name && r.values.some(v => v !== null && v !== 0));
+  return { id: cat.id, name: cat.name || `Kategorie ${cat.id}`, columns: columns.map(({ key, ...c }) => c), rows };
+}
+
 async function fetchMembers(groupId) {
   const members = [];
   const limit = 100;
@@ -191,6 +240,38 @@ async function main() {
     console.log(`${team.name}: ${members.length} Mitglieder, ${shown} für die Website freigegeben`);
   }
 
+  // Bilanz (Siege/Niederlagen) aus den gespielten Spielen des Grunddurchgangs
+  let records = null;
+  try {
+    const scenes = await api(`/competitions/${COMPETITION_ID}/seasons/${SEASON_ID}/scenes?_limit=1000`);
+    const rec = new Map(outTeams.map(t => [t.id, { team_id: t.id, w: 0, l: 0, t: 0, pf: 0, pa: 0 }]));
+    const results = new Map(outTeams.map(t => [t.id, []])); // für die aktuelle Serie
+    const games = [...(scenes || [])].sort((x, y) => String(x.start_date).localeCompare(String(y.start_date)));
+    for (const g of games) {
+      if (!g.completed || g.cancelled) continue;
+      const phaseName = String(g.phase?.name || g.round?.name || "");
+      if (/playoff|bowl|finale|final|semi|halbfinale/i.test(phaseName)) continue;
+      const a = rec.get(g.team1?.id), b = rec.get(g.team2?.id);
+      const s1 = Number(g.score1), s2 = Number(g.score2);
+      if (!a || !b || !Number.isFinite(s1) || !Number.isFinite(s2)) continue;
+      a.pf += s1; a.pa += s2; b.pf += s2; b.pa += s1;
+      if (s1 > s2) { a.w++; b.l++; } else if (s2 > s1) { b.w++; a.l++; } else { a.t++; b.t++; }
+      results.get(a.team_id).push(s1 > s2 ? "S" : s1 < s2 ? "N" : "U");
+      results.get(b.team_id).push(s2 > s1 ? "S" : s2 < s1 ? "N" : "U");
+    }
+    for (const r of rec.values()) {
+      const list = results.get(r.team_id);
+      let n = 0;
+      for (let i = list.length - 1; i >= 0 && list[i] === list[list.length - 1]; i--) n++;
+      r.streak = n ? `${n}${list[list.length - 1]}` : null;
+    }
+    const pct = r => (r.w + r.l + r.t) ? (r.w + r.t / 2) / (r.w + r.l + r.t) : 0;
+    records = [...rec.values()].sort((x, y) =>
+      pct(y) - pct(x) || y.w - x.w || (y.pf - y.pa) - (x.pf - x.pa) || y.pf - x.pf);
+  } catch (e) {
+    console.warn(`Spiele nicht abrufbar: ${e.message}`);
+  }
+
   // Tabelle (falls vorhanden)
   let standings = null;
   try {
@@ -215,6 +296,160 @@ async function main() {
     console.warn(`Tabelle nicht abrufbar: ${e.message}`);
   }
 
+  // Spieler- und Teamstatistiken
+  let stats = null;
+  try {
+    const cats = (await api(`/competitions/${COMPETITION_ID}/stats/categories`) || [])
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    stats = { players: [], teams: [] };
+    for (const cat of cats) {
+      for (const kind of ["players", "teams"]) {
+        const t = String(cat.type || "");
+        if (kind === "players" && /team/i.test(t)) continue;
+        if (kind === "teams" && /player|user/i.test(t)) continue;
+        if (kind === "teams" && /^standings$/i.test(String(cat.name || "").trim())) continue; // doppelt zur eigenen Tabelle
+        try {
+          const block = await fetchStatCategory(cat, kind);
+          if (block.rows.length) stats[kind].push(block);
+        } catch (e) {
+          console.warn(`Statistik ${cat.name} (${kind}) nicht abrufbar: ${e.message}`);
+        }
+        await sleep(150);
+      }
+    }
+    console.log(`Statistiken: ${stats.players.length} Spieler-Kategorien, ${stats.teams.length} Team-Kategorien`);
+  } catch (e) {
+    console.warn(`Statistiken nicht abrufbar: ${e.message}`);
+  }
+
+  // Kicking und Punting – berechnet aus Box Score und Spielprotokoll jedes gespielten Spiels.
+  // Clubee hat für die AFL keine eigenen Kategorien dafür.
+  // FG-Distanz = Ballposition (Feld "distance" beim FG-Versuch) + 17 Yards (Endzone + Holder).
+  // Punt-Weiten werden nicht erfasst und deshalb nicht berechnet.
+  try {
+    const scenes = await api(`/competitions/${COMPETITION_ID}/seasons/${SEASON_ID}/scenes?_limit=1000`);
+    const kick = new Map();   // user_id -> Kicker-Werte
+    const punt = new Map();   // user_id -> Punter-Werte
+    const typeOf = x => String(x?.scene_action_type?.translate || "").trim().toLowerCase();
+    const personName = u => `${u?.first_name || u?.firstname || ""} ${u?.last_name || u?.lastname || ""}`.trim();
+    const kicker = (uid, name, team) => {
+      if (!kick.has(uid)) kick.set(uid, { user_id: uid, name, team_id: team, games: new Set(), fgm: 0, fga: 0, lng: null, xpp: 0, xpm: 0 });
+      const e = kick.get(uid); if (!e.name && name) e.name = name; if (!e.team_id && team) e.team_id = team; return e;
+    };
+    const punter = (uid, name, team) => {
+      if (!punt.has(uid)) punt.set(uid, { user_id: uid, name, team_id: team, games: new Set(), n: 0, blk: 0, oob: 0, ret: 0, fc: 0, tb: 0 });
+      const e = punt.get(uid); if (!e.name && name) e.name = name; if (!e.team_id && team) e.team_id = team; return e;
+    };
+    let boxCount = 0, pbpCount = 0;
+
+    for (const g of scenes || []) {
+      if (!g.completed || g.cancelled) continue;
+
+      // 1) Spielprotokoll: Field-Goal-Versuche und Punts
+      let pbpHasFG = false;
+      try {
+        const summary = await api(`/matches/${g.id}/summary`);
+        const plays = [];
+        const walk = x => { if (Array.isArray(x)) x.forEach(walk); else if (x && typeof x === "object" && x.scene_action_type) plays.push(x); };
+        walk(summary);
+        for (const play of plays) {
+          const kids = play.children || [];
+          // Field Goal
+          if (typeOf(play) === "field goal try" && play.user1?.id) {
+            pbpHasFG = true;
+            const e = kicker(play.user1.id, personName(play.user1), play.group?.id ?? null);
+            e.games.add(g.id); e.fga++;
+            if (kids.some(k => typeOf(k) === "field goal good")) {
+              e.fgm++;
+              const spot = Number(play.distance);
+              if (Number.isFinite(spot) && spot >= 0 && spot <= 60) e.lng = Math.max(e.lng ?? 0, spot + 17);
+            }
+          }
+          // Punt (als Unterspielzug eines Scrimmage-Spielzugs)
+          const pk = kids.find(k => typeOf(k) === "punt");
+          if (pk && pk.user1?.id) {
+            const e = punter(pk.user1.id, personName(pk.user1), pk.group?.id ?? play.group?.id ?? null);
+            e.games.add(g.id); e.n++;
+            const t = kids.map(typeOf);
+            if (t.includes("blocked")) e.blk++;
+            if (t.includes("kick out of bounds")) e.oob++;
+            if (t.includes("punt return")) e.ret++;
+            if (t.includes("fair catch")) e.fc++;
+            if (t.includes("touchback")) e.tb++;
+          }
+        }
+        pbpCount++;
+      } catch (e) {
+        console.warn(`Spielprotokoll Spiel ${g.id}: ${e.message}`);
+      }
+
+      // 2) Box Score: Extra Points (und FG, falls das Protokoll keine FG enthält)
+      try {
+        const box = await api(`/scenes/${g.id}/stats`);
+        const h = box?.header || {};
+        const keyOf = ac => Object.keys(h).find(k => h[k]?.acronym === ac);
+        const kFG = keyOf("fg_acronym"), kXPp = keyOf("xp_plus_acronym"), kXPm = keyOf("xp_minus_acronym");
+        for (const r of box?.rows || []) {
+          const uid = r.user?.id ?? null;
+          if (!uid) continue;
+          const fg = Number(r[kFG]) || 0, xpp = Number(r[kXPp]) || 0, xpm = Number(r[kXPm]) || 0;
+          if (!xpp && !xpm && !(fg && !pbpHasFG)) continue;
+          // Nur Name, Team und Zahlen – Box Score enthält auch Lizenz- und Medizinangaben
+          const e = kicker(uid, personName(r), r.group_id ?? null);
+          e.games.add(g.id); e.xpp += xpp; e.xpm += xpm;
+          if (fg && !pbpHasFG) { e.fgm += fg; e.fga += fg; }
+        }
+        boxCount++;
+      } catch (e) {
+        console.warn(`Box Score Spiel ${g.id}: ${e.message}`);
+      }
+      await sleep(150);
+    }
+
+    const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : null);
+    const kickRows = [...kick.values()].filter(e => e.name).map(e => ({
+      user_id: e.user_id, name: e.name, team_id: e.team_id,
+      values: [e.games.size, e.fgm, e.fga, pct(e.fgm, e.fga), e.lng, e.xpp, e.xpm, pct(e.xpp, e.xpp + e.xpm), e.fgm * 3 + e.xpp]
+    })).sort((a, b) => b.values[8] - a.values[8] || b.values[1] - a.values[1]);
+    const puntRows = [...punt.values()].filter(e => e.name).map(e => ({
+      user_id: e.user_id, name: e.name, team_id: e.team_id,
+      values: [e.games.size, e.n, e.blk, e.oob, e.ret, e.fc, e.tb]
+    })).sort((a, b) => b.values[1] - a.values[1]);
+
+    stats = stats || { players: [], teams: [] };
+    if (kickRows.length) stats.players.push({
+      id: "kicking", name: "Kicking", computed: true,
+      columns: [
+        { label: "SP", title: "Spiele mit Kick" },
+        { label: "FG", title: "Field Goals verwandelt" },
+        { label: "FGV", title: "Field-Goal-Versuche" },
+        { label: "FG %", title: "Field-Goal-Quote" },
+        { label: "LNG", title: "Längstes Field Goal (Yards, berechnet)" },
+        { label: "XP+", title: "Extra Points verwandelt" },
+        { label: "XP-", title: "Extra Points verschossen" },
+        { label: "XP %", title: "Extra-Point-Quote" },
+        { label: "PKT", title: "Punkte durch Kicks (FG × 3 + XP)" }
+      ],
+      rows: kickRows
+    });
+    if (puntRows.length) stats.players.push({
+      id: "punting", name: "Punting", computed: true,
+      columns: [
+        { label: "SP", title: "Spiele mit Punt" },
+        { label: "PUNTS", title: "Punts" },
+        { label: "GEBL", title: "Geblockt" },
+        { label: "AUS", title: "Ins Aus" },
+        { label: "RET", title: "Mit Return" },
+        { label: "FC", title: "Fair Catch" },
+        { label: "TB", title: "Touchback" }
+      ],
+      rows: puntRows
+    });
+    console.log(`Kicking/Punting: ${pbpCount} Protokolle, ${boxCount} Box Scores, ${kickRows.length} Kicker, ${puntRows.length} Punter`);
+  } catch (e) {
+    console.warn(`Kicking/Punting nicht berechenbar: ${e.message}`);
+  }
+
   // Plausibilitätsprüfung: Bei API-Störung nicht die Website leeren
   if (outPlayers.length === 0) throw new Error("Keine Spieler erhalten – Datei wird nicht überschrieben.");
   try {
@@ -234,7 +469,9 @@ async function main() {
     teams: outTeams,
     players: outPlayers,
     staff: outStaff,
-    standings
+    records,
+    standings,
+    stats
   };
 
   await mkdir("data", { recursive: true });
