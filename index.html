@@ -111,7 +111,7 @@
   .dropdown-menu button:hover { background: var(--bg-raised); color: var(--chalk); }
   .dropdown-menu button.active { color: var(--turf-bright); }
 
-  main { max-width: 1180px; margin: 0 auto; padding: 0 24px 80px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 12px 24px 80px; }
 
   .hero { padding: 46px 0 28px; }
   .hero h1 { font-size: clamp(30px, 4.5vw, 46px); margin: 0 0 10px; line-height: 1.05; max-width: 16ch; }
@@ -263,6 +263,13 @@
   .champ-tbl .note { display: block; color: var(--chalk-dim); font-size: 12.5px; margin-top: 3px; }
   .champ-tbl s { color: var(--chalk-dim); }
   .champ-foot { margin-top: 14px; }
+  .mvp-tbl td { white-space: normal; vertical-align: top; min-width: 150px; }
+  .mvp-tbl td.season { font-weight: 700; min-width: 0; white-space: nowrap; }
+  .mvp-tbl .pn { display: block; font-weight: 600; }
+  .mvp-tbl .pt { display: block; color: var(--chalk-dim); font-size: 12.5px; margin-top: 2px; }
+  .mvp-tbl .plink { color: var(--turf-bright); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; background: none; border: none; padding: 0; font: inherit; font-weight: 600; text-align: left; }
+  .mvp-tbl .plink:hover { color: var(--chalk); }
+  .mvp-tbl .none { color: var(--chalk-dim); }
   .st-title.wide { max-width: 980px; }
   .cat-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
   .cat-tabs button {
@@ -461,14 +468,6 @@
 
 <main>
 
-  <div class="hero">
-    <h1>Kader, Spieler und Statistiken der AFL</h1>
-    <p>Durchsuchbare Übersicht aller Spieler, Trainer, Teams und Wettbewerbe der Austrian Football League.</p>
-    <div class="demo-note" id="data-note">
-      <span>⚠</span>
-      <span><strong>Prototyp mit Demo-Daten.</strong> Teams, Namen und Statistiken sind frei erfunden und dienen nur der Vorschau. Nach Anbindung an die Clubee-API werden sie durch echte Ligadaten ersetzt.</span>
-    </div>
-  </div>
 
   <!-- STARTSEITE -->
   <section class="panel active" id="panel-home">
@@ -563,22 +562,24 @@
 
   <!-- MVPs -->
   <section class="panel" id="panel-mvps">
-    <div class="hero" style="padding:32px 0">
-      <h1 style="font-size:28px">MVPs</h1>
-      <div class="demo-note">
-        <span>⚠</span>
-        <span><strong>Noch keine Daten hinterlegt.</strong> Hier erscheinen künftig die MVP-Gewinner je AFL-Saison, sobald diese Historie erfasst ist.</span>
-      </div>
+    <div class="st-title wide"><span>AFL MVPs</span></div>
+    <p class="result-count st-sub">Die Auszeichnungen des AFBÖ für die Regular Season. Spieler der aktuellen Saison sind anklickbar und öffnen ihre Statistiken.</p>
+    <div class="tbl-wrap">
+      <table class="standings mvp-tbl">
+        <thead><tr><th>Saison</th><th>League MVP</th><th>Offense MVP</th><th>Defense MVP</th><th>Young Star</th><th>Coach of the Year</th></tr></thead>
+        <tbody id="mvps-body"></tbody>
+      </table>
     </div>
+    <p class="result-count champ-foot" id="mvps-foot"></p>
   </section>
 
   <!-- CHAMPIONS -->
   <section class="panel" id="panel-champions">
-    <div class="st-title wide"><span>Meister der Austrian Football League</span></div>
-    <p class="result-count st-sub">Alle Austrian-Bowl-Sieger seit 1984. In Klammern die Anzahl der Meistertitel des Vereins bis zu diesem Jahr.</p>
+    <div class="st-title wide"><span>Austrian Bowl Champions</span></div>
+    <p class="result-count st-sub">Alle Austrian-Bowl-Sieger seit 1984. In Klammern die Anzahl der Austrian-Bowl-Titel des Vereins bis zu diesem Jahr.</p>
     <div class="tbl-wrap">
       <table class="standings champ-tbl">
-        <thead><tr><th>Saison</th><th>Meister</th><th>Finale</th><th>Österr. Staatsmeister</th></tr></thead>
+        <thead><tr><th>Saison</th><th>Champion</th><th>Finale</th><th>Öst. Meister</th></tr></thead>
         <tbody id="champions-body"></tbody>
       </table>
     </div>
@@ -717,13 +718,6 @@
           .sort((a, b) => b.values[1] - a.values[1]) }
       ]
     };
-  }
-
-  // Hinweisbox oben
-  const note = document.getElementById("data-note");
-  if (live && players.length) {
-    const d = new Date(live.updated_at);
-    note.innerHTML = `<span>🔄</span><span><strong>Saison ${esc(live.season?.name || "")}.</strong> Datenstand: ${d.toLocaleDateString("de-AT")} ${d.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" })} Uhr (Quelle: Clubee).</span>`;
   }
 
   const positions = [...new Set(players.flatMap(p => p.position.split("/")))].filter(p => p && p !== "—").sort();
@@ -1061,6 +1055,51 @@
     }).filter(Boolean);
   }
 
+  // ---------- MVPs ----------
+  // Quellen: AFBÖ-Presseaussendungen (football.at), football-austria.com, Wikipedia-Saisonartikel.
+  // Je Saison: [League MVP, Offense MVP, Defense MVP, Young Star, Coach of the Year] als [Name, Team] oder null
+  const MVPS = [
+    ["2026", ["Chad Jeffries", "Speedfit Vienna Knights"], ["Ahmonte Watkins", "Prague Black Panthers"], ["Franz Korger", "Graz Giants"], ["Daniel Holzmann", "Swarco Raiders Tirol"], ["Darius Saint-Robinson", "Prague Black Panthers"]],
+    ["2025", ["Eddie Morales III", "Graz Giants"], ["Fritz Bleckmann", "Graz Giants"], ["M. Rebl", "Danube Dragons"], ["Jakob Scheucher", "Swarco Raiders Tirol"], ["Stefan Pokorny", "Graz Giants"]],
+    ["2024", ["Nico Hrouda", "AFC Vienna Vikings"], ["Maximillion Fine", "AFC Vienna Vikings"], ["Jalen Dennis", "Prague Black Panthers"], ["Tim Tonko", "Swarco Raiders Tirol"], ["Benjamin Sobotka", "AFC Vienna Vikings"]],
+    ["2023", ["Tyler Jarnagin", "Prague Black Panthers"], ["Devontae Jordan", "AFC Vienna Vikings"], ["Paul Schachner", "Danube Dragons"], ["Valentin Bader", "Graz Giants"], ["Spencer Ford", "Prague Black Panthers"]],
+    ["2022", ["Chad Jeffries", "Danube Dragons"], ["Devontae Jordan", "Vienna Vikings"], ["Hugo Dyrendahl", "Telfs Patriots"], ["Nico Hrouda", "Vienna Vikings"], ["Nick Kleinhansl", "Telfs Patriots"]],
+    ["2021", ["Nick Milgate", "Rangers Mödling"], ["Philipp Haun", "Danube Dragons"], ["Leon Balogh", "Vienna Vikings"], ["Marco Schneider", "Swarco Raiders Tirol"], ["Daniel Schönet & Brandon Gorsuch", "Graz Giants"]],
+    ["2019", ["Sean Shelton", "Swarco Raiders Tirol"], ["Herbert Gamboa", "Prague Black Panthers"], ["Thomas Schnurrer", "Graz Giants"], ["Mathias Berghammer", "Steelsharks Traun"], ["Shuan Fatah", "Swarco Raiders Tirol"]],
+    ["2018", ["Sean Shelton", "Swarco Raiders Tirol"], ["Zachary Cavanaugh", "Ljubljana Silverhawks"], ["Thomas Schnurrer", "Graz Giants"], ["Jun Jie Gao", "Danube Dragons"], ["Stefan Pokorny", "Danube Dragons"]],
+    ["2017", ["Anthony Gardner", "Ljubljana Silverhawks"], ["Matic Tomse", "Ljubljana Silverhawks"], ["Thomas Schnurrer", "Graz Giants"], ["Bernhard Seikovits", "Vienna Vikings"], ["Shuan Fatah", "Swarco Raiders Tirol"]],
+    ["2016", ["Sean Shelton", "Swarco Raiders Tirol"], ["Dario Dobrolevski", "AFC Rangers Mödling"], ["Thomas Schnurrer", "Graz Giants"], ["Sandro Platzgummer", "Swarco Raiders Tirol"], ["Martin Kocian", "Graz Giants"]],
+    ["2015", ["Kyle Newhall-Caballero", "Prague Black Panthers"], ["Jan Dundacek", "Prague Black Panthers"], ["Alexander Achammer", "Swarco Raiders Tirol"], ["Sandro Platzgummer", "Swarco Raiders Tirol"], ["Chris Calaycay", "Vienna Vikings"]],
+    ["2013", ["Christoph Gross", "Vienna Vikings"], ["Jesse Lewis", "Vienna Vikings"], ["Simon Blach", "Vienna Vikings"], ["Christoph Gubisch", "Graz Giants"], null],
+    ["2012", ["Alex Gross", "Graz Giants"], ["Christoph Gross", "Vienna Vikings"], ["Alex Gross", "Graz Giants"], ["Andreas Hofbauer", "Swarco Raiders Tirol"], null],
+    ["2008", ["Mohammed Muheize", "Graz Giants"], ["Florian Grein", "Swarco Raiders Tirol"], ["Samuel Carter", "Graz Giants"], ["Michael Janik", "Danube Dragons"], ["Geoffrey Buffum", "Swarco Raiders Tirol"]],
+    ["2006", ["Christian Steffani", "Cineplexx Blue Devils"], ["Clinton Graham", "Vienna Vikings"], ["Mario Rinner", "Swarco Raiders Tirol"], ["Ramon Abdel Azim", "Carinthian Black Lions"], null]
+  ];
+  const normName = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+  function findPersonByName(name) {
+    const n = normName(name);
+    return players.find(p => normName(p.name) === n) || coaches.find(c => normName(c.name) === n) || null;
+  }
+  function renderMvps() {
+    const latest = MVPS[0][0];
+    document.getElementById("mvps-body").innerHTML = MVPS.map(([season, ...awards]) => `<tr>
+      <td class="season">${esc(season)}</td>
+      ${awards.map(a => {
+        if (!a) return `<td><span class="none">–</span></td>`;
+        const [name, team] = a;
+        const person = season === latest ? findPersonByName(name) : null;
+        const nameHtml = person
+          ? `<button type="button" class="plink pn" data-person="${esc(person.id)}">${esc(name)}</button>`
+          : `<span class="pn">${esc(name)}</span>`;
+        return `<td>${nameHtml}<span class="pt">${esc(team)}</span></td>`;
+      }).join("")}
+    </tr>`).join("");
+    document.getElementById("mvps-foot").textContent = "Die Liste wird laufend um frühere Saisons ergänzt.";
+  }
+  document.getElementById("mvps-body").addEventListener("click", e => {
+    const b = e.target.closest(".plink"); if (b) openDetail(b.dataset.person);
+  });
+
   // ---------- Champions (Austrian Bowl) ----------
   // Quelle: Austrian-Bowl-Archiv (football-austria.com), abgeglichen mit Wikipedia/ORF. Stand: Saison 2026.
   // [Saison, Bowl, Meister, Vereinsschlüssel, Finalgegner, Ergebnis, Austragungsort, Hinweis, Staatsmeister (falls abweichend)]
@@ -1100,46 +1139,46 @@
     ["2017", "XXXIII", "Vienna Vikings", "vikings", "Raiders Tirol", "45:26", "Klagenfurt"],
     ["2018", "XXXIV", "Raiders Tirol", "raiders", "Vienna Vikings", "51:48", "St. Pölten"],
     ["2019", "XXXV", "Raiders Tirol", "raiders", "Vienna Vikings", "42:34", "St. Pölten"],
-    ["2020", "", "Vienna Vikings", "vikings", "Graz Giants", "3:0", "",
-      "Kein Bowl-Spiel (Covid-19): Best-of-five-Finalserie, 31:19, 45:13, 46:29."],
+    ["2020", "", "", null, "Graz Giants", "3:0", "",
+      "Keine Austrian Bowl (Covid-19): Best-of-five-Finalserie, 31:19, 45:13, 46:29.", "Vienna Vikings"],
     ["2021", "XXXVI", "Raiders Tirol", "raiders", "Vienna Vikings", "35:14", "Innsbruck"],
     ["2022", "XXXVII", "Danube Dragons", "dragons", "Vienna Vikings", "51:29", "St. Pölten"],
     ["2023", "XXXVIII", "Danube Dragons", "dragons", "Vienna Vikings", "14:13", "St. Pölten"],
     ["2024", "XXXIX", "Prague Black Panthers", "panthers", "Vienna Vikings", "20:14", "Wiener Neustadt",
       "", "Vienna Vikings"],
     ["2025", "XL", "Danube Dragons", "dragons", "Vienna Vikings", "", "St. Pölten",
-      "Austrian Bowl (27:17 für die Vikings) nachträglich annulliert, Titel am grünen Tisch an die Danube Dragons."],
+      "Austrian Bowl (27:17 für die Vikings) nachträglich annulliert."],
     ["2026", "XLI", "Graz Giants", "giants", "Danube Dragons", "16:14", "Maria Enzersdorf"]
   ];
 
   function renderChampions() {
     const counts = {};
     const rows = CHAMPIONS.map(([season, bowl, champ, key, opp, score, venue, note, state]) => {
-      counts[key] = (counts[key] || 0) + 1;
-      return { season, bowl, champ, n: counts[key], opp, score, venue, note, state };
+      if (key) counts[key] = (counts[key] || 0) + 1;
+      return { season, bowl, champ, n: key ? counts[key] : null, opp, score, venue, note, state };
     }).reverse();
     document.getElementById("champions-body").innerHTML = rows.map(r => {
       let finale;
       if (r.season === "2025") {
         finale = `<span class="bowl">Austrian Bowl ${esc(r.bowl)}</span><br><s>17:27 gegen ${esc(r.opp)}</s>`;
       } else if (!r.bowl) {
-        finale = `Finalserie ${esc(r.score)} gegen ${esc(r.opp)}`;
+        finale = `Finalserie: ${esc(r.state)} ${esc(r.score)} gegen ${esc(r.opp)}`;
       } else {
         finale = `<span class="bowl">Austrian Bowl ${esc(r.bowl)}${r.venue ? " · " + esc(r.venue) : ""}</span><br>${esc(r.score)} gegen ${esc(r.opp)}`;
       }
       if (r.note) finale += `<span class="note">${esc(r.note)}</span>`;
       return `<tr>
         <td class="season">${esc(r.season)}</td>
-        <td class="champ">${esc(r.champ)}<span class="cnt">(${r.n})</span></td>
+        <td class="champ">${r.champ ? `${esc(r.champ)}<span class="cnt">(${r.n})</span>` : "–"}</td>
         <td>${finale}</td>
         <td>${esc(r.state || "")}</td>
       </tr>`;
     }).join("");
     const total = {};
-    CHAMPIONS.forEach(c => { total[c[3]] = (total[c[3]] || 0) + 1; });
+    CHAMPIONS.forEach(c => { if (c[3]) total[c[3]] = (total[c[3]] || 0) + 1; });
     const names = { vikings: "Vienna Vikings", giants: "Graz Giants", raiders: "Raiders Tirol", dragons: "Danube Dragons",
       lions: "Salzburg Lions", dinos: "Feldkirch Dinos", panthers: "Prague Black Panthers" };
-    document.getElementById("champions-foot").textContent = "Titel gesamt: " + Object.entries(total)
+    document.getElementById("champions-foot").textContent = "Austrian-Bowl-Titel gesamt: " + Object.entries(total)
       .sort((a, b) => b[1] - a[1]).map(([k, n]) => `${names[k] || k} ${n}`).join(" · ");
   }
 
@@ -1296,6 +1335,7 @@
   renderTeams();
   renderStandings();
   renderChampions();
+  renderMvps();
   renderPlayerStats();
   renderTeamStats();
   wireSortableHead("player-list-head", playerSort, renderPlayers);
