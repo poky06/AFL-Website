@@ -17,6 +17,10 @@ on:
         description: "Plausibilitätsprüfung überspringen"
         type: boolean
         default: false
+      rebuild_history:
+        description: "Archiv vergangener Saisons neu laden"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -28,6 +32,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Uhrzeit prüfen (nur bei geplantem Lauf)
         id: gate
@@ -55,6 +60,7 @@ jobs:
           COMPETITION_ID: ${{ vars.COMPETITION_ID || '13931' }}
           SEASON_ID: ${{ inputs.season_id || vars.SEASON_ID || '217' }}
           FORCE: ${{ inputs.force && 'true' || 'false' }}
+          REBUILD_HISTORY: ${{ inputs.rebuild_history && 'true' || 'false' }}
         run: node scripts/sync.mjs
 
       - name: Änderungen speichern
@@ -62,7 +68,7 @@ jobs:
         run: |
           git config user.name "afl-sync-bot"
           git config user.email "afl-sync-bot@users.noreply.github.com"
-          git add data/afl.json
+          git add data
           if git diff --cached --quiet; then
             echo "Keine Änderungen."
           else
