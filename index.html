@@ -1738,7 +1738,7 @@
   // Spiele, Records, Strength of Schedule
   // =====================================================================
   const PLAYOFF_RE = /playoff|play-off|wild|semi|halb|final|bowl|viertel|quarter/i;
-  const isPlayoff = g => PLAYOFF_RE.test(`${g.phase || ""} ${g.round || ""}`);
+  const isPlayoff = g => (typeof g.playoff === "boolean" ? g.playoff : PLAYOFF_RE.test(`${g.phase || ""} ${g.round || ""}`));
 
   function demoGames() {
     let seed = 11;
