@@ -171,6 +171,7 @@ KICK_COLS = cols('players', 'Kicking')
 PUNT_COLS = cols('players', 'Punting')
 
 people = {}             # hd-Schlüssel -> {name, ids, teams{yr:[...]}}
+calc_rows = defaultdict(list)   # hd-Schlüssel -> ["2016|Defense", …] (ganz berechnete Saisonzeilen)
 career = defaultdict(lambda: defaultdict(dict))   # key -> yr -> cat -> values
 seasons_out = {}
 report = defaultdict(list)
@@ -253,6 +254,68 @@ def build_players(yr):
                     'Defensive Touchdowns': int(agg[pid].get('def_td', 0))}
         rows.append(row)
     blocks.append(block('players', 'Defense', rows, {'Defensive Touchdowns'}, 'Total Tackles'))
+    # Spieler ohne Eintrag in den Hockeydata-Ranglisten (vor allem 2014–2018 unvollständig):
+    # Werte aus den Spielprotokollen berechnen und die Zeile als berechnet kennzeichnen
+    off_ids = {cat: {r['id'] for r in official(yr, 'players', cat)}
+               for cat in ('LeaderPassing', 'LeaderReceiving', 'LeaderRushing', 'LeaderDefense')}
+    team_hint = {}
+    for cat in off_ids:
+        for r in official(yr, 'players', cat):
+            team_hint.setdefault(r['id'], r['teamId'])
+
+    def calc_row(pid):
+        tid = team_hint.get(pid) or (team_cnt[pid].most_common(1)[0][0] if team_cnt[pid] else None)
+        row = base_row(pid, tid)
+        row['calc_row'] = True
+        return row
+
+    extra = defaultdict(list)
+    for pid, a in agg.items():
+        if pid not in spieler:
+            continue
+        G_ = len(games[pid]) or None
+        if a.get('pass_att', 0) > 0 and pid not in off_ids['LeaderPassing']:
+            att, cmp_, yds_, td, ic = a['pass_att'], a.get('pass_cmp', 0), a.get('pass_yds', 0), a.get('pass_td', 0), a.get('pass_int', 0)
+            row = calc_row(pid)
+            row['v'] = {'Games': G_, 'Pass Attempts': int(att), 'Completions': int(cmp_), 'Passing Yards': int(yds_),
+                        'Pass Touchdowns': int(td), 'Interceptions Thrown': int(ic),
+                        'Completion Percentage': div(cmp_, att, 100), 'Sacks Taken': int(a.get('sacked', 0)),
+                        'Passer Rating': rnd((8.4 * yds_ + 330 * td + 100 * cmp_ - 200 * ic) / att, 1)}
+            extra['Passing'].append(row)
+        if a.get('rec', 0) > 0 and pid not in off_ids['LeaderReceiving']:
+            rec, tgt, yds_ = a.get('rec', 0), a.get('tgt', 0), a.get('rec_yds', 0)
+            row = calc_row(pid)
+            row['v'] = {'Games': G_, 'Receptions': int(rec), 'Targets': int(max(tgt, rec)),
+                        'Catch Percentage': div(rec, max(tgt, rec), 100), 'Receiving Yards': int(yds_),
+                        'Yards per Reception': div(yds_, rec), 'Receiving Touchdowns': int(a.get('rec_td', 0))}
+            extra['Receiving'].append(row)
+        if a.get('rush_att', 0) > 0 and pid not in off_ids['LeaderRushing']:
+            att = a['rush_att']
+            net = a.get('rush_yds', 0) - a.get('sack_yds', 0)   # wie Hockeydata: Sack-Yards zählen beim Laufen
+            row = calc_row(pid)
+            row['v'] = {'Games': G_, 'Rush Attempts': int(att), 'Rushing Yards': int(net),
+                        'Yards per Attempt': div(net, att), 'Rush Touchdown': int(a.get('rush_td', 0)),
+                        'Fumbles': int(a.get('fum', 0))}
+            extra['Rushing'].append(row)
+        dsum = a.get('solo', 0) + a.get('ast', 0) + a.get('int', 0) + a.get('pbu', 0) + a.get('sacks', 0)
+        if dsum > 0 and pid not in off_ids['LeaderDefense']:
+            row = calc_row(pid)
+            row['v'] = {'Games': G_, 'Total Tackles': rnd(a.get('solo', 0) + a.get('ast', 0) * 0.5, 1),
+                        'Solo Tackles': int(a.get('solo', 0)), 'Assisted Tackles': rnd(a.get('ast', 0) * 0.5, 1),
+                        'Tackles for Loss': rnd(a.get('tfl_run', 0) + a.get('tfl_sack', 0), 1),
+                        'Sacks': rnd(a.get('sacks', 0), 1), 'Interceptions For': int(a.get('int', 0)),
+                        'Pass Breakups': int(a.get('pbu', 0)), 'Defensive Touchdowns': int(a.get('def_td', 0))}
+            extra['Defense'].append(row)
+    for b in blocks:
+        if extra.get(b['name']):
+            titles = [c.get('title') or c['label'] for c in b['columns']]
+            for r in extra[b['name']]:
+                b['rows'].append({k: v for k, v in r.items() if k != 'v'} | {'values': [r['v'].get(t) for t in titles]})
+            si = {'Passing': 'Pass Attempts', 'Receiving': 'Receptions', 'Rushing': 'Rush Attempts', 'Defense': 'Total Tackles'}[b['name']]
+            i = titles.index(si)
+            b['rows'].sort(key=lambda r: (r['values'][i] is None, -(r['values'][i] or 0)))
+            report['calc_rows'].append((yr, b['name'], len(extra[b['name']])))
+
     # offizielles Team je Spieler (für berechnete Kategorien)
     off_team = {}
     for cat in ('LeaderPassing', 'LeaderReceiving', 'LeaderRushing', 'LeaderDefense'):
@@ -547,6 +610,8 @@ for yr in SEASONS:
     for b in pblocks:
         for r in b['rows']:
             career[r['pid']][yr][b['name']] = r['values']
+            if r.get('calc_row'):
+                calc_rows[r['pid']].append(f"{yr}|{b['name']}")
     seasons_out[yr] = pblocks
     # Kader: alle Spieler mit Einsatz – auch ohne Statistikwerte (z. B. Offensive Line), damit ihre
     # Saisons, Teams und Spiele in der Karriere erscheinen
@@ -564,48 +629,78 @@ for yr in SEASONS:
     print(yr, 'Spieler-Kategorien:', [(b['name'], len(b['rows'])) for b in pblocks], '| Teams:', len(tids))
 
 # ---------------------------------------------------------------- Personen zusammenführen (Doppel-IDs im LOS)
-groups = defaultdict(list)
-for k, p in people.items():
-    pid = p['ids'][0]
-    sp = spieler.get(pid, {})
-    groups[norm(sp.get('Firstname')) + '|' + norm(sp.get('Lastname'))].append(k)
-merge_into = {}
-for name, keys in groups.items():
-    if len(keys) < 2:
-        continue
-    keys = sorted(keys, key=lambda k: int(k[2:]))
-    for i, a in enumerate(keys):
-        for b in keys[i + 1:]:
-            ra, rb = merge_into.get(a, a), merge_into.get(b, b)
-            if ra == rb:
-                continue
-            pa, pb = people[ra], people[rb]
-            ba = (spieler[int(a[2:])].get('Birthdate') or '')[:10]
-            bb = (spieler[int(b[2:])].get('Birthdate') or '')[:10]
-            weak = lambda x: (not x) or x.endswith('-01-01')  # noqa: E731
-            same_birth = ba and bb and ba == bb
-            teams_a = {t for ts in pa['teams'].values() for t in ts}
-            teams_b = {t for ts in pb['teams'].values() for t in ts}
-            overlap_season = set(pa['teams']) & set(pb['teams'])
-            if overlap_season:
-                continue
-            if same_birth or ((weak(ba) or weak(bb)) and teams_a & teams_b):
-                merge_into[rb] = ra
-                report['merged'].append((ra, rb, pa['name'], ba, bb))
+# Gleiche Person, wenn: Nachname gleich, Vornamen vereinbar ("Thomas" / "Thomas Johannes", "Junjie" / "Jun Jie"),
+# Geburtsdatum gleich – oder eines davon fehlt/Platzhalter und beide spielten im selben Team – und keine Saison doppelt.
+def weak_birth(x):
+    return (not x) or x.endswith('-01-01') or x.startswith('1900') or x == '1969-12-31'
+
+
+def first_ok(a, b):
+    a, b = norm(a), norm(b)
+    ca, cb = a.replace(' ', ''), b.replace(' ', '')
+    return bool(set(a.split()) & set(b.split())) or ca == cb or (min(len(ca), len(cb)) >= 4 and (ca.startswith(cb) or cb.startswith(ca)))
+
+
+parent = {}
 
 
 def root(k):
-    while k in merge_into:
-        k = merge_into[k]
+    while parent.get(k, k) != k:
+        k = parent[k]
     return k
 
 
+by_last = defaultdict(list)
+for k, p in people.items():
+    by_last[norm(spieler[p['ids'][0]].get('Lastname'))].append(k)
+for last, keys in by_last.items():
+    if len(keys) < 2 or not last:
+        continue
+    keys = sorted(keys, key=lambda k: int(k[2:]))
+    for i, ka in enumerate(keys):
+        for kb in keys[i + 1:]:
+            ra, rb = root(ka), root(kb)
+            if ra == rb:
+                continue
+            sa, sb = spieler[int(ka[2:])], spieler[int(kb[2:])]
+            if not first_ok(sa.get('Firstname'), sb.get('Firstname')):
+                continue
+            ba, bb = (sa.get('Birthdate') or '')[:10], (sb.get('Birthdate') or '')[:10]
+            # Saisons/Teams der bereits zusammengeführten Gruppen vergleichen
+            grp_a = [k for k in people if root(k) == ra]
+            grp_b = [k for k in people if root(k) == rb]
+            seasons_a = {yr for k in grp_a for yr in people[k]['teams']}
+            seasons_b = {yr for k in grp_b for yr in people[k]['teams']}
+            if seasons_a & seasons_b:
+                continue
+            teams_a = {t for k in grp_a for ts in people[k]['teams'].values() for t in ts}
+            teams_b = {t for k in grp_b for ts in people[k]['teams'].values() for t in ts}
+            same_birth = ba and bb and ba == bb and not weak_birth(ba)
+            if same_birth or ((weak_birth(ba) or weak_birth(bb)) and teams_a & teams_b):
+                lo, hi = sorted([ra, rb], key=lambda k: int(k[2:]))
+                parent[hi] = lo
+                report['merged'].append((lo, hi, people[ka]['name'] + ' / ' + people[kb]['name'], ba, bb))
+
+
+
+
+last_season = {k: max(p['teams']) for k, p in people.items() if p['teams']}
+own_seasons = {k: len(p['teams']) for k, p in people.items()}
 for k in list(people):
     r = root(k)
     if r == k:
         continue
     pr, pk = people[r], people.pop(k)
     pr['ids'] = sorted(set(pr['ids'] + pk['ids']))
+    pr.setdefault('aliases', [pr['name']])
+    if pk['name'] not in pr['aliases']:
+        pr['aliases'].append(pk['name'])
+    # angezeigt wird die Schreibweise mit den meisten Saisons (bei Gleichstand die jüngere)
+    cand = (own_seasons.get(k, 0), last_season.get(k, '0'))
+    if cand > pr.get('name_rank', (own_seasons.get(r, 0), last_season.get(r, '0'))):
+        pr['name_rank'] = cand
+        pr['name'] = pk['name']
+    calc_rows[r].extend(calc_rows.pop(k, []))
     for yr, n in pk.get('games', {}).items():
         pr.setdefault('games', {})[yr] = max(pr.get('games', {}).get(yr, 0), n)
     for yr, ts in pk['teams'].items():
@@ -616,7 +711,7 @@ for k in list(people):
         for cat, vals in cats.items():
             career[r][yr].setdefault(cat, vals)
 # Schlüssel in den Saisondateien nachziehen
-if merge_into:
+if parent:
     for yr in list(seasons_out):
         path = f'{OUT}/season-{yr}.json'
         data = json.load(open(path))
@@ -774,9 +869,13 @@ for k, p in sorted(people.items(), key=lambda x: int(x[0][2:])):
     entry = {'name': p['name'], 'teams': p['teams']}
     if p.get('games'):
         entry['games'] = p['games']
+    if len(p.get('aliases', [])) > 1:
+        entry['aliases'] = p['aliases']
     car['people'][k] = entry
     if k in career:
         car['players'][k] = career[k]
+    if calc_rows.get(k):
+        car.setdefault('calc_rows', {})[k] = sorted(set(calc_rows[k]))
 with open(f'{OUT}/career.json', 'w') as fh:
     json.dump(car, fh, ensure_ascii=False, separators=(',', ':'))
 

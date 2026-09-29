@@ -217,6 +217,7 @@ def parse(path):
         # ================= Scrimmage =================
         if kind == 'scrim':
             primary = None
+            sack_tacklers = []
             for a in acts:
                 t = a['type']
                 if t == 'RushAction':
@@ -284,6 +285,7 @@ def parse(path):
                         if s is not None:
                             s['sacks'] += 1 / len(sk)
                     T[de]['sacks_for'] += 1
+                    sack_tacklers = sk
                     primary = ('sack', qb, None)
                     break
 
@@ -308,6 +310,24 @@ def parse(path):
                     mx(primary[1], 'rec_long', yds)
                 if primary[2] is not None:
                     primary[2]['pass_yds'] += yds
+
+            # Tackles for Loss (Ballträger hinter der Line of Scrimmage gestoppt; solo 1, geteilt 0,5)
+            if role in ('rush', 'rec', 'sack') and (end_np - los) < 0:
+                tl = []
+                if role == 'sack':
+                    tl = sack_tacklers
+                else:
+                    for a in acts:
+                        if a['type'] in ('InterceptedPassAction', 'FumbleAction'):
+                            break
+                        if a['type'] in ('TackleAction', 'OutOfBoundsAction') and a.get('TackledByPlayers'):
+                            tl = a['TackledByPlayers']
+                w = 1 if len(tl) == 1 else 0.5
+                for j in tl:
+                    s_ = st(de, j)
+                    if s_ is not None:
+                        s_['tfl_sack' if role == 'sack' else 'tfl_run'] += w
+                        s_['tfl_yds'] += -(end_np - los) * w
 
             # Fumbles
             carrier_side = off
