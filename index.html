@@ -426,8 +426,6 @@
     display: none; margin-left: auto; background: none; border: 1px solid var(--line-strong); color: var(--chalk);
     font-size: 20px; line-height: 1; padding: 8px 12px; border-radius: var(--radius); cursor: pointer;
   }
-  #teams-menu { max-height: 70vh; overflow-y: auto; }
-  #teams-menu button[data-panel] { border-bottom: 1px solid var(--line); }
 
   /* Banner Austrian Bowl */
   .bowl-banner { margin: 22px 0 8px; }
@@ -637,12 +635,6 @@
           <a href="https://live.football.at" target="_blank" rel="noopener noreferrer">Live Scores ↗</a>
         </div>
       </div>
-      <div class="nav-dropdown" id="dd-teams">
-        <button type="button" class="dd-toggle">Teams <span class="caret">▾</span></button>
-        <div class="dropdown-menu" id="teams-menu">
-          <button data-panel="teams">Alle Teams</button>
-        </div>
-      </div>
       <div class="nav-dropdown" id="dd-stats">
         <button type="button" class="dd-toggle">Stats <span class="caret">▾</span></button>
         <div class="dropdown-menu">
@@ -656,7 +648,7 @@
         <button type="button" class="dd-toggle">Liga <span class="caret">▾</span></button>
         <div class="dropdown-menu">
           <button data-panel="players">Spieler</button>
-          <button data-panel="teams">Mannschaften</button>
+          <button data-panel="teams">Teams</button>
           <button data-panel="organisation">Organisation</button>
           <button data-panel="modus">Modus</button>
         </div>
@@ -892,6 +884,10 @@
 (async function () {
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
   const LICENSES = ["Homegrown","A-Klasse","E-Klasse"];
+  // Optional: eigene, hochauflösende Logo-Dateien je Team (Clubee-Team-ID → Pfad oder URL),
+  // z. B. "logos/graz-giants.png" – die Datei dazu im Repository im Ordner "logos" ablegen.
+  // Ohne Eintrag wird das Logo aus Clubee verwendet (große Version, falls vorhanden).
+  const TEAM_LOGOS = {};
 
   // ---------- Daten laden: echte Daten aus data/afl.json, sonst Demo ----------
   let live = null;
@@ -910,7 +906,7 @@
   function initials(f, l) { return ((f || "?")[0] + (l || "?")[0]).toUpperCase(); }
 
   if (live && Array.isArray(live.players) && live.players.length) {
-    teams = live.teams.map(t => ({ id: String(t.id), name: t.name, city: "", logo: t.logo, logoBig: t.logo_big || t.logo, color: "#1c86d1", icon: "🏈" }))
+    teams = live.teams.map(t => ({ id: String(t.id), name: t.name, city: "", logo: TEAM_LOGOS[String(t.id)] || t.logo, logoBig: TEAM_LOGOS[String(t.id)] || t.logo_big || t.logo, color: "#1c86d1", icon: "🏈" }))
       .sort((a, b) => a.name.localeCompare(b.name));
     const mapPerson = p => ({
       id: "u" + p.id,
@@ -1699,7 +1695,7 @@
   function teamRef(id, fallbackName) {
     const t = teams.find(x => x.id === idStr(id)) || teams.find(x => x.name === fallbackName);
     const { color } = teamStyle(t ? t.id : "");
-    return { t, name: t ? t.name : (fallbackName || "—"), color, logo: t ? (t.logo || null) : null };
+    return { t, name: t ? t.name : (fallbackName || "—"), color, logo: t ? (t.logo || null) : null, logoBig: t ? (t.logoBig || t.logo || null) : null };
   }
   function teamChip(id, name) {
     const r = teamRef(id, name);
@@ -1778,7 +1774,7 @@
     if (final && final.completed && final.home_score !== null && final.home_score !== final.away_score) {
       const w = final.home_score > final.away_score ? teamRef(final.home_id, final.home) : teamRef(final.away_id, final.away);
       html += `<div class="bcol champ-col"><div class="bhead">Champion</div><div class="bgames"><div class="bchamp" style="--c:${w.color};--fg:${textOn(w.color)}">
-        ${w.logo ? `<img src="${esc(w.logo)}" alt="">` : `<span class="bc-ico">🏆</span>`}<div>${esc(w.name)}</div></div></div></div>`;
+        ${w.logoBig ? `<img src="${esc(w.logoBig)}" alt="">` : `<span class="bc-ico">🏆</span>`}<div>${esc(w.name)}</div></div></div></div>`;
     }
     el.innerHTML = html;
   }
@@ -1820,8 +1816,6 @@
         </div>
       </div>`;
     }).join("");
-    document.getElementById("teams-menu").insertAdjacentHTML("beforeend",
-      sorted.map(t => `<button type="button" data-club="${esc(t.id)}">${esc(t.name)}</button>`).join(""));
   }
   let currentClub = null;
   function setClubTab(tab) {
@@ -1839,8 +1833,7 @@
     renderClubTeamStats(id);
     setClubTab(tab);
     activatePanel("club");
-    document.querySelectorAll("#teams-menu [data-club]").forEach(b => b.classList.toggle("active", b.dataset.club === id));
-    document.getElementById("dd-teams").classList.add("active-parent");
+    document.getElementById("dd-liga").classList.add("active-parent");
     window.scrollTo({ top: 0 });
   }
   function renderClubHead(id) {
@@ -1900,7 +1893,7 @@
   function renderBanner() {
     const side = s => {
       const r = teamRef(s.id, s.name);
-      const mark = r.logo ? `<img src="${esc(r.logo)}" alt="">` : `<span class="bb-dot" style="background:${r.color}"></span>`;
+      const mark = r.logoBig ? `<img src="${esc(r.logoBig)}" alt="">` : `<span class="bb-dot" style="background:${r.color}"></span>`;
       return { html: `<div class="bb-team${s.score > (s === LAST_BOWL.home ? LAST_BOWL.away.score : LAST_BOWL.home.score) ? " win" : ""}">${mark}<span>${esc(r.name)}</span></div>`, r };
     };
     const h = side(LAST_BOWL.home), a = side(LAST_BOWL.away);
@@ -2011,7 +2004,6 @@
   function activatePanel(panelId) {
     document.querySelector("header.top").classList.remove("nav-open");
     document.getElementById("menu-toggle").setAttribute("aria-expanded", "false");
-    if (panelId !== "club") document.querySelectorAll("#teams-menu [data-club]").forEach(b => b.classList.remove("active"));
     document.querySelectorAll(".dropdown-menu button[data-panel]").forEach(b =>
       b.classList.toggle("active", b.dataset.panel === panelId));
     document.querySelectorAll(".nav-dropdown").forEach(dd =>

@@ -16,6 +16,28 @@ Nationalität (Kürzel), Foto, Lizenzklasse und Team – und nur für Mitglieder
 „auf Website anzeigen“ in Clubee. Adressen, Telefonnummern, E-Mails und Dokumente werden
 im Sync verworfen und nie gespeichert.
 
+## Inhalte pflegen (in `index.html`)
+
+Ganz oben im Skriptteil von `index.html` steht ein Block **„Konfiguration – hier pflegen“**:
+
+| Eintrag | Wofür |
+|---|---|
+| `TEAM_WEBSITES` | Offizielle Vereins-Websites (Clubee-Team-ID → Adresse). Fehlt ein Team, erscheint kein Website-Knopf. |
+| `LAST_BOWL` | Banner auf der Startseite (letzte Austrian Bowl mit Ergebnis, Datum, Ort). |
+| `AUSTRIAN_BOWL` | Nächste Austrian Bowl: Datum, Venue, Adresse, Ticket-Link, Programm. |
+| `SOCIAL` | Links zu Instagram, Facebook, YouTube. |
+| `INSTAGRAM_POSTS` | Optional: Links zu einzelnen Instagram-Beiträgen, die in der Fußzeile eingebettet werden. |
+| `TEAM_STYLE` | Vereinsfarben und Kurznamen. |
+| `TEAM_LOGOS` | Optional: eigene hochauflösende Logos je Team (Datei im Ordner `logos` ablegen, z. B. `"354986": "logos/graz-giants.png"`). |
+| `MVPS`, `CHAMPIONS` | MVP- und Meisterliste. |
+
+Spielplan, Playoff-Baum, Tabelle inkl. Strength of Schedule, Teamseiten und League Leaders
+kommen automatisch aus den Clubee-Daten.
+
+**Strength of Schedule (SOS):** kombinierte Siegquote aller Gegner eines Teams im Grunddurchgang
+(gespielte und noch offene Spiele, jede Begegnung zählt einzeln) auf Basis der aktuellen Tabelle.
+Die Berechnung läuft im Browser und ändert sich mit jedem Sync automatisch mit.
+
 ## Einrichtung (einmalig)
 
 1. **Repository anlegen** auf github.com (z. B. `afboe/afl-website`) und alle Dateien dieses
