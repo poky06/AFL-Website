@@ -255,6 +255,14 @@
   }
   .st-more:hover { border-color: var(--flag); }
   #brand-home { cursor: pointer; }
+  .champ-tbl td { white-space: normal; vertical-align: top; }
+  .champ-tbl td.season { font-weight: 600; white-space: nowrap; }
+  .champ-tbl td.champ { font-weight: 700; white-space: nowrap; }
+  .champ-tbl td.champ .cnt { font-weight: 400; color: var(--chalk-dim); margin-left: 4px; }
+  .champ-tbl .bowl { color: var(--chalk-dim); font-size: 13px; }
+  .champ-tbl .note { display: block; color: var(--chalk-dim); font-size: 12.5px; margin-top: 3px; }
+  .champ-tbl s { color: var(--chalk-dim); }
+  .champ-foot { margin-top: 14px; }
   .st-title.wide { max-width: 980px; }
   .cat-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
   .cat-tabs button {
@@ -566,13 +574,15 @@
 
   <!-- CHAMPIONS -->
   <section class="panel" id="panel-champions">
-    <div class="hero" style="padding:32px 0">
-      <h1 style="font-size:28px">Champions</h1>
-      <div class="demo-note">
-        <span>⚠</span>
-        <span><strong>Noch keine Daten hinterlegt.</strong> Hier erscheinen künftig die Austrian-Bowl-Sieger je Saison.</span>
-      </div>
+    <div class="st-title wide"><span>Meister der Austrian Football League</span></div>
+    <p class="result-count st-sub">Alle Austrian-Bowl-Sieger seit 1984. In Klammern die Anzahl der Meistertitel des Vereins bis zu diesem Jahr.</p>
+    <div class="tbl-wrap">
+      <table class="standings champ-tbl">
+        <thead><tr><th>Saison</th><th>Meister</th><th>Finale</th><th>Österr. Staatsmeister</th></tr></thead>
+        <tbody id="champions-body"></tbody>
+      </table>
     </div>
+    <p class="result-count champ-foot" id="champions-foot"></p>
   </section>
 
   <!-- ORGANISATION -->
@@ -1051,6 +1061,88 @@
     }).filter(Boolean);
   }
 
+  // ---------- Champions (Austrian Bowl) ----------
+  // Quelle: Austrian-Bowl-Archiv (football-austria.com), abgeglichen mit Wikipedia/ORF. Stand: Saison 2026.
+  // [Saison, Bowl, Meister, Vereinsschlüssel, Finalgegner, Ergebnis, Austragungsort, Hinweis, Staatsmeister (falls abweichend)]
+  const CHAMPIONS = [
+    ["1984", "I", "Salzburg Lions", "lions", "Graz Giants", "27:10", "Salzburg"],
+    ["1985/86", "II", "Graz Giants", "giants", "Vienna Vikings", "31:12", "Salzburg"],
+    ["1987", "III", "Graz Giants", "giants", "Salzburg Lions", "20:0", "Wien"],
+    ["1988", "IV", "Graz Giants", "giants", "Vienna Vikings", "33:15", "Wien"],
+    ["1989", "V", "Salzburg Lions", "lions", "Graz Giants", "34:0", "Salzburg"],
+    ["1990", "VI", "Graz Giants", "giants", "Klosterneuburg Mercenaries", "59:7", "Linz"],
+    ["1991", "VII", "Graz Giants", "giants", "Vienna Vikings", "38:7", "Graz"],
+    ["1992", "VIII", "Graz Giants", "giants", "Schwarzenau Rangers", "28:13", "Wien"],
+    ["1993", "IX", "Feldkirch Dinos", "dinos", "Salzburg Bulls", "45:10", "Maria Enzersdorf"],
+    ["1994", "X", "Vienna Vikings", "vikings", "Graz Giants", "45:23", "Schwechat"],
+    ["1995", "XI", "Graz Giants", "giants", "Vienna Vikings", "26:20", "Schwechat"],
+    ["1996", "XII", "Vienna Vikings", "vikings", "Graz Giants", "41:35", "Schwechat"],
+    ["1997", "XIII", "Graz Giants", "giants", "Klosterneuburg Mercenaries", "35:14", "Schwechat"],
+    ["1998", "XIV", "Graz Giants", "giants", "Vienna Vikings", "43:3", "Maria Enzersdorf"],
+    ["1999", "XV", "Vienna Vikings", "vikings", "Graz Giants", "37:35", "Schwechat"],
+    ["2000", "XVI", "Vienna Vikings", "vikings", "Tyrolean Raiders", "34:28", "Wien"],
+    ["2001", "XVII", "Vienna Vikings", "vikings", "Tyrolean Raiders", "24:14", "Eisenstadt"],
+    ["2002", "XVIII", "Vienna Vikings", "vikings", "Graz Giants", "52:21", "Wien"],
+    ["2003", "XIX", "Vienna Vikings", "vikings", "Graz Giants", "56:42", "Wien"],
+    ["2004", "XX", "Tyrolean Raiders", "raiders", "Vienna Vikings", "28:20", "Salzburg"],
+    ["2005", "XXI", "Vienna Vikings", "vikings", "Tyrolean Raiders", "43:14", "Maria Enzersdorf"],
+    ["2006", "XXII", "Raiders Tirol", "raiders", "Vienna Vikings", "43:19", "Wien"],
+    ["2007", "XXIII", "Vienna Vikings", "vikings", "Graz Giants", "42:14", "Wien"],
+    ["2008", "XXIV", "Graz Giants", "giants", "Raiders Tirol", "31:21", "Wolfsberg"],
+    ["2009", "XXV", "Vienna Vikings", "vikings", "Graz Giants", "22:19", "Graz"],
+    ["2010", "XXVI", "Danube Dragons", "dragons", "Raiders Tirol", "28:21", "Innsbruck"],
+    ["2011", "XXVII", "Raiders Tirol", "raiders", "Vienna Vikings", "23:13", "Wien"],
+    ["2012", "XXVIII", "Vienna Vikings", "vikings", "Raiders Tirol", "48:34", "Wien"],
+    ["2013", "XXIX", "Vienna Vikings", "vikings", "Raiders Tirol", "48:31", "St. Pölten"],
+    ["2014", "XXX", "Vienna Vikings", "vikings", "Raiders Tirol", "24:17 n. V.", "St. Pölten"],
+    ["2015", "XXXI", "Raiders Tirol", "raiders", "Vienna Vikings", "38:0", "Klagenfurt"],
+    ["2016", "XXXII", "Raiders Tirol", "raiders", "Graz Giants", "51:7", "Klagenfurt"],
+    ["2017", "XXXIII", "Vienna Vikings", "vikings", "Raiders Tirol", "45:26", "Klagenfurt"],
+    ["2018", "XXXIV", "Raiders Tirol", "raiders", "Vienna Vikings", "51:48", "St. Pölten"],
+    ["2019", "XXXV", "Raiders Tirol", "raiders", "Vienna Vikings", "42:34", "St. Pölten"],
+    ["2020", "", "Vienna Vikings", "vikings", "Graz Giants", "3:0", "",
+      "Kein Bowl-Spiel (Covid-19): Best-of-five-Finalserie, 31:19, 45:13, 46:29."],
+    ["2021", "XXXVI", "Raiders Tirol", "raiders", "Vienna Vikings", "35:14", "Innsbruck"],
+    ["2022", "XXXVII", "Danube Dragons", "dragons", "Vienna Vikings", "51:29", "St. Pölten"],
+    ["2023", "XXXVIII", "Danube Dragons", "dragons", "Vienna Vikings", "14:13", "St. Pölten"],
+    ["2024", "XXXIX", "Prague Black Panthers", "panthers", "Vienna Vikings", "20:14", "Wiener Neustadt",
+      "", "Vienna Vikings"],
+    ["2025", "XL", "Danube Dragons", "dragons", "Vienna Vikings", "", "St. Pölten",
+      "Austrian Bowl (27:17 für die Vikings) nachträglich annulliert, Titel am grünen Tisch an die Danube Dragons."],
+    ["2026", "XLI", "Graz Giants", "giants", "Danube Dragons", "16:14", "Maria Enzersdorf"]
+  ];
+
+  function renderChampions() {
+    const counts = {};
+    const rows = CHAMPIONS.map(([season, bowl, champ, key, opp, score, venue, note, state]) => {
+      counts[key] = (counts[key] || 0) + 1;
+      return { season, bowl, champ, n: counts[key], opp, score, venue, note, state };
+    }).reverse();
+    document.getElementById("champions-body").innerHTML = rows.map(r => {
+      let finale;
+      if (r.season === "2025") {
+        finale = `<span class="bowl">Austrian Bowl ${esc(r.bowl)}</span><br><s>17:27 gegen ${esc(r.opp)}</s>`;
+      } else if (!r.bowl) {
+        finale = `Finalserie ${esc(r.score)} gegen ${esc(r.opp)}`;
+      } else {
+        finale = `<span class="bowl">Austrian Bowl ${esc(r.bowl)}${r.venue ? " · " + esc(r.venue) : ""}</span><br>${esc(r.score)} gegen ${esc(r.opp)}`;
+      }
+      if (r.note) finale += `<span class="note">${esc(r.note)}</span>`;
+      return `<tr>
+        <td class="season">${esc(r.season)}</td>
+        <td class="champ">${esc(r.champ)}<span class="cnt">(${r.n})</span></td>
+        <td>${finale}</td>
+        <td>${esc(r.state || "")}</td>
+      </tr>`;
+    }).join("");
+    const total = {};
+    CHAMPIONS.forEach(c => { total[c[3]] = (total[c[3]] || 0) + 1; });
+    const names = { vikings: "Vienna Vikings", giants: "Graz Giants", raiders: "Raiders Tirol", dragons: "Danube Dragons",
+      lions: "Salzburg Lions", dinos: "Feldkirch Dinos", panthers: "Prague Black Panthers" };
+    document.getElementById("champions-foot").textContent = "Titel gesamt: " + Object.entries(total)
+      .sort((a, b) => b[1] - a[1]).map(([k, n]) => `${names[k] || k} ${n}`).join(" · ");
+  }
+
   // ---------- Karriere-Statistiken (Detailansicht) ----------
   let careerPromise = null;
   function loadCareer() {
@@ -1203,6 +1295,7 @@
   renderPlayers();
   renderTeams();
   renderStandings();
+  renderChampions();
   renderPlayerStats();
   renderTeamStats();
   wireSortableHead("player-list-head", playerSort, renderPlayers);
