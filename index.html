@@ -603,6 +603,18 @@
     .ch-text h2 { font-size: 24px; }
     .ch-logo img { width: 84px; height: 84px; }
   }
+
+  /* Sprachumschalter */
+  .lang-switch { order: 3; display: flex; align-items: center; gap: 2px; margin-left: 14px; font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--chalk-dim); }
+  .lang-switch span { opacity: .5; }
+  .lang-switch button { background: none; border: none; border-bottom: 2px solid transparent; color: var(--chalk-dim); cursor: pointer; padding: 4px 5px; font: inherit; letter-spacing: .06em; }
+  .lang-switch button:hover { color: var(--chalk); }
+  .lang-switch button.active { color: var(--chalk); border-bottom-color: var(--flag); }
+  @media (max-width: 900px) {
+    .lang-switch { order: 1; margin-left: auto; }
+    .menu-toggle { order: 2; margin-left: 10px; }
+    nav.tabs { order: 3; }
+  }
 </style>
 </head>
 <body>
@@ -619,6 +631,7 @@
         <div class="name">Austrian Football League</div>
       </div>
     </div>
+    <div class="lang-switch" id="lang-switch"><button type="button" data-lang="de">DE</button><span>|</span><button type="button" data-lang="en">EN</button></div>
     <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
     <nav class="tabs" id="tabs">
       <div class="nav-dropdown" id="dd-bowl">
@@ -885,6 +898,127 @@
 
 <script>
 (async function () {
+  // =====================================================================
+  // Sprache: Deutsch, wenn die bevorzugte Browsersprache Deutsch ist, sonst Englisch.
+  // Der Umschalter DE | EN im Kopfbereich überschreibt das und wird im Browser gespeichert.
+  // =====================================================================
+  const LANG = (() => {
+    try { const v = localStorage.getItem("afl-lang"); if (v === "de" || v === "en") return v; } catch (e) { /* ignorieren */ }
+    const first = (navigator.languages && navigator.languages[0]) || navigator.language || "de";
+    return /^de\b/i.test(first) ? "de" : "en";
+  })();
+  document.documentElement.lang = LANG;
+  const EN_MODE = LANG === "en";
+  const LOC = EN_MODE ? "en-GB" : "de-AT";
+  const tf = (de, en) => (EN_MODE ? en : de);
+  const dec = (v, d = 1) => { const x = Number(v).toFixed(d); return EN_MODE ? x : x.replace(".", ","); };
+
+  // Übersetzungen: exakte Texte (Deutsch → Englisch). Neue Texte hier ergänzen.
+  const EN = {
+    "Austrian Bowl · Programm": "Austrian Bowl · Program", "Programm": "Program", "Saison": "Season", "Tabelle": "Standings",
+    "Spielplan": "Schedule", "Mannschaft": "Teams", "Spieler": "Players", "Liga": "League", "Organisation": "Organization",
+    "Modus": "Format", "Alle Teams": "All teams", "Alle Positionen": "All positions", "Alle Lizenzarten": "All license types",
+    "Geburtsdatum": "Date of birth", "Nationalität": "Nationality", "Lizenz": "License", "Lizenzart": "License type",
+    "Trainerstab": "Coaching staff", "Funktion": "Role", "Ganze Saison": "Full season", "Grunddurchgang": "Regular season",
+    "Spielerstatistiken": "Player statistics", "Teamstatistiken": "Team statistics", "Weitere anzeigen": "Show more",
+    "Finale": "Final", "Öst. Meister": "Austrian champion", "Schließen": "Close", "Total": "Total",
+    "Homegrown": "Homegrown", "A-Klasse": "A class", "E-Klasse": "E class", "OE-Klasse": "OE class",
+    "Coach": "Coach", "Betreuer": "Team staff", "Manager": "Manager", "Athletiktrainer": "Strength coach",
+    "Physiotherapeut": "Physiotherapist", "Teamarzt": "Team doctor", "Teamdelegierter": "Team delegate",
+    "Keine Spieler gefunden.": "No players found.", "Keine Spieler im Kader.": "No players on the roster.",
+    "Kein Trainerstab hinterlegt.": "No coaching staff listed.", "Noch keine Spiele gewertet.": "No games played yet.",
+    "Grunddurchgang · Siege – Niederlagen": "Regular season · Wins – Losses", "Demo-Tabelle": "Demo standings",
+    "Demo-Daten": "Demo data", "Noch keine Statistiken verfügbar.": "No statistics available yet.",
+    "Berechnet aus den Spielprotokollen und Box Scores der Saison – keine offizielle Clubee-Kategorie.":
+      "Calculated from the season's play-by-play logs and box scores – not an official Clubee category.",
+    "Die Liste wird laufend um frühere Saisons ergänzt.": "Earlier seasons are being added continuously.",
+    "Die Auszeichnungen des AFBÖ für die Regular Season. Spieler der aktuellen Saison sind anklickbar und öffnen ihre Statistiken.":
+      "The AFBÖ awards for the regular season. Players from the current season are clickable and open their statistics.",
+    "Alle Austrian-Bowl-Sieger seit 1984. In Klammern die Anzahl der Austrian-Bowl-Titel des Vereins bis zu diesem Jahr.":
+      "All Austrian Bowl winners since 1984. In brackets: the club's number of Austrian Bowl titles up to that year.",
+    "Keine Austrian Bowl (Covid-19): Best-of-five-Finalserie, 31:19, 45:13, 46:29.":
+      "No Austrian Bowl (COVID-19): best-of-five final series, 31:19, 45:13, 46:29.",
+    "Austrian Bowl (27:17 für die Vikings) nachträglich annulliert.": "Austrian Bowl (27:17 for the Vikings) annulled retroactively.",
+    "Termin offen": "TBD", "abgesagt": "cancelled", "Keine Spiele gefunden.": "No games found.",
+    "Viertelfinale": "Quarterfinals", "Halbfinale": "Semifinals",
+    "Für diese Saison sind noch keine Playoff-Spiele erfasst.": "No playoff games recorded for this season yet.",
+    "Offizielle Website ↗": "Official website ↗", "Noch keine Spielerstatistiken für dieses Team.": "No player statistics for this team yet.",
+    "Ligaschnitt": "League average", "Noch keine Teamstatistiken für dieses Team.": "No team statistics for this team yet.",
+    "Tickets kaufen ↗": "Buy tickets ↗", "Der Vorverkauf startet in Kürze.": "Ticket sales start soon.",
+    "Tickets für das Finale der Austrian Football League gibt es im offiziellen Vorverkauf.":
+      "Tickets for the final of the Austrian Football League are available through the official ticket sale.",
+    "In Google Maps öffnen ↗": "Open in Google Maps ↗", "Folge der AFL auf Instagram": "Follow the AFL on Instagram",
+    "Auf Instagram ansehen ↗": "View on Instagram ↗", "Platzhalter.": "Placeholder.",
+    "Hier folgen künftig Ansprechpartner, Vorstand und Kontaktinformationen des Ligamanagements.":
+      "Contacts, board members and contact details of the league management will follow here.",
+    "Details zu Playoff-Format und Auf-/Abstiegsregeln folgen, sobald final beschlossen.":
+      "Details on the playoff format and promotion/relegation rules will follow once finalised.",
+    "Die AFL wird vom AFBÖ (Österreichischer American-Football-Bund) als Dachverband organisiert, zu dem neben der AFL auch die Division 1 bis 3 gehören.":
+      "The AFL is organised by the AFBÖ (Austrian American Football Federation) as the governing body, which also runs Divisions 1 to 3.",
+    "Die AFL 2027 spielt mit 6 Teams im doppelten Round Robin (jeder gegen jeden zweimal) — 10 Spiele pro Team im Grunddurchgang, anschließend Playoffs um den Austrian Bowl.":
+      "The 2027 AFL season features 6 teams in a double round robin (everyone plays everyone twice) — 10 regular-season games per team, followed by the playoffs for the Austrian Bowl.",
+    // Spaltenköpfe der berechneten Kategorien
+    "SP": "GP", "FGV": "FGA", "GEBL": "BLK", "AUS": "OOB", "PKT": "PTS",
+    // Tooltips
+    "Zur Startseite": "Home", "Spieler suchen…": "Search players…", "Menü öffnen": "Open menu",
+    "Spiele mit Kick": "Games with a kick", "Field Goals verwandelt": "Field goals made", "Field-Goal-Versuche": "Field goal attempts",
+    "Field-Goal-Quote": "Field goal percentage", "Längstes Field Goal (Yards, berechnet)": "Longest field goal (yards, calculated)",
+    "Extra Points verwandelt": "Extra points made", "Extra Points verschossen": "Extra points missed", "Extra-Point-Quote": "Extra point percentage",
+    "Punkte durch Kicks (FG × 3 + XP)": "Points from kicks (FG × 3 + XP)", "Spiele mit Punt": "Games with a punt", "Punts": "Punts",
+    "Geblockt": "Blocked", "Ins Aus": "Out of bounds", "Mit Return": "Returned", "Fair Catch": "Fair catch", "Touchback": "Touchback",
+    "Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang (inkl. noch offener Spiele), auf Basis der aktuellen Tabelle":
+      "Strength of schedule: combined winning percentage of all regular-season opponents (including remaining games), based on the current standings"
+  };
+  // Übersetzungen mit Platzhaltern (für Texte mit Zahlen/Namen)
+  const EN_RULES = [
+    [/^Finalserie: (.+) gegen (.+)$/, "Final series: $1 vs. $2"],
+    [/^(.+) gegen (.+)$/, "$1 vs. $2"],
+    [/^(\d+) von (\d+) Spielern$/, "$1 of $2 players"],
+    [/^(.*?)(\d+) Spieler im Kader$/, "$1$2 players on the roster"],
+    [/^(\S+) Tabelle$/, "$1 standings"],
+    [/^Saison (.+)$/, "Season $1"],
+    [/^Spieltag (\d+)$/, "Week $1"],
+    [/^Bilanz (\S+) · Platz (\d+)(.*)$/, "Record $1 · Rank $2$3"],
+    [/^Austrian-Bowl-Titel gesamt: (.+)$/, "Austrian Bowl titles: $1"],
+    [/^Termin wird bekanntgegeben(.*)$/, "Date to be announced$1"],
+    [/^Das Programm für den Finaltag wird rechtzeitig vor der Austrian Bowl (\S+) veröffentlicht\.$/, "The programme for the final will be published ahead of Austrian Bowl $1."],
+    [/^Der Austragungsort der Austrian Bowl (\S+) wird bekanntgegeben\.$/, "The venue for Austrian Bowl $1 will be announced."],
+    [/^Zuletzt: (.+)$/, "Last held: $1"],
+    [/^(.+) · Trikot #(\d+)$/, "$1 · Jersey #$2"]
+  ];
+  function trText(raw) {
+    const key = raw.replace(/\s+/g, " ").trim();
+    if (!key) return null;
+    if (Object.prototype.hasOwnProperty.call(EN, key)) return EN[key];
+    for (const [re, out] of EN_RULES) if (re.test(key)) return key.replace(re, out);
+    return null;
+  }
+  function translateTree(root) {
+    if (!root) return;
+    if (root.nodeType === 3) {
+      const t = trText(root.nodeValue);
+      if (t !== null) root.nodeValue = root.nodeValue.replace(root.nodeValue.trim(), t);
+      return;
+    }
+    if (root.nodeType !== 1 || root.tagName === "SCRIPT" || root.tagName === "STYLE") return;
+    for (const attr of ["title", "placeholder", "aria-label"]) {
+      if (root.hasAttribute && root.hasAttribute(attr)) { const t = trText(root.getAttribute(attr)); if (t !== null) root.setAttribute(attr, t); }
+    }
+    for (const c of [...root.childNodes]) translateTree(c);
+  }
+  if (EN_MODE) {
+    translateTree(document.body);
+    new MutationObserver(list => list.forEach(m => m.addedNodes.forEach(translateTree)))
+      .observe(document.body, { childList: true, subtree: true });
+  }
+  // Sprachumschalter
+  document.querySelectorAll("#lang-switch button").forEach(b => {
+    b.classList.toggle("active", b.dataset.lang === LANG);
+    b.addEventListener("click", () => {
+      try { localStorage.setItem("afl-lang", b.dataset.lang); } catch (e) { /* ignorieren */ }
+      location.reload();
+    });
+  });
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
   const LICENSES = ["Homegrown","A-Klasse","E-Klasse"];
   // Optional: eigene, hochauflösende Logo-Dateien je Team (Clubee-Team-ID → Pfad oder URL),
@@ -904,7 +1038,7 @@
   function fmtDate(iso) {
     if (!iso) return "—";
     const [y, m, d] = iso.split("-");
-    return `${d}.${m}.${y}`;
+    return EN_MODE ? `${d}/${m}/${y}` : `${d}.${m}.${y}`;
   }
   function initials(f, l) { return ((f || "?")[0] + (l || "?")[0]).toUpperCase(); }
 
@@ -1011,8 +1145,8 @@
       case "team": return teamName(p.team).toLowerCase();
       case "position": return p.position;
       case "birth": {
-        if (!/^\d{2}\.\d{2}\.\d{4}$/.test(p.birth)) return 0;
-        const [d, m, y] = p.birth.split(".").map(Number);
+        if (!/^\d{2}[./]\d{2}[./]\d{4}$/.test(p.birth)) return 0;
+        const [d, m, y] = p.birth.split(/[./]/).map(Number);
         return y * 10000 + m * 100 + d;
       }
       case "nationality": return p.nationality;
@@ -1173,21 +1307,21 @@
     // Tabelle-Seite: ausführlich
     document.getElementById("tbl-intro").textContent = live ? "Grunddurchgang" : "Demo-Tabelle";
     document.getElementById("standings-head").innerHTML =
-      `<tr><th></th><th>Team</th><th>S</th><th>N</th>${rows.some(r => r.t) ? "<th>U</th>" : ""}<th>Sp.</th><th>Pct.</th><th>Diff.</th><th>PF</th><th>PA</th><th>Serie</th><th title="Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang (inkl. noch offener Spiele), auf Basis der aktuellen Tabelle">SOS</th></tr>`;
+      `<tr><th></th><th>Team</th><th>${tf("S", "W")}</th><th>${tf("N", "L")}</th>${rows.some(r => r.t) ? `<th>${tf("U", "T")}</th>` : ""}<th>${tf("Sp.", "GP")}</th><th>Pct.</th><th>Diff.</th><th>PF</th><th>PA</th><th>${tf("Serie", "Strk")}</th><th title="Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang (inkl. noch offener Spiele), auf Basis der aktuellen Tabelle">SOS</th></tr>`;
     const sos = sosMap();
     const showT = rows.some(r => r.t);
     document.getElementById("standings-body").innerHTML = rows.map((r, i) => {
       const { team, color } = teamStyle(r.team_id);
       const g = r.w + r.l + (r.t || 0);
-      const pct = g ? ((r.w + (r.t || 0) / 2) / g).toFixed(3).replace(".", ",") : "0,000";
+      const pct = dec(g ? (r.w + (r.t || 0) / 2) / g : 0, 3);
       const diff = (r.pf || 0) - (r.pa || 0);
       const mark = team.logo ? `<img src="${esc(team.logo)}" alt="">` : `<span class="dot" style="background:${color}"></span>`;
       return `<tr>
         <td class="rank">${i + 1}</td>
         <td class="team"><span class="tl" data-team="${esc(r.team_id)}">${mark}${esc(team.name)}</span></td>
         <td>${r.w}</td><td>${r.l}</td>${showT ? `<td>${r.t || 0}</td>` : ""}<td>${g}</td><td>${pct}</td>
-        <td>${diff > 0 ? "+" : ""}${diff}</td><td>${r.pf ?? "–"}</td><td>${r.pa ?? "–"}</td><td>${esc(r.streak || "–")}</td>
-        <td>${sos[r.team_id] === null || sos[r.team_id] === undefined ? "–" : sos[r.team_id].toFixed(3).replace(".", ",")}</td>
+        <td>${diff > 0 ? "+" : ""}${diff}</td><td>${r.pf ?? "–"}</td><td>${r.pa ?? "–"}</td><td>${esc(r.streak ? (EN_MODE ? r.streak.replace(/S$/, "W").replace(/N$/, "L").replace(/U$/, "T") : r.streak) : "–")}</td>
+        <td>${sos[r.team_id] === null || sos[r.team_id] === undefined ? "–" : dec(sos[r.team_id], 3)}</td>
       </tr>`;
     }).join("");
   }
@@ -1216,7 +1350,7 @@
   }
   function fmtStat(v) {
     if (v === null || v === undefined) return "–";
-    return Number.isInteger(v) ? String(v) : v.toFixed(1).replace(".", ",");
+    return Number.isInteger(v) ? String(v) : dec(v, 1);
   }
   function teamMark(teamId) {
     const { team, color } = teamStyle(idStr(teamId));
@@ -1576,7 +1710,7 @@
   };
   // Letzte Austrian Bowl (Banner auf der Startseite)
   const LAST_BOWL = {
-    edition: "XLI", season: "2026", date: "25. Juli 2026", venue: "Datenpol Arena, Maria Enzersdorf",
+    edition: "XLI", season: "2026", date: "25. Juli 2026", date_en: "25 July 2026", venue: "Datenpol Arena, Maria Enzersdorf",
     home: { id: "354986", name: "Graz Giants", score: 16 },
     away: { id: "355142", name: "Danube Dragons", score: 14 }
   };
@@ -1584,6 +1718,7 @@
   const AUSTRIAN_BOWL = {
     edition: "XLII", year: "2027",
     date: "",        // z. B. "Samstag, 24. Juli 2027"
+    date_en: "",     // z. B. "Saturday, 24 July 2027"
     venue: "",       // z. B. "Datenpol Arena"
     address: "",     // z. B. "Johann-Steinböck-Straße 3, 2344 Maria Enzersdorf"
     ticketsUrl: "https://www.oeticket.com/artist/austrian-bowl/",
@@ -1692,8 +1827,8 @@
     if (!iso) return { d: "Termin offen", t: "" };
     const dt = new Date(iso);
     if (isNaN(dt)) return { d: String(iso), t: "" };
-    const t = dt.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
-    return { d: dt.toLocaleDateString("de-AT", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }), t: t === "00:00" ? "" : t };
+    const t = dt.toLocaleTimeString(LOC, { hour: "2-digit", minute: "2-digit" });
+    return { d: dt.toLocaleDateString(LOC, { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }), t: t === "00:00" ? "" : t };
   }
   function teamRef(id, fallbackName) {
     const t = teams.find(x => x.id === idStr(id)) || teams.find(x => x.name === fallbackName);
@@ -1902,7 +2037,7 @@
     const h = side(LAST_BOWL.home), a = side(LAST_BOWL.away);
     const champ = LAST_BOWL.home.score > LAST_BOWL.away.score ? h.r : a.r;
     document.getElementById("bowl-banner").innerHTML = `<div class="bb-inner">
-      <div class="bb-kicker">Austrian Bowl ${esc(LAST_BOWL.edition)} · ${esc(LAST_BOWL.date)} · ${esc(LAST_BOWL.venue)}</div>
+      <div class="bb-kicker">Austrian Bowl ${esc(LAST_BOWL.edition)} · ${esc(tf(LAST_BOWL.date, LAST_BOWL.date_en || LAST_BOWL.date))} · ${esc(LAST_BOWL.venue)}</div>
       <div class="bb-match">${h.html}<div class="bb-score">${LAST_BOWL.home.score}<span>:</span>${LAST_BOWL.away.score}</div>${a.html}</div>
       <div class="bb-champ">🏆 Champion ${esc(LAST_BOWL.season)}: ${esc(champ.name)}</div>
     </div>`;
@@ -1968,7 +2103,7 @@
   function renderBowlPages() {
     const B = AUSTRIAN_BOWL;
     const head = `<h2>Austrian Bowl ${esc(B.edition)}${B.year ? ` · ${esc(B.year)}` : ""}</h2>
-      <p class="ic-meta">${B.date ? esc(B.date) : "Termin wird bekanntgegeben"}${B.venue ? ` · ${esc(B.venue)}` : ""}</p>`;
+      <p class="ic-meta">${B.date ? esc(tf(B.date, B.date_en || B.date)) : "Termin wird bekanntgegeben"}${B.venue ? ` · ${esc(B.venue)}` : ""}</p>`;
     document.getElementById("bowl-tickets").innerHTML = head + `
       <p>Tickets für das Finale der Austrian Football League gibt es im offiziellen Vorverkauf.</p>
       ${B.ticketsUrl ? `<a class="btn-primary" href="${esc(B.ticketsUrl)}" target="_blank" rel="noopener noreferrer">Tickets kaufen ↗</a>` : "<p>Der Vorverkauf startet in Kürze.</p>"}`;

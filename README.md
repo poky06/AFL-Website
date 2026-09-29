@@ -38,6 +38,18 @@ kommen automatisch aus den Clubee-Daten.
 (gespielte und noch offene Spiele, jede Begegnung zählt einzeln) auf Basis der aktuellen Tabelle.
 Die Berechnung läuft im Browser und ändert sich mit jedem Sync automatisch mit.
 
+## Sprachen (Deutsch / Englisch)
+
+Die Seite erscheint auf **Deutsch**, wenn die bevorzugte Sprache des Browsers Deutsch ist, sonst auf **Englisch**.
+Über den Umschalter **DE | EN** oben rechts kann man wechseln; die Wahl merkt sich der Browser.
+
+Alle Übersetzungen stehen ganz oben im Skriptteil von `index.html`:
+- `EN` – feste Texte (Deutsch → Englisch)
+- `EN_RULES` – Texte mit Zahlen oder Namen (z. B. „12 von 50 Spielern“)
+
+Kommt ein neuer deutscher Text auf die Seite, dort die englische Fassung ergänzen – sonst erscheint er in der
+englischen Version auf Deutsch. Spieler- und Teamnamen sowie die Statistik-Kategorien aus Clubee werden nicht übersetzt.
+
 ## Einrichtung (einmalig)
 
 1. **Repository anlegen** auf github.com (z. B. `afboe/afl-website`) und alle Dateien dieses
