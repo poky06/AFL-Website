@@ -1,0 +1,143 @@
+{
+ "source": "Hockeydata (AFBÖ-Datenexport, Stand 31.12.2025)",
+ "seasons": [
+  {
+   "name": "2025",
+   "file": "data/archive/season-2025.json",
+   "games": 33
+  },
+  {
+   "name": "2024",
+   "file": "data/archive/season-2024.json",
+   "games": 43
+  },
+  {
+   "name": "2023",
+   "file": "data/archive/season-2023.json",
+   "games": 51
+  },
+  {
+   "name": "2022",
+   "file": "data/archive/season-2022.json",
+   "games": 54
+  },
+  {
+   "name": "2021",
+   "file": "data/archive/season-2021.json",
+   "games": 27
+  },
+  {
+   "name": "2020",
+   "file": "data/archive/season-2020.json",
+   "games": 3
+  },
+  {
+   "name": "2019",
+   "file": "data/archive/season-2019.json",
+   "games": 45
+  },
+  {
+   "name": "2018",
+   "file": "data/archive/season-2018.json",
+   "games": 45
+  },
+  {
+   "name": "2017",
+   "file": "data/archive/season-2017.json",
+   "games": 45
+  },
+  {
+   "name": "2016",
+   "file": "data/archive/season-2016.json",
+   "games": 45
+  },
+  {
+   "name": "2015",
+   "file": "data/archive/season-2015.json",
+   "games": 23
+  },
+  {
+   "name": "2014",
+   "file": "data/archive/season-2014.json",
+   "games": 23
+  }
+ ],
+ "teams": {
+  "hd-1": {
+   "name": "Danube Dragons",
+   "club": "dragons",
+   "short": "Dragons"
+  },
+  "hd-2": {
+   "name": "Graz Giants",
+   "club": "giants",
+   "short": "Giants"
+  },
+  "hd-3": {
+   "name": "Prague Black Panthers",
+   "club": "panthers",
+   "short": "Black Panthers"
+  },
+  "hd-4": {
+   "name": "Vienna Vikings",
+   "club": "vikings",
+   "short": "Vikings"
+  },
+  "hd-5": {
+   "name": "Swarco Raiders Tirol",
+   "club": "raiders",
+   "short": "Raiders"
+  },
+  "hd-16": {
+   "name": "Cineplexx Blue Devils",
+   "club": null,
+   "short": "Blue Devils"
+  },
+  "hd-17": {
+   "name": "Ljubljana Silverhawks",
+   "club": null,
+   "short": "Silverhawks"
+  },
+  "hd-18": {
+   "name": "SonicWall Rangers Mödling",
+   "club": null,
+   "short": "Rangers"
+  },
+  "hd-24": {
+   "name": "Steelsharks Traun",
+   "club": null,
+   "short": "Steelsharks"
+  },
+  "hd-27": {
+   "name": "Bratislava Monarchs",
+   "club": null,
+   "short": "Monarchs"
+  },
+  "hd-29": {
+   "name": "Ultimate Amstetten Thunder",
+   "club": null,
+   "short": "Thunder"
+  },
+  "hd-40": {
+   "name": "Salzburg Ducks",
+   "club": "ducks",
+   "short": "Ducks"
+  },
+  "hd-42": {
+   "name": "Telfs Patriots",
+   "club": null,
+   "short": "Patriots"
+  },
+  "hd-54": {
+   "name": "Znojmo Knights",
+   "club": null,
+   "short": "Knights"
+  },
+  "hd-32": {
+   "name": "PROVENTOR Styrian Bears",
+   "club": null,
+   "short": "Bears"
+  }
+ },
+ "calc_note": "Werte mit dem Hinweis „berechnet“ sind in den Hockeydata-Ranglisten nicht enthalten und wurden aus den Spielprotokollen (EGREP-AF) berechnet."
+}
