@@ -350,17 +350,16 @@
   }
   .st-row:hover { filter: brightness(1.1); transform: translateX(3px); }
   .st-row:focus-visible { outline: 2px solid var(--turf-bright); outline-offset: 2px; }
-  .st-logo { position: relative; height: 100%; }
-  .st-logo img {
-    position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
-    height: 128%; width: auto; max-width: 130px; object-fit: contain;
-  }
-  .st-logo .ico { display: block; font-size: 30px; line-height: 62px; padding-left: 16px; }
+  .st-logo { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0 10px; overflow: hidden; }
+  .st-logo img { display: block; height: 46px; width: auto; max-width: 84px; object-fit: contain; }
+  .st-logo .ico { display: block; font-size: 30px; line-height: 62px; }
   .st-name { font-size: 26px; font-weight: 500; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .st-rec { font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
   @media (max-width: 560px) {
     .st-row { grid-template-columns: 78px 1fr 84px; height: 52px; }
-    .st-logo .ico { line-height: 52px; font-size: 24px; padding-left: 12px; }
+    .st-logo .ico { line-height: 52px; font-size: 24px; }
+    .st-logo { padding: 0 6px; }
+    .st-logo img { height: 36px; max-width: 58px; }
     .st-name, .st-rec { font-size: 20px; }
   }
 
