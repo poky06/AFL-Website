@@ -155,6 +155,25 @@ async function fetchStatCategory(cat, kind, seasonId = SEASON_ID) {
   return { id: cat.id, name: cat.name || `Kategorie ${cat.id}`, columns: columns.map(({ key, ...c }) => c), rows };
 }
 
+// Alle Spiele einer Saison holen. Ohne _date liefert Clubee nur Spiele ab heute –
+// deshalb ausdrücklich ab 2000 abfragen und bei vielen Spielen seitenweise nachladen.
+async function fetchScenes(seasonId) {
+  const limit = 200;
+  const byId = new Map();
+  let cursor = "2000-01-01T00:00:00Z";
+  for (let page = 0; page < 25; page++) {
+    const rows = await api(`/competitions/${COMPETITION_ID}/seasons/${seasonId}/scenes?_date=${encodeURIComponent(cursor)}&_limit=${limit}`);
+    const list = Array.isArray(rows) ? rows : (rows?.data || []);
+    let added = 0;
+    for (const g of list) if (g && g.id != null && !byId.has(g.id)) { byId.set(g.id, g); added++; }
+    if (list.length < limit || added === 0) break;
+    const last = list.map(g => g.start_date).filter(Boolean).sort().pop();
+    if (!last || last === cursor) break;
+    cursor = last;
+  }
+  return [...byId.values()];
+}
+
 async function fetchMembers(groupId) {
   const members = [];
   const limit = 100;
@@ -174,7 +193,7 @@ async function fetchMembers(groupId) {
   // Punt-Weiten werden nicht erfasst und deshalb nicht berechnet.
 async function computeKickingPunting(seasonId) {
   try {
-    const scenes = await api(`/competitions/${COMPETITION_ID}/seasons/${seasonId}/scenes?_limit=1000`);
+    const scenes = await fetchScenes(seasonId);
     const kick = new Map();   // user_id -> Kicker-Werte
     const punt = new Map();   // user_id -> Punter-Werte
     const typeOf = x => String(x?.scene_action_type?.translate || "").trim().toLowerCase();
@@ -466,7 +485,7 @@ async function main() {
   // Bilanz (Siege/Niederlagen) aus den gespielten Spielen des Grunddurchgangs
   let records = null;
   try {
-    const scenes = await api(`/competitions/${COMPETITION_ID}/seasons/${SEASON_ID}/scenes?_limit=1000`);
+    const scenes = await fetchScenes(SEASON_ID);
     const rec = new Map(outTeams.map(t => [t.id, { team_id: t.id, w: 0, l: 0, t: 0, pf: 0, pa: 0 }]));
     const results = new Map(outTeams.map(t => [t.id, []])); // für die aktuelle Serie
     const games = [...(scenes || [])].sort((x, y) => String(x.start_date).localeCompare(String(y.start_date)));
@@ -499,7 +518,7 @@ async function main() {
   // Annahme: team1 = Heimteam, team2 = Gastteam (so wie Clubee Spiele anzeigt)
   let games = [];
   try {
-    const scenes = await api(`/competitions/${COMPETITION_ID}/seasons/${SEASON_ID}/scenes?_limit=1000`);
+    const scenes = await fetchScenes(SEASON_ID);
     const num = v => (v === null || v === undefined || v === "" || !Number.isFinite(Number(v))) ? null : Number(v);
     games = (scenes || []).map(g => ({
       id: g.id,
