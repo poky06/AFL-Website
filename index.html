@@ -1307,7 +1307,7 @@
     // Tabelle-Seite: ausführlich
     document.getElementById("tbl-intro").textContent = live ? "Grunddurchgang" : "Demo-Tabelle";
     document.getElementById("standings-head").innerHTML =
-      `<tr><th></th><th>Team</th><th>${tf("S", "W")}</th><th>${tf("N", "L")}</th>${rows.some(r => r.t) ? `<th>${tf("U", "T")}</th>` : ""}<th>${tf("Sp.", "GP")}</th><th>Pct.</th><th>Diff.</th><th>PF</th><th>PA</th><th>${tf("Serie", "Strk")}</th><th title="Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang (inkl. noch offener Spiele), auf Basis der aktuellen Tabelle">SOS</th></tr>`;
+      `<tr><th></th><th>Team</th><th>W</th><th>L</th>${rows.some(r => r.t) ? `<th>T</th>` : ""}<th>${tf("Sp.", "GP")}</th><th>Pct.</th><th>Diff.</th><th>PF</th><th>PA</th><th>${tf("Serie", "Strk")}</th><th title="Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang (inkl. noch offener Spiele), auf Basis der aktuellen Tabelle">SOS</th></tr>`;
     const sos = sosMap();
     const showT = rows.some(r => r.t);
     document.getElementById("standings-body").innerHTML = rows.map((r, i) => {
@@ -1320,7 +1320,7 @@
         <td class="rank">${i + 1}</td>
         <td class="team"><span class="tl" data-team="${esc(r.team_id)}">${mark}${esc(team.name)}</span></td>
         <td>${r.w}</td><td>${r.l}</td>${showT ? `<td>${r.t || 0}</td>` : ""}<td>${g}</td><td>${pct}</td>
-        <td>${diff > 0 ? "+" : ""}${diff}</td><td>${r.pf ?? "–"}</td><td>${r.pa ?? "–"}</td><td>${esc(r.streak ? (EN_MODE ? r.streak.replace(/S$/, "W").replace(/N$/, "L").replace(/U$/, "T") : r.streak) : "–")}</td>
+        <td>${diff > 0 ? "+" : ""}${diff}</td><td>${r.pf ?? "–"}</td><td>${r.pa ?? "–"}</td><td>${esc(r.streak ? r.streak.replace(/S$/, "W").replace(/N$/, "L").replace(/U$/, "T") : "–")}</td>
         <td>${sos[r.team_id] === null || sos[r.team_id] === undefined ? "–" : dec(sos[r.team_id], 3)}</td>
       </tr>`;
     }).join("");
