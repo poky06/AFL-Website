@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-29T10:09:11.342Z",
+ "updated_at": "2026-09-29T13:22:31.905Z",
  "competition_id": 13931,
  "season": {
   "id": 217,
@@ -57,6 +57,450 @@
  ],
  "players": [
   {
+   "id": 977578,
+   "team_id": 354921,
+   "firstname": "Manuel",
+   "lastname": "Jovic",
+   "birthday": "1992-05-20",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/4315_b81c7418ed/Jovic-M-_Foto.JPG",
+   "jersey_number": null,
+   "positions": [],
+   "license": "Homegrown"
+  },
+  {
+   "id": 977714,
+   "team_id": 354921,
+   "firstname": "Michael",
+   "lastname": "Hantich",
+   "birthday": "1995-11-11",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/13338_cafb1941f1/FOTO_Hantich_Michael.jpg",
+   "jersey_number": 9,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 978040,
+   "team_id": 354921,
+   "firstname": "Fabian",
+   "lastname": "Matl",
+   "birthday": "2002-06-15",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/19421_d11fedaf74/Matl.jpg",
+   "jersey_number": 34,
+   "positions": [
+    "RB"
+   ],
+   "license": null
+  },
+  {
+   "id": 979084,
+   "team_id": 354921,
+   "firstname": "Sebastian",
+   "lastname": "POST",
+   "birthday": "1985-07-18",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/28415_30145a5cc1/Post.jpg",
+   "jersey_number": null,
+   "positions": [
+    "LB"
+   ],
+   "license": null
+  },
+  {
+   "id": 979154,
+   "team_id": 354921,
+   "firstname": "Sebastian",
+   "lastname": "Siller",
+   "birthday": "1999-07-29",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/28711_4450a3bf5f/Siller_Foto-jpg.jpg",
+   "jersey_number": 19,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 979288,
+   "team_id": 354921,
+   "firstname": "Moritz",
+   "lastname": "Mosshammer",
+   "birthday": "1994-05-26",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/29303_5faf752fc7/Mosshammer_Bild.jpg",
+   "jersey_number": 99,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 979393,
+   "team_id": 354921,
+   "firstname": "Marcel",
+   "lastname": "Jurak",
+   "birthday": "2004-02-09",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/29914_b3b4872f8d/Jurak.jpeg",
+   "jersey_number": 76,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 979942,
+   "team_id": 354921,
+   "firstname": "Kerim",
+   "lastname": "Özdemir",
+   "birthday": "2003-04-21",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/32041_03b0f77793/Foto.jpg",
+   "jersey_number": 97,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 980484,
+   "team_id": 354921,
+   "firstname": "Maximilian",
+   "lastname": "Reuter",
+   "birthday": "1992-05-25",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/33509_cd40df3517/foto.jpg",
+   "jersey_number": 47,
+   "positions": [
+    "TE",
+    "K",
+    "P"
+   ],
+   "license": null
+  },
+  {
+   "id": 980546,
+   "team_id": 354921,
+   "firstname": "Noah",
+   "lastname": "Steinbichler",
+   "birthday": "2006-05-14",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/269_ceb916c1f6/33609_0ee98bb5b7/foto_n.jpg",
+   "jersey_number": null,
+   "positions": [
+    "QB"
+   ],
+   "license": null
+  },
+  {
+   "id": 980907,
+   "team_id": 354921,
+   "firstname": "Tristan",
+   "lastname": "Sendele",
+   "birthday": "2007-06-08",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/34625_6cc35a23c4/fsendele.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981502,
+   "team_id": 354921,
+   "firstname": "Jamario",
+   "lastname": "Howard",
+   "birthday": "1995-12-12",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/36044_1ad89bb1ae/foto.jpg",
+   "jersey_number": 1,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 981859,
+   "team_id": 354921,
+   "firstname": "Camron",
+   "lastname": "Madden",
+   "birthday": "1994-07-25",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/36691_b889e3a7f4/Foto_Madden.jpg",
+   "jersey_number": 5,
+   "positions": [
+    "RB"
+   ],
+   "license": "Homegrown"
+  },
+  {
+   "id": 981900,
+   "team_id": 354921,
+   "firstname": "Moritz",
+   "lastname": "Renoth",
+   "birthday": "2007-05-26",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/36758_fa136a1487/Foto-Renoth.jpg",
+   "jersey_number": 2,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 982111,
+   "team_id": 354921,
+   "firstname": "Matthias",
+   "lastname": "Krasa",
+   "birthday": "1999-07-03",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/37074_c76fc4042b/Krasa_Passfoto.jpg",
+   "jersey_number": 73,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 982431,
+   "team_id": 354921,
+   "firstname": "Fabian",
+   "lastname": "Landertinger",
+   "birthday": "1999-07-05",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/37533_dcab7895d7/Foto_Landertinger.JPG",
+   "jersey_number": 24,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 982770,
+   "team_id": 354921,
+   "firstname": "Karlo",
+   "lastname": "KELAVA",
+   "birthday": "1999-09-13",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/37969_3c2b0b2430/Kelava_Passfoto.JPG",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983083,
+   "team_id": 354921,
+   "firstname": "Roman",
+   "lastname": "Sendele",
+   "birthday": "1982-12-16",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/38360_022190c7dd/Foto_sendele.jpg",
+   "jersey_number": 40,
+   "positions": [
+    "DE"
+   ],
+   "license": null
+  },
+  {
+   "id": 983330,
+   "team_id": 354921,
+   "firstname": "Finn-Luca",
+   "lastname": "Engelkes",
+   "birthday": "2007-07-04",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/38663_91834a6944/Engelkes-Foto.jpg",
+   "jersey_number": 11,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 983583,
+   "team_id": 354921,
+   "firstname": "Tom",
+   "lastname": "Schmid",
+   "birthday": "2005-10-18",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/38957_44952a4816/IMG_536EFD1C9A30-1.jpg",
+   "jersey_number": 33,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 983728,
+   "team_id": 354921,
+   "firstname": "Viktor",
+   "lastname": "Lazić",
+   "birthday": "2001-06-30",
+   "nationality": "BIH",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39143_ce181ad3eb/Foto-Lazic.JPG",
+   "jersey_number": 21,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 983729,
+   "team_id": 354921,
+   "firstname": "Simon",
+   "lastname": "Paech",
+   "birthday": "1999-04-02",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39144_9069d3fd91/Paech_Foto.JPG",
+   "jersey_number": 73,
+   "positions": [
+    "OL"
+   ],
+   "license": null
+  },
+  {
+   "id": 983730,
+   "team_id": 354921,
+   "firstname": "Pavo",
+   "lastname": "Lukač",
+   "birthday": "2001-06-05",
+   "nationality": "CRO",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39145_9f7637fb80/Lukac-_Foto.JPG",
+   "jersey_number": 3,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 983824,
+   "team_id": 354921,
+   "firstname": "Michael",
+   "lastname": "Hartig",
+   "birthday": "1989-10-10",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39262_eedbeff005/Hartig_Foto.jpg",
+   "jersey_number": 26,
+   "positions": [
+    "DB"
+   ],
+   "license": "Homegrown"
+  },
+  {
+   "id": 983929,
+   "team_id": 354921,
+   "firstname": "Gernot",
+   "lastname": "Schmidt",
+   "birthday": "1997-10-25",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/321_4a3abd1856/39386_07a6620704/035A0129.jpg",
+   "jersey_number": null,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 983955,
+   "team_id": 354921,
+   "firstname": "Christian",
+   "lastname": "GOLLAN",
+   "birthday": "1995-05-15",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39419_847173577c/Gollan_Foto.jpg",
+   "jersey_number": null,
+   "positions": [
+    "DE"
+   ],
+   "license": null
+  },
+  {
+   "id": 984196,
+   "team_id": 354921,
+   "firstname": "Florian",
+   "lastname": "Oberascher",
+   "birthday": "2006-10-23",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39703_3bdc2fd129/foto.jpg",
+   "jersey_number": 16,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 984281,
+   "team_id": 354921,
+   "firstname": "Dominik",
+   "lastname": "Freundlinger",
+   "birthday": "2006-02-20",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/39796_16793cbd53/Passfoto-Freundlinger-Dominik.jpg",
+   "jersey_number": 8,
+   "positions": [
+    "LB"
+   ],
+   "license": null
+  },
+  {
+   "id": 984818,
+   "team_id": 354921,
+   "firstname": "Felix",
+   "lastname": "Troger",
+   "birthday": "2007-07-30",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/40408_b5b7ac11c9/Troger_Foto.jpg",
+   "jersey_number": 58,
+   "positions": [
+    "OL"
+   ],
+   "license": null
+  },
+  {
+   "id": 984951,
+   "team_id": 354921,
+   "firstname": "Carlo",
+   "lastname": "Mosel",
+   "birthday": "1999-11-06",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/40553_8ef5892a28/passportpic.jpg",
+   "jersey_number": null,
+   "positions": [
+    "WR"
+   ],
+   "license": "Homegrown"
+  },
+  {
+   "id": 985040,
+   "team_id": 354921,
+   "firstname": "Florian",
+   "lastname": "Eder",
+   "birthday": "2006-05-17",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/40660_7ba4b27c38/Eder_Foto.jpg",
+   "jersey_number": 14,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 985681,
+   "team_id": 354921,
+   "firstname": "Jonathan",
+   "lastname": "Ober",
+   "birthday": "1998-03-10",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/41420_7e31fddfa3/Ober_Foto-jpg.jpg",
+   "jersey_number": null,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
    "id": 986308,
    "team_id": 354921,
    "firstname": "Florian",
@@ -87,6 +531,287 @@
    "license": null
   },
   {
+   "id": 986467,
+   "team_id": 354921,
+   "firstname": "Kilian",
+   "lastname": "Obersteiner",
+   "birthday": "2006-09-25",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42311_2070ba551c/Obersteiner_Foto.jpg",
+   "jersey_number": 82,
+   "positions": [
+    "TE"
+   ],
+   "license": null
+  },
+  {
+   "id": 986469,
+   "team_id": 354921,
+   "firstname": "Francis",
+   "lastname": "Crocker",
+   "birthday": "2006-10-11",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42313_4c22f5df34/Crocker_Foto.JPG",
+   "jersey_number": 32,
+   "positions": [
+    "RB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986536,
+   "team_id": 354921,
+   "firstname": "Tobias",
+   "lastname": "Trenker",
+   "birthday": "2002-08-10",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42392_cf826d23e8/Trenker_Foto.jpg",
+   "jersey_number": 15,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986537,
+   "team_id": 354921,
+   "firstname": "Malachi",
+   "lastname": "Chapman",
+   "birthday": "2001-09-14",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42393_df77c4b556/Chapman_Foto.jpg",
+   "jersey_number": 23,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 986538,
+   "team_id": 354921,
+   "firstname": "Stefan",
+   "lastname": "Schmiedbauer",
+   "birthday": "2000-07-26",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42394_ca32a148f6/Schmiedbauer_Foto.jpg",
+   "jersey_number": null,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 986637,
+   "team_id": 354921,
+   "firstname": "Tamás",
+   "lastname": "Fábián",
+   "birthday": "1995-07-16",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42527_1a1a504a80/Fabian_T_Foto.jpg",
+   "jersey_number": 27,
+   "positions": [
+    "DE"
+   ],
+   "license": null
+  },
+  {
+   "id": 986638,
+   "team_id": 354921,
+   "firstname": "Peter",
+   "lastname": "Fábián",
+   "birthday": "1995-07-16",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42528_a79b23d7e7/Fabian_P_Bild.jpg",
+   "jersey_number": 28,
+   "positions": [
+    "DE"
+   ],
+   "license": null
+  },
+  {
+   "id": 986639,
+   "team_id": 354921,
+   "firstname": "Joel",
+   "lastname": "Hermann",
+   "birthday": "1997-05-20",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42529_64f61fc0a5/Hermann_Foto.jpg",
+   "jersey_number": 83,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 986686,
+   "team_id": 354921,
+   "firstname": "Jonathan",
+   "lastname": "Struger",
+   "birthday": "2005-02-12",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42582_1afe7f4468/Struger_Foto.jpg",
+   "jersey_number": 31,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986690,
+   "team_id": 354921,
+   "firstname": "Christoph",
+   "lastname": "Asenkerschbaumer",
+   "birthday": "1997-10-23",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42586_0dc5d62c61/Asenkerschbaumer_Foto.jpg",
+   "jersey_number": 90,
+   "positions": [
+    "DE"
+   ],
+   "license": "Homegrown"
+  },
+  {
+   "id": 986692,
+   "team_id": 354921,
+   "firstname": "Gavin",
+   "lastname": "Sukup",
+   "birthday": "2003-09-05",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42588_601e83c1f5/Sukup_Foto.JPG",
+   "jersey_number": 4,
+   "positions": [
+    "QB"
+   ],
+   "license": "A-Klasse"
+  },
+  {
+   "id": 986693,
+   "team_id": 354921,
+   "firstname": "Rasmus",
+   "lastname": "Hagberg",
+   "birthday": "2004-08-27",
+   "nationality": "SWE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42589_a982dc56de/Hagberg_Foto.JPG",
+   "jersey_number": 65,
+   "positions": [
+    "C"
+   ],
+   "license": "E-Klasse"
+  },
+  {
+   "id": 986704,
+   "team_id": 354921,
+   "firstname": "Muhammed",
+   "lastname": "Gün",
+   "birthday": "2005-03-11",
+   "nationality": "TUR",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42601_5eda5f864d/Gun_Foto.JPG",
+   "jersey_number": null,
+   "positions": [
+    "RB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986705,
+   "team_id": 354921,
+   "firstname": "Alexander",
+   "lastname": "Herring",
+   "birthday": "1995-09-10",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42602_b80f4e8192/Herring_Foto.jpg",
+   "jersey_number": 13,
+   "positions": [
+    "DE",
+    "LB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986740,
+   "team_id": 354921,
+   "firstname": "Cedric",
+   "lastname": "Sporn",
+   "birthday": "2004-04-14",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42639_d76864e719/Sporn_Foto.jpg",
+   "jersey_number": 17,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
+   "id": 986741,
+   "team_id": 354921,
+   "firstname": "Lennard",
+   "lastname": "Zoglmann",
+   "birthday": "1995-04-16",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42640_c02879fd27/Zoglmann_Foto.JPG",
+   "jersey_number": 25,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986742,
+   "team_id": 354921,
+   "firstname": "Felix",
+   "lastname": "Löcker",
+   "birthday": "2003-01-03",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42641_a2ff95bcc2/Locker_Foto.jpg",
+   "jersey_number": 66,
+   "positions": [
+    "OL"
+   ],
+   "license": null
+  },
+  {
+   "id": 986802,
+   "team_id": 354921,
+   "firstname": "Alexander",
+   "lastname": "Hasselberger",
+   "birthday": "1992-10-06",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/42704_a0011ab4d6/Hasselberger_Foto.jpg",
+   "jersey_number": 44,
+   "positions": [
+    "LB"
+   ],
+   "license": null
+  },
+  {
+   "id": 986812,
+   "team_id": 354921,
+   "firstname": "Quirin",
+   "lastname": "Obermayer",
+   "birthday": "2003-08-10",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/321_4a3abd1856/42714_52f051a73d/Quirin.jpg",
+   "jersey_number": 18,
+   "positions": [
+    "DB"
+   ],
+   "license": "Homegrown"
+  },
+  {
+   "id": 988061,
+   "team_id": 354921,
+   "firstname": "Christoph",
+   "lastname": "Mühlbacher",
+   "birthday": null,
+   "nationality": "GER",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988061/69b6e6b344a4b_roster.png",
+   "jersey_number": 20,
+   "positions": [
+    "DB"
+   ],
+   "license": null
+  },
+  {
    "id": 988062,
    "team_id": 354921,
    "firstname": "Andre",
@@ -99,6 +824,76 @@
     "LB"
    ],
    "license": "A-Klasse"
+  },
+  {
+   "id": 988124,
+   "team_id": 354921,
+   "firstname": "Alexander",
+   "lastname": "Hijawi",
+   "birthday": "2005-07-14",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988124/69b70c9ac4801_roster.png",
+   "jersey_number": 67,
+   "positions": [
+    "OL"
+   ],
+   "license": null
+  },
+  {
+   "id": 988130,
+   "team_id": 354921,
+   "firstname": "Axel",
+   "lastname": "Nykvist",
+   "birthday": "2004-01-15",
+   "nationality": "SWE",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988130/69b3e5c7d95b4_roster.png",
+   "jersey_number": 56,
+   "positions": [
+    "OL"
+   ],
+   "license": "E-Klasse"
+  },
+  {
+   "id": 989554,
+   "team_id": 354921,
+   "firstname": "Andreas",
+   "lastname": "Anfang",
+   "birthday": "2006-10-09",
+   "nationality": "GER",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/989554/69c154961c5ed_roster.png",
+   "jersey_number": 96,
+   "positions": [
+    "DT"
+   ],
+   "license": null
+  },
+  {
+   "id": 991811,
+   "team_id": 354921,
+   "firstname": "Tiano",
+   "lastname": "Nelson",
+   "birthday": "2004-09-08",
+   "nationality": "FRA",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/991811/69e0be8d488fe_roster.png",
+   "jersey_number": 7,
+   "positions": [
+    "DB"
+   ],
+   "license": "E-Klasse"
+  },
+  {
+   "id": 1137047,
+   "team_id": 354921,
+   "firstname": "Mateo",
+   "lastname": "Josipovic",
+   "birthday": "2003-01-22",
+   "nationality": "GER",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/1137047/69e24f874aadb_roster.png",
+   "jersey_number": null,
+   "positions": [
+    "DT"
+   ],
+   "license": "E-Klasse"
   },
   {
    "id": 1718700,
@@ -1035,6 +1830,18 @@
    "license": null
   },
   {
+   "id": 982061,
+   "team_id": 355038,
+   "firstname": "Richard",
+   "lastname": "OGUNYANWO",
+   "birthday": "2009-04-26",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/982061/69ac0bcf07080_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 982179,
    "team_id": 355038,
    "firstname": "Matthias",
@@ -1275,6 +2082,30 @@
    "license": null
   },
   {
+   "id": 985257,
+   "team_id": 355038,
+   "firstname": "Noah",
+   "lastname": "FISCHER OBERHOFER",
+   "birthday": "2002-10-21",
+   "nationality": "ITA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/153_ab49dc7569/40931_eec64cb50c/FischerOberhoferNoahFoto.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985414,
+   "team_id": 355038,
+   "firstname": "Önder",
+   "lastname": "GüNDOGDU",
+   "birthday": "1988-10-14",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/153_ab49dc7569/41121_8a4c5bacd4/Gundogdu_O-nder_SP_25.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 985425,
    "team_id": 355038,
    "firstname": "Jakob",
@@ -1347,6 +2178,18 @@
    "license": null
   },
   {
+   "id": 986731,
+   "team_id": 355038,
+   "firstname": "David Jan Jayde",
+   "lastname": "ETAKPOFE",
+   "birthday": "2003-09-01",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/986731/69ac0a8bca842_roster.png",
+   "jersey_number": 35,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 986818,
    "team_id": 355038,
    "firstname": "LEON YANNIC",
@@ -1391,6 +2234,18 @@
    "nationality": "GER",
    "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/987884/69ad9c08a3068_roster.png",
    "jersey_number": 98,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 988240,
+   "team_id": 355038,
+   "firstname": "Kenyatte",
+   "lastname": "Allen ",
+   "birthday": "1994-11-22",
+   "nationality": "USA",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988240/69bd1da68c3d8_roster.png",
+   "jersey_number": 9,
    "positions": [],
    "license": null
   },
@@ -1513,6 +2368,30 @@
    "jersey_number": 11,
    "positions": [],
    "license": null
+  },
+  {
+   "id": 990051,
+   "team_id": 355038,
+   "firstname": "Filip",
+   "lastname": "Ghita",
+   "birthday": "2004-12-10",
+   "nationality": "ROU",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/990051/69c3a322877a6_roster.png",
+   "jersey_number": 60,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 990539,
+   "team_id": 355038,
+   "firstname": "Daniel",
+   "lastname": "Unterwaditzer",
+   "birthday": "1995-03-01",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/990539/69c39597b5184_roster.png",
+   "jersey_number": 43,
+   "positions": [],
+   "license": "Homegrown"
   },
   {
    "id": 1136750,
@@ -2645,6 +3524,18 @@
    "license": null
   },
   {
+   "id": 977629,
+   "team_id": 355129,
+   "firstname": "Rudolf Fabian Lee",
+   "lastname": "FREY",
+   "birthday": "1999-04-23",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/977629/69ad31e579fa9_roster.png",
+   "jersey_number": 15,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 977748,
    "team_id": 355129,
    "firstname": "Michael",
@@ -3353,6 +4244,18 @@
    "license": null
   },
   {
+   "id": 980977,
+   "team_id": 355129,
+   "firstname": "Pawel Szymon",
+   "lastname": "STEPNIAK",
+   "birthday": "1997-04-24",
+   "nationality": "POL",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/118_23476681ba/34793_d427989ef7/PHOTO-2021-07-12-14-06-42.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": "Homegrown"
+  },
+  {
    "id": 981197,
    "team_id": 355129,
    "firstname": "Tayfun",
@@ -3773,6 +4676,18 @@
    "license": "A-Klasse"
   },
   {
+   "id": 985775,
+   "team_id": 355129,
+   "firstname": "Moritz",
+   "lastname": "RIEDINGER",
+   "birthday": "1999-04-28",
+   "nationality": "GER",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/167_6872a0785e/41528_b17c8aa167/Moritz-Riedinger-5666-Foto.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": "A-Klasse"
+  },
+  {
    "id": 985784,
    "team_id": 355129,
    "firstname": "Daniel",
@@ -3869,6 +4784,18 @@
    "license": "E-Klasse"
   },
   {
+   "id": 987951,
+   "team_id": 355129,
+   "firstname": "Patrick-Leon",
+   "lastname": "Welte",
+   "birthday": "2005-05-27",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/987951/69ae9433ebbb4_roster.png",
+   "jersey_number": 6,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 988174,
    "team_id": 355129,
    "firstname": "András",
@@ -3879,6 +4806,30 @@
    "jersey_number": null,
    "positions": [],
    "license": "E-Klasse"
+  },
+  {
+   "id": 990112,
+   "team_id": 355129,
+   "firstname": "Nathan Henrik",
+   "lastname": "Franeczek",
+   "birthday": "2006-03-27",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/990112/69be72de3cb48_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 990406,
+   "team_id": 355129,
+   "firstname": "Tyler Dean",
+   "lastname": "FARRIS",
+   "birthday": "1998-11-16",
+   "nationality": "USA",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/990406/69c182a5e12d8_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": "A-Klasse"
   },
   {
    "id": 991349,
@@ -3903,6 +4854,30 @@
    "jersey_number": null,
    "positions": [],
    "license": null
+  },
+  {
+   "id": 1269535,
+   "team_id": 355129,
+   "firstname": "Milos",
+   "lastname": "Tresovic",
+   "birthday": "2006-02-24",
+   "nationality": "CRO",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/1269535/69f1d4463c54a_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": "E-Klasse"
+  },
+  {
+   "id": 1271381,
+   "team_id": 355129,
+   "firstname": "Jordan David",
+   "lastname": "Kress",
+   "birthday": "1998-05-21",
+   "nationality": "USA",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/1271381/69fd66f3c0302_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": "A-Klasse"
   },
   {
    "id": 977657,
@@ -4153,6 +5128,20 @@
    "license": null
   },
   {
+   "id": 978380,
+   "team_id": 355142,
+   "firstname": "Bernhard",
+   "lastname": "RUSCHER",
+   "birthday": "1999-12-01",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/256_08645e5a0f/23468_0355ac69e0/Foto_Ruscher.png",
+   "jersey_number": 17,
+   "positions": [
+    "WR"
+   ],
+   "license": null
+  },
+  {
    "id": 978413,
    "team_id": 355142,
    "firstname": "Jonas",
@@ -4221,6 +5210,20 @@
    "license": null
   },
   {
+   "id": 979049,
+   "team_id": 355142,
+   "firstname": "Marvyn",
+   "lastname": "ACENAS",
+   "birthday": "2007-07-11",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/979049/69aa7ea83f29d_roster.png",
+   "jersey_number": 16,
+   "positions": [
+    "WR"
+   ],
+   "license": "Homegrown"
+  },
+  {
    "id": 979108,
    "team_id": 355142,
    "firstname": "Marcus",
@@ -4273,6 +5276,20 @@
    "jersey_number": 77,
    "positions": [
     "OL"
+   ],
+   "license": null
+  },
+  {
+   "id": 979418,
+   "team_id": 355142,
+   "firstname": "Shams",
+   "lastname": "ALNUSYRAT",
+   "birthday": "2008-07-14",
+   "nationality": "SYR",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/118_23476681ba/30024_b9b81a2a83/Foto_Alnusyrat-Shams_2025.jpg",
+   "jersey_number": 58,
+   "positions": [
+    "DL"
    ],
    "license": null
   },
@@ -4659,6 +5676,18 @@
    "license": null
   },
   {
+   "id": 989767,
+   "team_id": 355142,
+   "firstname": "Christoph",
+   "lastname": "Cauvet",
+   "birthday": "1980-02-10",
+   "nationality": "GER",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/989767/69ba6366524c7_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 1126864,
    "team_id": 355142,
    "firstname": "Lennard",
@@ -4669,6 +5698,30 @@
    "jersey_number": 97,
    "positions": [],
    "license": "E-Klasse"
+  },
+  {
+   "id": 979075,
+   "team_id": 355285,
+   "firstname": "Máté",
+   "lastname": "GYARMATI",
+   "birthday": "1991-02-04",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/28397_7e4fa004bb/gyarmati_máté_sp_DB_8_18.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": "Homegrown"
+  },
+  {
+   "id": 979078,
+   "team_id": 355285,
+   "firstname": "Péter",
+   "lastname": "TREMBULYÁK",
+   "birthday": "1985-09-09",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/28404_61912dea46/trembulyak_péter_sp_DE_98_18.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": "Homegrown"
   },
   {
    "id": 979080,
@@ -4691,6 +5744,18 @@
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/28407_e8e66cb137/toth_nandor_sp_WR_82_18.jpg",
    "jersey_number": 82,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979086,
+   "team_id": 355285,
+   "firstname": "Márk",
+   "lastname": "LEKRINSZKI",
+   "birthday": "1988-11-22",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/28417_efa08ab68f/lekrinszki_márk_sp_DL_99_18.jpg",
+   "jersey_number": null,
    "positions": [],
    "license": null
   },
@@ -4719,6 +5784,30 @@
    "license": null
   },
   {
+   "id": 979101,
+   "team_id": 355285,
+   "firstname": "Dávid",
+   "lastname": "NOVAKOV",
+   "birthday": "1991-08-06",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/28459_2317ea1a5a/novakov_dávid_sp_RB_41_18.jpg",
+   "jersey_number": 41,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979673,
+   "team_id": 355285,
+   "firstname": "Péter",
+   "lastname": "PAPP",
+   "birthday": "1986-11-14",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/31192_e9fd32c1e0/papp_peter_sp_DL_76_19.JPG",
+   "jersey_number": null,
+   "positions": [],
+   "license": "Homegrown"
+  },
+  {
    "id": 979680,
    "team_id": 355285,
    "firstname": "János",
@@ -4726,6 +5815,30 @@
    "birthday": "2002-02-11",
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/31200_db1a2ae589/klein.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979682,
+   "team_id": 355285,
+   "firstname": "Pál Bendegúz",
+   "lastname": "FARKAS",
+   "birthday": "1999-01-08",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/31203_347836dd0c/farkas_pal_bendeguz_sp_WR_19_19.JPG",
+   "jersey_number": 12,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979936,
+   "team_id": 355285,
+   "firstname": "Szabolics",
+   "lastname": "SZöLLöSI",
+   "birthday": "2004-11-04",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/167_6872a0785e/32023_40a5616873/IMG_20190903_214442.jpg",
    "jersey_number": null,
    "positions": [],
    "license": null
@@ -4755,6 +5868,18 @@
    "license": null
   },
   {
+   "id": 981085,
+   "team_id": 355285,
+   "firstname": "Péter",
+   "lastname": "BARANYAI",
+   "birthday": "1999-09-30",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/34967_d597477dd9/baranyai-peter_sp_21.jpg",
+   "jersey_number": 24,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 981086,
    "team_id": 355285,
    "firstname": "Péter",
@@ -4763,6 +5888,18 @@
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/34971_5be05000f3/szo-ke-peter_sp_21.jpg",
    "jersey_number": 27,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981456,
+   "team_id": 355285,
+   "firstname": "Mátyás",
+   "lastname": "BAGOLY",
+   "birthday": "2003-01-08",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/35969_39d7896560/profile.jpg",
+   "jersey_number": null,
    "positions": [],
    "license": null
   },
@@ -4779,6 +5916,30 @@
    "license": null
   },
   {
+   "id": 982773,
+   "team_id": 355285,
+   "firstname": "Bertalan",
+   "lastname": "SZEPESI",
+   "birthday": "2005-08-25",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/37972_cffd2a6d92/szepesi_bertalan_profil_01.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 982783,
+   "team_id": 355285,
+   "firstname": "Balázs",
+   "lastname": "FODOR",
+   "birthday": "2004-07-14",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/37983_5b8f441a0b/profile-2.jpg",
+   "jersey_number": 15,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 982804,
    "team_id": 355285,
    "firstname": "Gordon",
@@ -4787,6 +5948,18 @@
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/38011_cf2d156b72/Berkes_Gordon_kep_24.jpg",
    "jersey_number": 50,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 982817,
+   "team_id": 355285,
+   "firstname": "Roland",
+   "lastname": "KOZáK",
+   "birthday": "2003-12-08",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/38026_dfc9c1960c/kozak_roland_profil.jpg",
+   "jersey_number": null,
    "positions": [],
    "license": null
   },
@@ -4851,6 +6024,18 @@
    "license": null
   },
   {
+   "id": 983328,
+   "team_id": 355285,
+   "firstname": "Patrik",
+   "lastname": "KOVáCS",
+   "birthday": "2003-12-21",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/38661_22380ebd07/Kovacs_Patrik_kep_24.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 984259,
    "team_id": 355285,
    "firstname": "Kevin",
@@ -4859,6 +6044,18 @@
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39774_bedc5e5056/432356936_956035122805933_16746391570763209_n.jpg",
    "jersey_number": 4,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 984294,
+   "team_id": 355285,
+   "firstname": "Kel Ezekiel",
+   "lastname": "BEISINGER",
+   "birthday": "1998-04-16",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39810_f1bc08d62c/312230670_5725947354134467_534502983996007585_n.jpg",
+   "jersey_number": null,
    "positions": [],
    "license": null
   },
@@ -4875,6 +6072,18 @@
    "license": null
   },
   {
+   "id": 984300,
+   "team_id": 355285,
+   "firstname": "Gergely Donát",
+   "lastname": "KIRáLY",
+   "birthday": "1999-01-16",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39817_be708439a2/Kiraly_Gergely_kep_24.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 984304,
    "team_id": 355285,
    "firstname": "Kevin",
@@ -4887,6 +6096,18 @@
    "license": null
   },
   {
+   "id": 984305,
+   "team_id": 355285,
+   "firstname": "Kevin",
+   "lastname": "PUSCH",
+   "birthday": "2004-10-12",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39822_c11f3f4279/Pursch_Kevin_kep2_24.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 984310,
    "team_id": 355285,
    "firstname": "Dominik Balázs",
@@ -4894,6 +6115,90 @@
    "birthday": "2003-05-13",
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39827_243c160fea/profile-2.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 984311,
+   "team_id": 355285,
+   "firstname": "Dániel",
+   "lastname": "VARGA",
+   "birthday": "2006-06-02",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39828_17de8408c1/Varga_Daniel_kep_24.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 984377,
+   "team_id": 355285,
+   "firstname": "Domonkos Károly",
+   "lastname": "KOPIáRI",
+   "birthday": "2005-04-05",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/39898_958563f38c/Kopiari_Domonkos_kep_24.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 984628,
+   "team_id": 355285,
+   "firstname": "László",
+   "lastname": "KOVáCS",
+   "birthday": "1993-08-29",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40191_759cfbd591/Kovacs_Laszlo_kep_2024.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 984672,
+   "team_id": 355285,
+   "firstname": "DAVID",
+   "lastname": "JOZSA",
+   "birthday": "1995-02-04",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40247_b29ded0f1b/ENT_94_David_Jozsa-1.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985128,
+   "team_id": 355285,
+   "firstname": "András",
+   "lastname": "ANTAL",
+   "birthday": "2007-10-24",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40771_08dc634327/Antal_Andras.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985129,
+   "team_id": 355285,
+   "firstname": "Márk Zorán",
+   "lastname": "BENK",
+   "birthday": "2007-07-10",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40772_23600ae0d3/Benk-Mark-Zoran.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985135,
+   "team_id": 355285,
+   "firstname": "Benedek Lőrinc",
+   "lastname": "KOVáCS",
+   "birthday": "2007-07-19",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40778_cb0fc4f082/Kovacs-Benedek-Lo-rinc.JPG",
    "jersey_number": null,
    "positions": [],
    "license": null
@@ -4911,6 +6216,18 @@
    "license": null
   },
   {
+   "id": 985137,
+   "team_id": 355285,
+   "firstname": "László Márk",
+   "lastname": "MOLNáR",
+   "birthday": "2005-11-14",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40781_59e9012fa3/profile-3.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 985139,
    "team_id": 355285,
    "firstname": "Dániel",
@@ -4918,6 +6235,18 @@
    "birthday": "1998-03-17",
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40784_1360368b3f/pantali.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985141,
+   "team_id": 355285,
+   "firstname": "Alvin",
+   "lastname": "SZABó",
+   "birthday": "2007-05-08",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40786_ef59b05a31/Szabo-Alvin.jpg",
    "jersey_number": null,
    "positions": [],
    "license": null
@@ -4931,6 +6260,42 @@
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40787_3ccfdd157f/Szabo-gergo.jpg",
    "jersey_number": 3,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985144,
+   "team_id": 355285,
+   "firstname": "Béni",
+   "lastname": "TARY",
+   "birthday": "2007-07-12",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40791_e28c95a536/Tary-Beni.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985154,
+   "team_id": 355285,
+   "firstname": "Levente",
+   "lastname": "MOLNáR",
+   "birthday": "2006-10-16",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40804_da5fa4b3e7/molnar.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985254,
+   "team_id": 355285,
+   "firstname": "Kevin",
+   "lastname": "SZIGETVáRI ",
+   "birthday": "2005-09-27",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/40927_37d5607c8b/profile-2.jpg",
+   "jersey_number": null,
    "positions": [],
    "license": null
   },
@@ -4971,6 +6336,18 @@
    "license": null
   },
   {
+   "id": 986779,
+   "team_id": 355285,
+   "firstname": "Lucas",
+   "lastname": "SOARES DA SILVA",
+   "birthday": "2000-10-10",
+   "nationality": "BRA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42681_d684a30a81/Lucas-Soares-photo.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 986780,
    "team_id": 355285,
    "firstname": "Frederick William",
@@ -4983,6 +6360,54 @@
    "license": null
   },
   {
+   "id": 986888,
+   "team_id": 355285,
+   "firstname": "Kristóf Zsolt",
+   "lastname": "AUER",
+   "birthday": "2008-05-21",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42795_e47370ee0b/profile-6.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986889,
+   "team_id": 355285,
+   "firstname": "András Márton ",
+   "lastname": "BALOGH",
+   "birthday": "2005-05-10",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42796_62c9108813/profile-6.jpg",
+   "jersey_number": 81,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986890,
+   "team_id": 355285,
+   "firstname": "Áron Mihály",
+   "lastname": "BARTHA",
+   "birthday": "2008-12-21",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42798_52fc14ca60/profile-6.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986892,
+   "team_id": 355285,
+   "firstname": "Márton Tamás ",
+   "lastname": "CZIRóK ",
+   "birthday": "1990-08-05",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42800_70491c53c5/profile-6.jpg",
+   "jersey_number": 13,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 986893,
    "team_id": 355285,
    "firstname": "Zalán",
@@ -4991,6 +6416,30 @@
    "nationality": "HUN",
    "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42801_4d68f513ca/476142840_1360211251677111_1637569104337478437_n.jpg",
    "jersey_number": 14,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986896,
+   "team_id": 355285,
+   "firstname": " László ",
+   "lastname": "FüZéR",
+   "birthday": "2006-09-15",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42804_e88787cb25/profile-7.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986897,
+   "team_id": 355285,
+   "firstname": " Péter ",
+   "lastname": "GáL",
+   "birthday": "2008-03-09",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42805_94d7623561/profile-6.jpg",
+   "jersey_number": null,
    "positions": [],
    "license": null
   },
@@ -5103,6 +6552,18 @@
    "license": null
   },
   {
+   "id": 986909,
+   "team_id": 355285,
+   "firstname": "Bálint",
+   "lastname": "TáMBA ",
+   "birthday": "2008-06-02",
+   "nationality": "HUN",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/308_f1b9d75c9e/42818_eb263eeb72/profile-6.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 986910,
    "team_id": 355285,
    "firstname": "Vincent",
@@ -5127,6 +6588,42 @@
    "license": null
   },
   {
+   "id": 988012,
+   "team_id": 355285,
+   "firstname": "Gabriel",
+   "lastname": "BIAVA DA ROSA",
+   "birthday": null,
+   "nationality": null,
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988012/69aeea7f71e3e_roster.png",
+   "jersey_number": 69,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 988014,
+   "team_id": 355285,
+   "firstname": "Szabó",
+   "lastname": "Zoltán",
+   "birthday": null,
+   "nationality": null,
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988014/69aeee5a54155_roster.png",
+   "jersey_number": 55,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 988015,
+   "team_id": 355285,
+   "firstname": "Marcell",
+   "lastname": "Jakoda",
+   "birthday": null,
+   "nationality": null,
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988015/69aef16a27d40_roster.png",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 988021,
    "team_id": 355285,
    "firstname": "Nagy",
@@ -5135,6 +6632,18 @@
    "nationality": "HUN",
    "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988021/69aef89ab7daf_roster.png",
    "jersey_number": 91,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 988676,
+   "team_id": 355285,
+   "firstname": "Javarian ",
+   "lastname": "Smith",
+   "birthday": null,
+   "nationality": null,
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/988676/69b3ba811f607_roster.png",
+   "jersey_number": 2,
    "positions": [],
    "license": null
   },
@@ -5189,6 +6698,714 @@
    "license": "Homegrown"
   },
   {
+   "id": 977820,
+   "team_id": 355311,
+   "firstname": "Jakub",
+   "lastname": "WOLESKY",
+   "birthday": "1992-06-02",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/15883_3c12320d57/volesky.jpg",
+   "jersey_number": 2,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979571,
+   "team_id": 355311,
+   "firstname": "Kamil",
+   "lastname": "ROBA",
+   "birthday": "1993-05-09",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/30833_298d9902a7/Photo_ROBA.jpg",
+   "jersey_number": 3,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979572,
+   "team_id": 355311,
+   "firstname": "Martin",
+   "lastname": "MANDIK",
+   "birthday": "2000-09-08",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/30834_5fafbf4c2e/Photo_MANDIK.jpg",
+   "jersey_number": 18,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979584,
+   "team_id": 355311,
+   "firstname": "Ondrej",
+   "lastname": "MICKA",
+   "birthday": "1999-04-27",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/30863_206e5cda40/Photo_MICKA.jpg",
+   "jersey_number": 47,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979585,
+   "team_id": 355311,
+   "firstname": "Jakub",
+   "lastname": "JANDA",
+   "birthday": "1998-04-16",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/30865_accc97f4d9/Photo_JANDA.jpg",
+   "jersey_number": 46,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 979621,
+   "team_id": 355311,
+   "firstname": "SHANE",
+   "lastname": "TIERNEY",
+   "birthday": "1995-04-12",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/31024_667d6c1dfb/Photo_TIERNEY.jpg",
+   "jersey_number": 71,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980139,
+   "team_id": 355311,
+   "firstname": "David",
+   "lastname": "PIVONKA",
+   "birthday": "1996-12-11",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/32830_30717f13a9/PIVON-KA-Photo.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980143,
+   "team_id": 355311,
+   "firstname": "Jiri",
+   "lastname": "SLADEK",
+   "birthday": "1999-08-08",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/32845_4a73daa83a/SLADEK-Photo.jpg",
+   "jersey_number": 91,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980215,
+   "team_id": 355311,
+   "firstname": "Premysl",
+   "lastname": "KRAL",
+   "birthday": "1998-08-27",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/33045_2a816f2017/Kral-Photo.jpg",
+   "jersey_number": 49,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980227,
+   "team_id": 355311,
+   "firstname": "Erik",
+   "lastname": "KRAULAND",
+   "birthday": "2002-11-21",
+   "nationality": "NOR",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/114_3955dd8638/33081_25904db209/krauland_erik_foto_2022.jpg",
+   "jersey_number": 4,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980640,
+   "team_id": 355311,
+   "firstname": "Michal",
+   "lastname": "KOZAK",
+   "birthday": "1999-07-23",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/33829_c18a00b12e/PHOTO_KOZAK.jpg",
+   "jersey_number": 33,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980641,
+   "team_id": 355311,
+   "firstname": "Jakub",
+   "lastname": "SVIDEK",
+   "birthday": "2001-05-23",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/33830_421c279e96/PHOTO_SVIDEK.jpg",
+   "jersey_number": 77,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980642,
+   "team_id": 355311,
+   "firstname": "Petr",
+   "lastname": "MAREK",
+   "birthday": "2000-06-23",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/33831_301859e4f7/PHOTO_MAREK.jpg",
+   "jersey_number": 63,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980643,
+   "team_id": 355311,
+   "firstname": "Bohumil",
+   "lastname": "TOMCIK",
+   "birthday": "2001-03-15",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/33834_e5cd798912/PHOTO_TOMCIK.jpg",
+   "jersey_number": 60,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 980885,
+   "team_id": 355311,
+   "firstname": "Matej",
+   "lastname": "CERNY",
+   "birthday": "1999-05-17",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/34598_4f327d52bb/CERNY_Photo.jpg",
+   "jersey_number": 54,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981482,
+   "team_id": 355311,
+   "firstname": "Mikuláš",
+   "lastname": "BENDA",
+   "birthday": "1997-03-21",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/36007_c8f7cdafaf/BENDA-Photo.jpg",
+   "jersey_number": 67,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981485,
+   "team_id": 355311,
+   "firstname": "Dan",
+   "lastname": "LINDOVSKY",
+   "birthday": "2000-09-28",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/36015_f7a76d6e09/Lindovsky-PHOTO.jpg",
+   "jersey_number": 14,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981488,
+   "team_id": 355311,
+   "firstname": "Matej",
+   "lastname": "POLOUCEK",
+   "birthday": "2000-06-05",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/36018_eed4dc364f/Poloucek-Photo.jpg",
+   "jersey_number": 43,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981489,
+   "team_id": 355311,
+   "firstname": "Michal",
+   "lastname": "VLK",
+   "birthday": "1998-07-14",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/36021_b6e0a666f5/Vlk-Photo.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981490,
+   "team_id": 355311,
+   "firstname": "Viktor",
+   "lastname": "JENICEK",
+   "birthday": "2002-09-26",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/36022_b81d786a64/Jenicek-Photo.jpg",
+   "jersey_number": 23,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 981608,
+   "team_id": 355311,
+   "firstname": "Vratislav",
+   "lastname": "HAVLOVIC",
+   "birthday": "2002-12-11",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/36229_cad7c53a97/Havlovic-Photo.jpg",
+   "jersey_number": 72,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 982600,
+   "team_id": 355311,
+   "firstname": "Jakub",
+   "lastname": "DEMJAN",
+   "birthday": "1994-07-03",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/37753_c6f5e685e4/Demjan.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 982601,
+   "team_id": 355311,
+   "firstname": "David",
+   "lastname": "DOHNAL",
+   "birthday": "2004-05-26",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/37754_9b0462c2cf/Dohnal.jpg",
+   "jersey_number": 89,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 982605,
+   "team_id": 355311,
+   "firstname": "Ondřej",
+   "lastname": "KYLOUSEK",
+   "birthday": "2004-03-07",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/37760_1d4ebb3afc/Kylousek.jpg",
+   "jersey_number": 50,
+   "positions": [],
+   "license": "Homegrown"
+  },
+  {
+   "id": 982609,
+   "team_id": 355311,
+   "firstname": "Jakub",
+   "lastname": "RADA",
+   "birthday": "2001-10-29",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/37764_ef14f53009/Rada.jpg",
+   "jersey_number": 13,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 982642,
+   "team_id": 355311,
+   "firstname": "Lukas",
+   "lastname": "PUCALKA",
+   "birthday": "2005-03-29",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/37807_666e8f074d/9694.jpg",
+   "jersey_number": 61,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983890,
+   "team_id": 355311,
+   "firstname": "Jan",
+   "lastname": "BENDA",
+   "birthday": "2005-07-15",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39338_2c92540cbb/11083.jpg",
+   "jersey_number": 90,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983891,
+   "team_id": 355311,
+   "firstname": "Frantisek",
+   "lastname": "BREZINA",
+   "birthday": "2003-09-22",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39339_7d44460793/9180.jpg",
+   "jersey_number": 45,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983893,
+   "team_id": 355311,
+   "firstname": "Jan",
+   "lastname": "CERMAK",
+   "birthday": "1991-02-14",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39341_c781a1b0f5/9175.jpg",
+   "jersey_number": 88,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983895,
+   "team_id": 355311,
+   "firstname": "Jachym",
+   "lastname": "FLACHS",
+   "birthday": "2005-12-14",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39343_d29b5285ae/9774.jpg",
+   "jersey_number": 12,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983896,
+   "team_id": 355311,
+   "firstname": "Filip",
+   "lastname": "FOLAUF",
+   "birthday": "2002-07-27",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39344_1ade721506/11194.jpg",
+   "jersey_number": 19,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983897,
+   "team_id": 355311,
+   "firstname": "Artur",
+   "lastname": "HOVORKA",
+   "birthday": "2005-03-29",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39345_1e138f4ab8/9688.jpg",
+   "jersey_number": 5,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983901,
+   "team_id": 355311,
+   "firstname": "Jan",
+   "lastname": "VRNATA",
+   "birthday": "2005-07-25",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39352_f407019fa8/9704.jpg",
+   "jersey_number": 81,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 983981,
+   "team_id": 355311,
+   "firstname": "Jakub",
+   "lastname": "BREZINA",
+   "birthday": "1999-10-09",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/39448_41ce496b15/5358.jpg",
+   "jersey_number": 9,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985619,
+   "team_id": 355311,
+   "firstname": "STEPAN",
+   "lastname": "VANA",
+   "birthday": "2005-04-05",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41350_e212db3eff/11011.jpg",
+   "jersey_number": 55,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985622,
+   "team_id": 355311,
+   "firstname": "JAN",
+   "lastname": "RAUS",
+   "birthday": "1994-07-16",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41353_35e8720651/8H0A6699.jpg",
+   "jersey_number": 65,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985624,
+   "team_id": 355311,
+   "firstname": "MATEJ",
+   "lastname": "SPALEK",
+   "birthday": "2000-03-07",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41356_7b7ac50b31/8993.jpg",
+   "jersey_number": 98,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985625,
+   "team_id": 355311,
+   "firstname": "MIROSLAV",
+   "lastname": "HABRNAL",
+   "birthday": "2007-05-25",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41357_06bca5e6fc/9990.jpg",
+   "jersey_number": 51,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985626,
+   "team_id": 355311,
+   "firstname": "MIROSLAV",
+   "lastname": "MASEK",
+   "birthday": "1993-10-07",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41358_cf8c226d7c/3851.jpg",
+   "jersey_number": 31,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985628,
+   "team_id": 355311,
+   "firstname": "FRANTISEK",
+   "lastname": "KUCERA",
+   "birthday": "2006-05-11",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41360_58242235fc/8612.jpg",
+   "jersey_number": 56,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985666,
+   "team_id": 355311,
+   "firstname": "LUKAS",
+   "lastname": "BACOVSKY",
+   "birthday": "2007-08-15",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41403_2eaafc775a/8376.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985668,
+   "team_id": 355311,
+   "firstname": "JAKUB",
+   "lastname": "SLAPAK",
+   "birthday": "1998-04-08",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41405_e2ec363cc5/3102.jpg",
+   "jersey_number": 21,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985789,
+   "team_id": 355311,
+   "firstname": "JIRI",
+   "lastname": "VACHA",
+   "birthday": "1977-12-20",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41542_3a95014583/vacha.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 985791,
+   "team_id": 355311,
+   "firstname": "MATEJ",
+   "lastname": "VANA",
+   "birthday": "2006-03-06",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/41544_ad9d985b9f/12209.jpg",
+   "jersey_number": 62,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986254,
+   "team_id": 355311,
+   "firstname": "MARTIN",
+   "lastname": "MASEK",
+   "birthday": "1994-10-29",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42064_a020860678/Masek-PHOTO.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986824,
+   "team_id": 355311,
+   "firstname": "Jevgenij",
+   "lastname": "SOKUR",
+   "birthday": "2007-08-21",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42726_2b2aaefe47/10417.jpg",
+   "jersey_number": 75,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986825,
+   "team_id": 355311,
+   "firstname": "Filip",
+   "lastname": "KAZMIR",
+   "birthday": "2005-03-08",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42727_36343ad845/9028.jpg",
+   "jersey_number": 11,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986826,
+   "team_id": 355311,
+   "firstname": "Sebastian",
+   "lastname": "TESARIK",
+   "birthday": "1999-11-24",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42728_2b6dc49e4d/4520.jpg",
+   "jersey_number": 28,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986840,
+   "team_id": 355311,
+   "firstname": "Samuel",
+   "lastname": "HUBR",
+   "birthday": "2007-01-04",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42743_b1a91514b4/12489.jpg",
+   "jersey_number": null,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986841,
+   "team_id": 355311,
+   "firstname": "Martin",
+   "lastname": "MARX",
+   "birthday": "1995-07-29",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42744_93107533d9/Marx.jpg",
+   "jersey_number": 26,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986842,
+   "team_id": 355311,
+   "firstname": "David",
+   "lastname": "PAULSON",
+   "birthday": "1996-02-19",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42745_614d99b326/IMG_7480.JPG",
+   "jersey_number": 30,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986843,
+   "team_id": 355311,
+   "firstname": "Petr",
+   "lastname": "SIFALDA",
+   "birthday": "1994-07-18",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42746_ef9832cf77/8134.jpg",
+   "jersey_number": 93,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986845,
+   "team_id": 355311,
+   "firstname": "Amos",
+   "lastname": "FERANEC",
+   "birthday": "2006-05-15",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42748_07d7277451/8071.jpg",
+   "jersey_number": 15,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986846,
+   "team_id": 355311,
+   "firstname": "Matyas",
+   "lastname": "NECKAR",
+   "birthday": "2002-06-30",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42749_2b2062f7e8/NECKAR-photo.jpg",
+   "jersey_number": 17,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986847,
+   "team_id": 355311,
+   "firstname": "Ludek",
+   "lastname": "RUZICKA",
+   "birthday": "2006-04-29",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42750_5455150dcf/11968.jpg",
+   "jersey_number": 27,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986849,
+   "team_id": 355311,
+   "firstname": "Ahmonte D’Shon ",
+   "lastname": "WATKINS",
+   "birthday": "2001-12-31",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42752_0d548addca/Watkins-photo.jpg",
+   "jersey_number": 6,
+   "positions": [],
+   "license": "A-Klasse"
+  },
+  {
+   "id": 986850,
+   "team_id": 355311,
+   "firstname": "Evan",
+   "lastname": "BYRD",
+   "birthday": "2002-07-03",
+   "nationality": "USA",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42753_16a146af41/Byrd-Photo.jpg",
+   "jersey_number": 1,
+   "positions": [],
+   "license": "A-Klasse"
+  },
+  {
+   "id": 986855,
+   "team_id": 355311,
+   "firstname": "Kristián",
+   "lastname": "ZIEGELHEIM",
+   "birthday": "2002-10-26",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42758_f60c7cf71f/11393.jpg",
+   "jersey_number": 32,
+   "positions": [],
+   "license": null
+  },
+  {
+   "id": 986912,
+   "team_id": 355311,
+   "firstname": "Oliver",
+   "lastname": "SCHONBAUER",
+   "birthday": "2007-04-23",
+   "nationality": "CZE",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/149_5211a0aeb3/42821_ee1844751b/12460.jpg",
+   "jersey_number": 41,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 1280496,
    "team_id": 355311,
    "firstname": "Luke Francis",
@@ -5214,6 +7431,46 @@
   }
  ],
  "staff": [
+  {
+   "id": 985857,
+   "team_id": 354921,
+   "firstname": "Gernot",
+   "lastname": "Schmidt",
+   "birthday": "1997-10-25",
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/111_d9d5ba1e73/41619_9481eb3b7f/foto_02.jpg",
+   "role": "Trainerstab"
+  },
+  {
+   "id": 989524,
+   "team_id": 354921,
+   "firstname": "Yannick ",
+   "lastname": "Mayr",
+   "birthday": "1996-03-19",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/989524/69c51e94ed32e_roster.png",
+   "role": "Trainerstab / Athletiktrainer"
+  },
+  {
+   "id": 990503,
+   "team_id": 354921,
+   "firstname": "Fabian",
+   "lastname": "Birkholz",
+   "birthday": null,
+   "nationality": "GER",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/990503/69d00d267f8ee_roster.png",
+   "role": "Trainerstab"
+  },
+  {
+   "id": 990761,
+   "team_id": 354921,
+   "firstname": "Roman",
+   "lastname": "Niedermayr",
+   "birthday": "1965-01-19",
+   "nationality": "AUT",
+   "photo": "https://d28kyj1r8oju1l.cloudfront.net/images/users/avatars/990761/69c53f5e1d408_roster.png",
+   "role": "Trainerstab"
+  },
   {
    "id": 985569,
    "team_id": 355103,
@@ -5256,30 +7513,30 @@
   },
   {
    "team_id": 354986,
-   "w": 8,
+   "w": 7,
    "l": 3,
    "t": 0,
-   "pf": 370,
-   "pa": 145,
-   "streak": "4S"
+   "pf": 300,
+   "pa": 126,
+   "streak": "3S"
   },
   {
    "team_id": 355103,
    "w": 7,
-   "l": 4,
+   "l": 3,
    "t": 0,
-   "pf": 357,
-   "pa": 324,
-   "streak": "1N"
+   "pf": 332,
+   "pa": 288,
+   "streak": "1S"
   },
   {
    "team_id": 355129,
-   "w": 7,
+   "w": 6,
    "l": 4,
    "t": 0,
-   "pf": 229,
-   "pa": 215,
-   "streak": "4S"
+   "pf": 193,
+   "pa": 190,
+   "streak": "3S"
   },
   {
    "team_id": 355285,
@@ -5293,11 +7550,11 @@
   {
    "team_id": 354921,
    "w": 2,
-   "l": 9,
+   "l": 8,
    "t": 0,
-   "pf": 205,
-   "pa": 397,
-   "streak": "6N"
+   "pf": 186,
+   "pa": 327,
+   "streak": "5N"
   },
   {
    "team_id": 355038,
@@ -5322,6 +7579,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "1",
    "venue": "Sportplatz Donaufeld",
    "city": "Wien",
@@ -5339,6 +7597,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "1",
    "venue": "Ducks Pond",
    "city": "Salzburg",
@@ -5356,6 +7615,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "1",
    "venue": "Athletic Field Rugby Club Sparta Praha",
    "city": "",
@@ -5373,6 +7633,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "2",
    "venue": "Invaders Field",
    "city": "Sankt Pölten",
@@ -5390,6 +7651,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "2",
    "venue": "Helfortplatz",
    "city": "Wien",
@@ -5407,6 +7669,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "2",
    "venue": "Footballzentrum Ravelin",
    "city": "Wien",
@@ -5424,6 +7687,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "2",
    "venue": "Athletic Field Rugby Club Sparta Praha",
    "city": "",
@@ -5441,6 +7705,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "3",
    "venue": "Sportplatz Donaufeld",
    "city": "Wien",
@@ -5458,6 +7723,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "3",
    "venue": "FIRST Field",
    "city": "Székesfehérvár",
@@ -5475,6 +7741,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "3",
    "venue": "ASKÖ-Stadion Eggenberg",
    "city": "Graz",
@@ -5492,6 +7759,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "3",
    "venue": "Helfortplatz",
    "city": "Wien",
@@ -5509,6 +7777,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "4",
    "venue": "ASKÖ-Stadion Eggenberg",
    "city": "Graz",
@@ -5526,6 +7795,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "4",
    "venue": "Ducks Pond",
    "city": "Salzburg",
@@ -5543,6 +7813,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "4",
    "venue": "Footballzentrum Ravelin",
    "city": "Wien",
@@ -5560,6 +7831,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "4",
    "venue": "AFZ Innsbruck",
    "city": "Innsbruck",
@@ -5577,6 +7849,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "1",
    "venue": "AFZ Innsbruck",
    "city": "Innsbruck",
@@ -5594,6 +7867,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "5",
    "venue": "ASKÖ-Stadion Eggenberg",
    "city": "Graz",
@@ -5611,6 +7885,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "5",
    "venue": "Ducks Pond",
    "city": "Salzburg",
@@ -5628,6 +7903,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "5",
    "venue": "Helfortplatz",
    "city": "Wien",
@@ -5645,6 +7921,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "5",
    "venue": "FIRST Field",
    "city": "Székesfehérvár",
@@ -5662,6 +7939,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "6",
    "venue": "Sportplatz Donaufeld",
    "city": "Wien",
@@ -5679,6 +7957,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "6",
    "venue": "AFZ Innsbruck",
    "city": "Innsbruck",
@@ -5696,6 +7975,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "6",
    "venue": "Athletic Field Rugby Club Sparta Praha",
    "city": "",
@@ -5713,6 +7993,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "6",
    "venue": "Helfortplatz",
    "city": "Wien",
@@ -5730,6 +8011,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "7",
    "venue": "FIRST Field",
    "city": "Székesfehérvár",
@@ -5747,6 +8029,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "7",
    "venue": "Helfortplatz",
    "city": "Wien",
@@ -5764,6 +8047,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "7",
    "venue": "AFZ Innsbruck",
    "city": "Innsbruck",
@@ -5781,6 +8065,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "7",
    "venue": "ASKÖ-Stadion Eggenberg",
    "city": "Graz",
@@ -5798,6 +8083,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "8",
    "venue": "Athletic Field Rugby Club Sparta Praha",
    "city": "",
@@ -5815,6 +8101,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "8",
    "venue": "Sportplatz Donaufeld",
    "city": "Wien",
@@ -5832,6 +8119,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "8",
    "venue": "FIRST Field",
    "city": "Székesfehérvár",
@@ -5849,6 +8137,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "8",
    "venue": "Footballzentrum Ravelin",
    "city": "Wien",
@@ -5866,6 +8155,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "9",
    "venue": "ASKÖ-Stadion Eggenberg",
    "city": "Graz",
@@ -5883,6 +8173,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "9",
    "venue": "Ducks Pond",
    "city": "Salzburg",
@@ -5900,6 +8191,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "9",
    "venue": "Athletic Field Rugby Club Sparta Praha",
    "city": "",
@@ -5917,6 +8209,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "9",
    "venue": "Footballzentrum Ravelin",
    "city": "Wien",
@@ -5934,6 +8227,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "10",
    "venue": "Ducks Pond",
    "city": "Salzburg",
@@ -5951,6 +8245,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "10",
    "venue": "FIRST Field",
    "city": "Székesfehérvár",
@@ -5968,6 +8263,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "10",
    "venue": "AFZ Innsbruck",
    "city": "Innsbruck",
@@ -5985,6 +8281,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "AFL",
+   "playoff": false,
    "round": "10",
    "venue": "Footballzentrum Ravelin",
    "city": "Wien",
@@ -6002,6 +8299,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "Wildcard AFL",
+   "playoff": true,
    "round": "13",
    "venue": "ASKÖ-Stadion Eggenberg",
    "city": "Graz",
@@ -6019,6 +8317,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "Wildcard AFL",
+   "playoff": true,
    "round": "13",
    "venue": "Helfortplatz",
    "city": "Wien",
@@ -6036,6 +8335,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "Playoff AFL",
+   "playoff": true,
    "round": "7",
    "venue": "Sportplatz Donaufeld",
    "city": "Wien",
@@ -6053,6 +8353,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "Playoff AFL",
+   "playoff": true,
    "round": "7",
    "venue": "Athletic Field Rugby Club Sparta Praha",
    "city": "",
@@ -6070,6 +8371,7 @@
    "completed": true,
    "cancelled": false,
    "phase": "Austrian Bowl",
+   "playoff": true,
    "round": "12",
    "venue": "Datenpol Arena ",
    "city": "Maria Enzersdorf",
@@ -21157,7 +23459,7 @@
      },
      {
       "user_id": 979572,
-      "name": "M... M...",
+      "name": "Martin MANDIK",
       "team_id": 355311,
       "values": [
        5,
@@ -21430,7 +23732,7 @@
      },
      {
       "user_id": 980484,
-      "name": "M... R...",
+      "name": "Maximilian Reuter",
       "team_id": 354921,
       "values": [
        4,
@@ -21486,7 +23788,7 @@
      },
      {
       "user_id": 977820,
-      "name": "J... W...",
+      "name": "Jakub WOLESKY",
       "team_id": 355311,
       "values": [
        5,
@@ -21710,7 +24012,7 @@
      },
      {
       "user_id": 986469,
-      "name": "F... C...",
+      "name": "Francis Crocker",
       "team_id": 354921,
       "values": [
        1,
@@ -21724,7 +24026,7 @@
      },
      {
       "user_id": 986692,
-      "name": "G... S...",
+      "name": "Gavin Sukup",
       "team_id": 354921,
       "values": [
        1,
@@ -21752,7 +24054,7 @@
      },
      {
       "user_id": 988676,
-      "name": "J... S...",
+      "name": "Javarian  Smith",
       "team_id": 355285,
       "values": [
        1,
@@ -21780,7 +24082,7 @@
      },
      {
       "user_id": 985128,
-      "name": "A... A...",
+      "name": "András ANTAL",
       "team_id": 355285,
       "values": [
        1,
