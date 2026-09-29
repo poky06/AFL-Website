@@ -22,6 +22,8 @@ const FORCE = process.env.FORCE === "true";
 const OUT_FILE = "data/afl.json";
 const HISTORY_DIR = "data/history";       // Archiv je Saison (nur IDs und Zahlen)
 const CAREER_FILE = "data/career.json";   // Karrierewerte für die Spieler-Detailansicht
+const STATS_INDEX = `${HISTORY_DIR}/index.json`; // Saisons für die Saisonauswahl der Statistikseiten
+// Hinweis: Die Saisons 2014–2025 (Hockeydata) liegen fest in data/archive und werden vom Sync nicht verändert.
 const REBUILD_HISTORY = process.env.REBUILD_HISTORY === "true";
 // Anzahl der Grunddurchgangsspiele pro Team. Jedes weitere Spiel eines Teams gilt als Playoff-Spiel.
 const REGULAR_GAMES = Number(process.env.REGULAR_GAMES || 10);
@@ -133,12 +135,19 @@ async function fetchStatCategory(cat, kind, seasonId = SEASON_ID) {
   const limit = 200;
   let header = null;
   const raw = [];
+  const seenRows = new Set();
+  const rowKey = r => kind === "players" ? `u${r.user?.id}` : `g${r.group?.id}`;
   for (let offset = 0; offset < 5000; offset += limit) {
     const page = await api(`/competitions/${COMPETITION_ID}/seasons/${seasonId}/stats/categories/${cat.id}/${kind}?_limit=${limit}&_offset=${offset}`);
     header = header || page?.header;
     const rows = page?.rows || [];
-    raw.push(...rows);
-    if (rows.length < limit || raw.length >= (page?.total ?? 0)) break;
+    // Nur neue Zeilen übernehmen (Schutz, falls die API den Offset ignoriert und dieselbe Seite liefert)
+    const fresh = rows.filter(r => !seenRows.has(rowKey(r)));
+    fresh.forEach(r => seenRows.add(rowKey(r)));
+    raw.push(...fresh);
+    const total = Number(page?.total);
+    // Früher: Abbruch nach der ersten Seite, wenn "total" fehlte -> höchstens 200 Spieler je Kategorie
+    if (rows.length < limit || fresh.length === 0 || (Number.isFinite(total) && total > 0 && raw.length >= total)) break;
   }
   const columns = statColumns(header, raw);
   const rows = raw.map(r => {
@@ -379,8 +388,31 @@ function slimBlocks(blocks) {
   }));
 }
 
+// Vollständige Saisonstatistik (Spieler + Teams, mit Namen wie in afl.json) für die Saisonauswahl
+// der Statistikseiten ablegen: data/history/stats-<Saison-ID>.json + Verzeichnis data/history/index.json
+function statsFile(seasonId) { return `${HISTORY_DIR}/stats-${seasonId}.json`; }
+async function writeSeasonStats(season, stats, teams) {
+  await mkdir(HISTORY_DIR, { recursive: true });
+  const data = {
+    season, source: "clubee", updated_at: new Date().toISOString(),
+    teams: (teams || []).map(t => ({ id: t.id, name: t.name, logo: t.logo || null })),
+    stats
+  };
+  await writeFile(statsFile(season.id), JSON.stringify(data) + "\n", "utf8");
+  let idx = { seasons: [] };
+  try { idx = JSON.parse(await readFile(STATS_INDEX, "utf8")); } catch { /* neu anlegen */ }
+  idx.seasons = (idx.seasons || []).filter(x => x.id !== season.id);
+  idx.seasons.push({ id: season.id, name: String(season.name), file: statsFile(season.id) });
+  idx.seasons.sort((a, b) => String(b.name).localeCompare(String(a.name), "de", { numeric: true }));
+  idx.updated_at = new Date().toISOString();
+  await writeFile(STATS_INDEX, JSON.stringify(idx, null, 1) + "\n", "utf8");
+}
+async function hasFile(path) {
+  try { await readFile(path, "utf8"); return true; } catch { return false; }
+}
+
 // Karriere aufbauen: vergangene Saisons aus dem Archiv (fehlende einmalig nachladen) + aktuelle Saison
-async function buildCareer(statCats, currentBlocks, seasons, currentName) {
+async function buildCareer(statCats, currentBlocks, seasons, currentName, currentStats, currentTeams) {
   await mkdir(HISTORY_DIR, { recursive: true });
   const nameOf = id => seasons.find(x => x.id === id)?.name || String(id);
 
@@ -401,12 +433,23 @@ async function buildCareer(statCats, currentBlocks, seasons, currentName) {
     if (!REBUILD_HISTORY) {
       try { data = JSON.parse(await readFile(file, "utf8")); } catch { /* noch nicht im Archiv */ }
     }
-    if (!data) {
+    const needStats = REBUILD_HISTORY || !(await hasFile(statsFile(id)));
+    if (!data || needStats) {
       console.log(`Archiv: lade Saison ${nameOf(id)} …`);
-      const blocks = (await fetchSeasonCategoryStats(id, statCats, ["players"])).players;
-      blocks.push(...await computeKickingPunting(id));
-      data = { season: { id, name: nameOf(id) }, updated_at: new Date().toISOString(), players: slimBlocks(blocks) };
-      await writeFile(file, JSON.stringify(data) + "\n", "utf8");
+      const full = await fetchSeasonCategoryStats(id, statCats, ["players", "teams"]);
+      full.players.push(...await computeKickingPunting(id));
+      if (!data) {
+        data = { season: { id, name: nameOf(id) }, updated_at: new Date().toISOString(), players: slimBlocks(full.players) };
+        await writeFile(file, JSON.stringify(data) + "\n", "utf8");
+      }
+      let seasonTeams = [];
+      try {
+        seasonTeams = (await api(`/competitions/${COMPETITION_ID}/seasons/${id}/teams`) || []).map(t => ({
+          id: t.id, name: t.name, logo: IMAGE_URL.test(t.pic_s || "") ? t.pic_s : null }));
+      } catch (e) {
+        console.warn(`Teams der Saison ${nameOf(id)} nicht abrufbar: ${e.message}`);
+      }
+      await writeSeasonStats({ id, name: nameOf(id) }, full, seasonTeams);
     }
     seasonData.push(data);
   }
@@ -414,6 +457,8 @@ async function buildCareer(statCats, currentBlocks, seasons, currentName) {
   // Aktuelle Saison ebenfalls archivieren (wird nach dem Saisonwechsel zur abgeschlossenen Saison)
   const current = { season: { id: SEASON_ID, name: currentName }, updated_at: new Date().toISOString(), players: slimBlocks(currentBlocks) };
   await writeFile(`${HISTORY_DIR}/season-${SEASON_ID}.json`, JSON.stringify(current) + "\n", "utf8");
+  // … und vollständig für die Saisonauswahl der Statistikseiten
+  if (currentStats) await writeSeasonStats({ id: SEASON_ID, name: currentName }, currentStats, currentTeams);
   seasonData.push(current);
 
   const all = seasonData.filter(d => d.players?.length)
@@ -614,7 +659,7 @@ async function main() {
 
   // Karriere über alle Saisons (Archiv + aktuelle Saison)
   try {
-    await buildCareer(statCats, stats.players, seasons, season?.name || String(seasonYear));
+    await buildCareer(statCats, stats.players, seasons, season?.name || String(seasonYear), stats, outTeams);
   } catch (e) {
     console.warn(`Karriere nicht erstellt: ${e.message}`);
   }
