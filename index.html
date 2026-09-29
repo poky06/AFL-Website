@@ -297,7 +297,7 @@
   .detail-stats tr.total td { font-weight: 700; border-top: 2px solid var(--line-strong); background: var(--bg-raised); }
   /* Saisonauswahl und Archiv (Hockeydata 2014–2025) */
   .toolbar select.season-select { font-family: 'Oswald', sans-serif; letter-spacing: .03em; font-size: 15px; }
-  .stats-tbl thead th.calc, .detail-stats th.calc { text-decoration: underline dotted; text-underline-offset: 3px; }
+  .stats-tbl thead th.calc, .detail-stats th.calc, .stats-tbl .tl .nm.calc, .detail-stats td.season.calc { text-decoration: underline dotted; text-underline-offset: 3px; }
   .season-src { font-size: 12.5px; color: var(--chalk-dim); margin: 0 0 12px; }
   .detail-stats td.season .tm { font-weight: 400; color: var(--chalk-dim); margin-left: 6px; font-size: 11px; }
   .detail .arch-note { font-size: 12.5px; color: var(--chalk-dim); margin: 0 0 6px; }
@@ -972,9 +972,10 @@
       "The 2027 AFL season features 6 teams in a double round robin (everyone plays everyone twice) — 10 regular-season games per team, followed by the playoffs for the Austrian Bowl.",
     // Saisonauswahl und Hockeydata-Archiv
     "Lädt …": "Loading …", "Diese Saison konnte nicht geladen werden.": "This season could not be loaded.",
-    "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet.":
-      "Source: Hockeydata archive (AFL 2014–2025). Columns with a dotted underline are not part of the Hockeydata leaderboards and were calculated from the play-by-play logs.",
-    "Archiv-Profil": "Archive profile", "Keine Statistiken vorhanden.": "No statistics available.", "Spiele": "Games",
+    "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten und Spieler fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet.":
+      "Source: Hockeydata archive (AFL 2014–2025). Columns and players with a dotted underline are not part of the Hockeydata leaderboards and were calculated from the play-by-play logs.",
+    "Archiv-Profil": "Archive profile", "Keine Statistiken vorhanden.": "No statistics available.", "Frühere Teams": "Previous teams",
+    "Nicht in den Hockeydata-Ranglisten – berechnet aus den Spielprotokollen": "Not part of the Hockeydata leaderboards – calculated from the play-by-play logs",
     "Archiv-Profil · Statistiken aus dem Hockeydata-Archiv (AFL 2014–2025) und aus Clubee (ab 2026).":
       "Archive profile · Statistics from the Hockeydata archive (AFL 2014–2025) and from Clubee (since 2026).",
     // Spaltenköpfe der berechneten Kategorien
@@ -1499,7 +1500,7 @@
       const list = blocks();
       const archived = ctx.source === "hockeydata";
       const srcNote = archived
-        ? "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet."
+        ? "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten und Spieler fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet."
         : "";
       if (!list.length) {
         tabs.innerHTML = "";
@@ -1542,7 +1543,8 @@
         let nameCell;
         if (kind === "players") {
           const tg = personTarget(ctx, r);
-          nameCell = `<span class="tl ${tg ? "" : "nolink"}" ${tg ? `${tg.attr}="${esc(tg.val)}"` : ""}>${seasonTeamMark(ctx, r.team_id)}${esc(r.name)}</span>`;
+          const calcTitle = r.calc_row ? ` title="Nicht in den Hockeydata-Ranglisten – berechnet aus den Spielprotokollen"` : "";
+          nameCell = `<span class="tl ${tg ? "" : "nolink"}" ${tg ? `${tg.attr}="${esc(tg.val)}"` : ""}${calcTitle}>${seasonTeamMark(ctx, r.team_id)}<span class="${r.calc_row ? "nm calc" : "nm"}">${esc(r.name)}</span></span>`;
         } else {
           const cur = currentTeamFor(ctx, r.team_id);
           nameCell = `<span class="tl ${cur ? "" : "nolink"}" ${cur ? `data-team="${esc(cur.id)}"` : ""}>${seasonTeamMark(ctx, r.team_id)}${esc(r.name || seasonTeamName(ctx, r.team_id))}</span>`;
@@ -1619,18 +1621,32 @@
     ["2007", ["Clinton Graham", ""], ["Jakob Dieplinger", ""], ["Mario Floredo", ""], ["Andrej Kliman", ""], ["Ivan Zivko", ""]],
     ["2005", ["Lance Gustafson", "Vienna Vikings"], ["Lance Gustafson", "Vienna Vikings"], ["Gregor Kodella", "Graz Giants"], ["Christian Steffani", "Cineplexx Blue Devils"], ["Tom Smythe", "Vienna Vikings"]]
   ];
-  const normName = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+  // Schreibweisen in der MVP-Liste, die von Clubee/Hockeydata abweichen (MVP-Name -> Name im System)
+  const MVP_ALIASES = {
+    "Nick Milgate": "Nicholas Milgate",
+    "Eddie Morales III": "Edwin Morales III",
+    "Kyle Newhall-Caballero": "Kyle Newhall",
+    "Ahmonte Watkins": "Ahmonte D'Shon Watkins"
+  };
+  // Vergleich ohne Akzente, Groß-/Kleinschreibung, Bindestriche und Apostrophe
+  const normName = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+  // "Ahmonte D'Shon Watkins" -> "ahmonte watkins" (erster Vorname + Nachname)
+  const shortName = n => { const t = normName(n).split(" "); return t.length > 2 ? `${t[0]} ${t[t.length - 1]}` : t.join(" "); };
   function findPersonByName(name) {
-    const n = normName(name);
-    return players.find(p => normName(p.name) === n) || coaches.find(c => normName(c.name) === n) || null;
+    const n = normName(MVP_ALIASES[name] || name);
+    const exact = players.find(p => normName(p.name) === n) || coaches.find(c => normName(c.name) === n);
+    if (exact) return exact;
+    const s = shortName(n);
+    const hits = [...players, ...coaches].filter(p => shortName(p.name) === s);
+    return hits.length === 1 ? hits[0] : null;
   }
   // Frühere Saisons: MVP-Spieler über das Hockeydata-Archiv verlinken (Name + Saison eindeutig)
   let archiveNameIdx = null;
-  // "Chad Allen Jeffries" -> "chad jeffries" (erster Vorname + Nachname)
-  const shortName = n => { const t = normName(n).split(" "); return t.length > 2 ? `${t[0]} ${t[t.length - 1]}` : t.join(" "); };
   function archivePersonFor(name, season) {
     if (!archiveNameIdx) return null;
-    const cands = new Set([...(archiveNameIdx.idx.get(normName(name)) || []), ...(archiveNameIdx.idx.get(shortName(name)) || [])]);
+    const nm = MVP_ALIASES[name] || name;
+    const cands = new Set([...(archiveNameIdx.idx.get(normName(nm)) || []), ...(archiveNameIdx.idx.get(shortName(nm)) || [])]);
     const hits = [...cands].filter(k => archiveNameIdx.people[k]?.teams?.[season]);
     return hits.length === 1 ? hits[0] : null;
   }
@@ -1640,7 +1656,7 @@
       if (!arch?.people || archiveNameIdx) return;
       const idx = new Map();
       const add = (n, k) => { if (!idx.has(n)) idx.set(n, []); if (!idx.get(n).includes(k)) idx.get(n).push(k); };
-      Object.entries(arch.people).forEach(([k, p]) => { add(normName(p.name), k); add(shortName(p.name), k); });
+      Object.entries(arch.people).forEach(([k, p]) => [p.name, ...(p.aliases || [])].forEach(n => { add(normName(n), k); add(shortName(n), k); }));
       archiveNameIdx = { idx, people: arch.people };
       renderMvps();
     });
@@ -1806,12 +1822,12 @@
     // Spalten: die der neuesten Saison zuerst, dann ggf. ältere zusätzliche
     const labels = [];
     for (const sr of [...seasonsRows].reverse()) for (const l of sr.labels) if (!labels.includes(l)) labels.push(l);
-    const rows = seasonsRows.map(sr => { const m = {}; sr.labels.forEach((l, i) => { m[l] = sr.values[i]; }); return { season: sr.season, team: sr.team, m }; });
+    const rows = seasonsRows.map(sr => { const m = {}; sr.labels.forEach((l, i) => { m[l] = sr.values[i]; }); return { season: sr.season, team: sr.team, calcRow: sr.calcRow, m }; });
     const total = rows.length > 1 ? careerTotal(labels, rows.map(r => r.m)) : null;
     const calc = new Set(calcLabels || []);
     return `<h4>${esc(cat)}</h4><div class="ds-wrap"><table>
       <tr><th class="season">Saison</th>${labels.map(l => `<th title="${esc((titles?.[l] || "") + (calc.has(l) ? " (bis 2025 berechnet aus den Spielprotokollen)" : ""))}"${calc.has(l) ? ` class="calc"` : ""}>${esc(l)}</th>`).join("")}</tr>
-      ${rows.map(r => `<tr><td class="season">${esc(r.season)}${r.team ? `<span class="tm">${esc(r.team)}</span>` : ""}</td>${labels.map(l => `<td>${fmtStat(r.m[l])}</td>`).join("")}</tr>`).join("")}
+      ${rows.map(r => `<tr><td class="season${r.calcRow ? " calc" : ""}"${r.calcRow ? ` title="Nicht in den Hockeydata-Ranglisten – berechnet aus den Spielprotokollen"` : ""}>${esc(r.season)}${r.team ? `<span class="tm">${esc(r.team)}</span>` : ""}</td>${labels.map(l => `<td>${fmtStat(r.m[l])}</td>`).join("")}</tr>`).join("")}
       ${total ? `<tr class="total"><td class="season">Total</td>${total.map(v => `<td>${fmtStat(v)}</td>`).join("")}</tr>` : ""}
     </table></div>`;
   }
@@ -1840,7 +1856,8 @@
           // mehrere Archiv-Schlüssel (Doppel-IDs) – erster Treffer je Saison
           const k = keys.find(k => arch.players?.[k]?.[sn]?.[cat]);
           if (!k || !hasValues(arch.players[k][sn][cat])) continue;
-          seasonsRows.push({ season: sn, team: archiveShort(arch.people?.[k]?.teams?.[sn]), labels: arch.columns?.[cat]?.[sn] || [], values: arch.players[k][sn][cat] });
+          const calcRow = (arch.calc_rows?.[k] || []).includes(`${sn}|${cat}`);
+          seasonsRows.push({ season: sn, team: archiveShort(arch.people?.[k]?.teams?.[sn]), calcRow, labels: arch.columns?.[cat]?.[sn] || [], values: arch.players[k][sn][cat] });
         }
       }
       if (clubeeMine) {
@@ -1855,29 +1872,20 @@
       const calc = seasonsRows.some(r => !(career?.seasons || []).includes(r.season)) ? (arch?.calc?.[cat] || []) : [];
       return careerTableHTML(cat, seasonsRows, titles, calc);
     }).join("");
-    // Übersicht Saisons / Teams / Spiele – zeigt auch Saisons ohne Statistikwerte (z. B. Offensive Line)
-    const overview = [];
-    if (arch) {
-      for (const sn of arch.seasons || []) {
-        const ks = keys.filter(k => arch.people?.[k]?.games?.[sn]);
-        if (!ks.length) continue;
-        overview.push({ season: sn, team: archiveShort(arch.people[ks[0]].teams?.[sn]), g: Math.max(...ks.map(k => arch.people[k].games[sn])) });
-      }
-    }
-    if (overview.length && clubeeMine) {
-      for (const sn of career.seasons || []) {
-        if (overview.some(r => r.season === sn)) continue;
-        const g = Math.max(0, ...Object.values(clubeeMine[sn] || {}).map(v => (Array.isArray(v) && typeof v[0] === "number") ? v[0] : 0));
-        if (g) overview.push({ season: sn, team: sn === CURRENT_SEASON ? currentTeamShort : "", g });
-      }
-    }
-    overview.sort((a, b) => String(a.season).localeCompare(String(b.season), "de", { numeric: true }));
-    const ovHTML = overview.length ? `<h4>Spiele</h4><div class="ds-wrap"><table>
-      <tr><th class="season">Saison</th><th>Team</th><th title="Games">G</th></tr>
-      ${overview.map(r => `<tr><td class="season">${esc(r.season)}</td><td>${esc(r.team || "–")}</td><td>${r.g}</td></tr>`).join("")}
-      ${overview.length > 1 ? `<tr class="total"><td class="season">Total</td><td></td><td>${overview.reduce((a, r) => a + r.g, 0)}</td></tr>` : ""}
-    </table></div>` : "";
-    return { html: ovHTML + html, hasArchive: keys.some(k => arch?.players?.[k] || arch?.people?.[k]?.games) };
+    // Frühere Teams mit Saisons (auch Saisons ohne Statistikwerte, z. B. Offensive Line)
+    const bySeason = {};
+    keys.forEach(k => Object.entries(arch?.people?.[k]?.teams || {}).forEach(([sn, ts]) => {
+      bySeason[sn] = [...new Set([...(bySeason[sn] || []), ...ts])];
+    }));
+    return { html, teamLine: teamSpans(bySeason), hasArchive: keys.some(k => arch?.people?.[k]) };
+  }
+  // {"2016": ["Graz Giants"], "2017": [...]} -> "Graz Giants 2016–2019, 2022 · Danube Dragons 2021"
+  function teamSpans(bySeason) {
+    const teamYears = new Map();
+    Object.keys(bySeason).sort().forEach(sn => (bySeason[sn] || []).forEach(t => { if (!teamYears.has(t)) teamYears.set(t, []); teamYears.get(t).push(Number(sn)); }));
+    const span = ys => ys.reduce((out, y, i) => { if (i && y === ys[i - 1] + 1) out[out.length - 1][1] = y; else out.push([y, y]); return out; }, [])
+      .map(([a, b]) => a === b ? String(a) : `${a}–${b}`).join(", ");
+    return [...teamYears.entries()].map(([t, ys]) => `${t} ${span(ys)}`).join(" · ");
   }
   async function fillDetailStats(personId, currentTeamShort) {
     const box = document.getElementById("detail-stats");
@@ -1885,8 +1893,10 @@
     const raw = personId.startsWith("u") ? personId.slice(1) : personId;
     await seasonsReady;
     const keys = archiveKeysFor(raw);
-    const { html } = await careerHTML({ keys, clubeeId: raw, currentTeamShort });
+    const { html, teamLine } = await careerHTML({ keys, clubeeId: raw, currentTeamShort });
     if (document.getElementById("detail-stats") !== box) return; // Ansicht inzwischen geschlossen/gewechselt
+    const dl = document.querySelector("#detail-content dl");
+    if (teamLine && dl) dl.insertAdjacentHTML("beforeend", `<dt>Frühere Teams</dt><dd>${esc(teamLine)}</dd>`);
     if (html) { box.innerHTML = html; return; }
     // Ohne Karriere-Datei: nur aktuelle Saison
     const seasonName = live?.season?.name || "2027";
@@ -1929,16 +1939,11 @@
     const arch = keys.length ? await loadArchiveCareer() : null;
     const person = keys.map(k => arch?.people?.[k]).find(Boolean) || null;
     const nm = (key && person?.name) || name || person?.name || "—";
-    // Teams mit Saisons, z. B. "Graz Giants 2016–2019, 2022" (über alle Archiv-Schlüssel der Person)
     const bySeason = {};
     keys.forEach(k => Object.entries(arch?.people?.[k]?.teams || {}).forEach(([sn, ts]) => {
       bySeason[sn] = [...new Set([...(bySeason[sn] || []), ...ts])];
     }));
-    const teamYears = new Map();
-    Object.keys(bySeason).sort().forEach(sn => (bySeason[sn] || []).forEach(t => { if (!teamYears.has(t)) teamYears.set(t, []); teamYears.get(t).push(Number(sn)); }));
-    const span = ys => ys.reduce((out, y, i) => { if (i && y === ys[i - 1] + 1) out[out.length - 1][1] = y; else out.push([y, y]); return out; }, [])
-      .map(([a, b]) => a === b ? String(a) : `${a}–${b}`).join(", ");
-    const teamLine = [...teamYears.entries()].map(([t, ys]) => `${t} ${span(ys)}`).join(" · ");
+    const teamLine = teamSpans(bySeason);
     const initialsOf = n => n.split(/\s+/).filter(Boolean).map(x => x[0]).slice(0, 2).join("").toUpperCase();
     document.getElementById("detail-content").innerHTML = `
       <div class="detail-top">
