@@ -23,6 +23,8 @@ const OUT_FILE = "data/afl.json";
 const HISTORY_DIR = "data/history";       // Archiv je Saison (nur IDs und Zahlen)
 const CAREER_FILE = "data/career.json";   // Karrierewerte für die Spieler-Detailansicht
 const REBUILD_HISTORY = process.env.REBUILD_HISTORY === "true";
+// Anzahl der Grunddurchgangsspiele pro Team. Jedes weitere Spiel eines Teams gilt als Playoff-Spiel.
+const REGULAR_GAMES = Number(process.env.REGULAR_GAMES || 10);
 
 if (!TOKEN) {
   console.error("Fehler: CLUBEE_TOKEN ist nicht gesetzt.");
@@ -172,6 +174,34 @@ async function fetchScenes(seasonId) {
     cursor = last;
   }
   return [...byId.values()];
+}
+
+// Welche Spiele sind Playoff-Spiele? Drei Regeln, jede reicht für sich:
+// 1. Das Spiel liegt in einer anderen Clubee-Phase als die meisten Spiele (die größte Phase = Grunddurchgang).
+// 2. Phase oder Runde heißen z. B. "Playoffs", "Wild Card", "Halbfinale", "Austrian Bowl".
+// 3. Eines der beiden Teams hat bereits REGULAR_GAMES Grunddurchgangsspiele (chronologisch gezählt).
+function playoffIds(scenes) {
+  const RE = /playoff|play-off|wild ?card|semi|halb|viertel|quarter|finale?\b|bowl|k\.?\s?o\.?-runde/i;
+  const valid = (scenes || []).filter(g => g && !g.cancelled);
+  const set = new Set();
+  const phaseKey = g => g.phase?.id ?? g.phase?.name ?? null;
+  const byPhase = new Map();
+  valid.forEach(g => { const k = phaseKey(g); if (k !== null) byPhase.set(k, (byPhase.get(k) || 0) + 1); });
+  const mainPhase = byPhase.size > 1 ? [...byPhase.entries()].sort((a, b) => b[1] - a[1])[0][0] : null;
+  valid.forEach(g => {
+    if (mainPhase !== null && phaseKey(g) !== mainPhase) set.add(g.id);
+    else if (RE.test(`${g.phase?.name || ""} ${g.round?.name || ""}`) && !(mainPhase !== null && phaseKey(g) === mainPhase)) set.add(g.id);
+  });
+  if (REGULAR_GAMES > 0) {
+    const count = new Map();
+    [...valid].sort((a, b) => String(a.start_date).localeCompare(String(b.start_date))).forEach(g => {
+      if (set.has(g.id)) return;
+      const a = g.team1?.id, b = g.team2?.id;
+      if ((count.get(a) || 0) >= REGULAR_GAMES || (count.get(b) || 0) >= REGULAR_GAMES) { set.add(g.id); return; }
+      count.set(a, (count.get(a) || 0) + 1); count.set(b, (count.get(b) || 0) + 1);
+    });
+  }
+  return set;
 }
 
 async function fetchMembers(groupId) {
@@ -486,13 +516,13 @@ async function main() {
   let records = null;
   try {
     const scenes = await fetchScenes(SEASON_ID);
+    const po = playoffIds(scenes);
     const rec = new Map(outTeams.map(t => [t.id, { team_id: t.id, w: 0, l: 0, t: 0, pf: 0, pa: 0 }]));
     const results = new Map(outTeams.map(t => [t.id, []])); // für die aktuelle Serie
     const games = [...(scenes || [])].sort((x, y) => String(x.start_date).localeCompare(String(y.start_date)));
     for (const g of games) {
       if (!g.completed || g.cancelled) continue;
-      const phaseName = String(g.phase?.name || g.round?.name || "");
-      if (/playoff|bowl|finale|final|semi|halbfinale/i.test(phaseName)) continue;
+      if (po.has(g.id)) continue; // nur Grunddurchgang zählt für die Tabelle
       const a = rec.get(g.team1?.id), b = rec.get(g.team2?.id);
       const s1 = Number(g.score1), s2 = Number(g.score2);
       if (!a || !b || !Number.isFinite(s1) || !Number.isFinite(s2)) continue;
@@ -519,6 +549,7 @@ async function main() {
   let games = [];
   try {
     const scenes = await fetchScenes(SEASON_ID);
+    const po = playoffIds(scenes);
     const num = v => (v === null || v === undefined || v === "" || !Number.isFinite(Number(v))) ? null : Number(v);
     games = (scenes || []).map(g => ({
       id: g.id,
@@ -532,12 +563,15 @@ async function main() {
       completed: g.completed === true,
       cancelled: g.cancelled === true,
       phase: String(g.phase?.name || ""),
+      playoff: po.has(g.id),
       round: String(g.round?.name || g.game_day || ""),
       venue: g.venue_name || "",
       city: g.venue_city || "",
       stream: typeof g.stream_link === "string" && /^https:\/\//.test(g.stream_link) ? g.stream_link : null
     })).sort((a, b) => String(a.date).localeCompare(String(b.date)));
-    console.log(`Spielplan: ${games.length} Spiele`);
+    const phases = [...new Set((scenes || []).map(g => g.phase?.name).filter(Boolean))];
+    console.log(`Spielplan: ${games.length} Spiele – Grunddurchgang ${games.filter(g => !g.playoff && !g.cancelled).length}, Playoffs ${games.filter(g => g.playoff).length}` +
+      (phases.length ? ` (Phasen in Clubee: ${phases.join(", ")})` : ""));
   } catch (e) {
     console.warn(`Spielplan nicht abrufbar: ${e.message}`);
   }
