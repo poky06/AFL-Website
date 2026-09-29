@@ -123,6 +123,11 @@ Geburtsdatum – z. B. „Junjie Gao“ / „Jun Jie Gao“, „Curis Sven“ / 
 **Saisonauswahl:** Spieler- und Teamstatistiken haben eine Saisonauswahl. Die aktuelle Saison kommt aus
 `data/afl.json`, frühere Clubee-Saisons aus `data/history/stats-<Saison-ID>.json` (legt der Sync nach jedem Lauf
 automatisch an) und 2014–2025 aus dem Archiv.
+Ganz unten im Dropdown steht **All Time**: alle Saisons zusammengezählt (Archiv und Clubee). Spieler werden über
+`player-map.json` zusammengeführt, Teams über den Verein (`club` in `data/archive/index.json`, bei Clubee-Teams über
+den Namen). Quoten und Schnitte werden aus den Summen neu berechnet (z. B. CMP%, Y/A, FG%, Passer Rating, KR Avg),
+Werte pro Spiel über alle Spiele; Schnitte ohne Grundwerte (z. B. 3D%, P Avg) sind nach Spielen gewichtet. Mit
+Teamauswahl zählen bei den Spielern nur die Saisons für dieses Team. Neue Saisons kommen automatisch dazu.
 
 **Spieler-Detailansicht:** Zeigt alle Saisons eines Spielers – Archiv und Clubee zusammen. Ehemalige Spieler
 ohne Clubee-Profil sind in den alten Ranglisten ebenfalls anklickbar und öffnen ein Archiv-Profil (nur Name,
