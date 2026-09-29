@@ -419,6 +419,189 @@
     .detail { padding: 20px; }
     .st-title span { font-size: 15px; padding: 8px 16px; }
   }
+
+  /* ================= Erweiterungen: Menü, Startseite, Teams, Spielplan, Playoffs ================= */
+  .top-inner { position: relative; }
+  .menu-toggle {
+    display: none; margin-left: auto; background: none; border: 1px solid var(--line-strong); color: var(--chalk);
+    font-size: 20px; line-height: 1; padding: 8px 12px; border-radius: var(--radius); cursor: pointer;
+  }
+  #teams-menu { max-height: 70vh; overflow-y: auto; }
+  #teams-menu button[data-panel] { border-bottom: 1px solid var(--line); }
+
+  /* Banner Austrian Bowl */
+  .bowl-banner { margin: 22px 0 8px; }
+  .bb-inner {
+    position: relative; overflow: hidden; border-radius: var(--radius); padding: 26px 24px 22px; color: #fff;
+    background: linear-gradient(115deg, #b0000b 0%, #dd010e 34%, #0c1f3b 34.2%, #002e67 70%, #0069ab 100%);
+    box-shadow: var(--shadow);
+  }
+  .bb-inner::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 60px);
+  }
+  .bb-kicker { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; text-align: center; opacity: .95; }
+  .bb-match { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; margin: 16px 0 12px; }
+  .bb-team { display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 20px; text-align: center; opacity: .8; }
+  .bb-team.win { opacity: 1; }
+  .bb-team img { width: 110px; height: 110px; object-fit: contain; background: #fff; border-radius: 50%; padding: 8px; }
+  .bb-dot { width: 96px; height: 96px; border-radius: 50%; border: 4px solid rgba(255,255,255,.8); }
+  .bb-score { font-family: 'Oswald', sans-serif; font-size: 64px; font-weight: 700; line-height: 1; display: flex; gap: 8px; }
+  .bb-score span { opacity: .6; }
+  .bb-champ { text-align: center; font-family: 'Oswald', sans-serif; font-size: 16px; letter-spacing: .03em; }
+
+  /* Startseite zweispaltig */
+  .home-grid { display: grid; grid-template-columns: minmax(0, 640px) minmax(0, 1fr); gap: 36px; align-items: start; }
+  .home-grid .st-title { max-width: none; }
+  .leaders { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }
+  #club-tab-roster .team-header h2 { display: none; }
+  .lb { background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .lb-title { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; padding: 10px 14px; background: var(--bg-raised); color: var(--chalk-dim); }
+  .lb-top { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; padding: 14px; border-left: 4px solid var(--c); }
+  .lb-top.click, .lb-list li.click { cursor: pointer; }
+  .lb-top.click:hover .lb-name, .lb-list li.click:hover .lb-n { color: var(--turf-bright); }
+  .lb-photo { width: 52px; height: 52px; border-radius: 50%; overflow: hidden; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; color: var(--chalk-dim); }
+  .lb-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .lb-name { font-weight: 700; font-size: 15px; }
+  .lb-team { color: var(--chalk-dim); font-size: 12.5px; }
+  .lb-val { font-family: 'Oswald', sans-serif; font-size: 30px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .lb-list { margin: 0; padding: 4px 14px 10px 34px; font-size: 13.5px; color: var(--chalk-dim); }
+  .lb-list li { padding: 4px 0; border-top: 1px solid var(--line); }
+  .lb-list li:first-child { border-top: none; }
+  .lb-list li span { display: inline-flex; }
+  .lb-n { color: var(--chalk); }
+  .lb-v { float: right; font-variant-numeric: tabular-nums; }
+
+  /* Teams-Übersicht */
+  .club-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; margin-top: 20px; }
+  .club-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+  .cc-top { background: var(--c); border: none; height: 150px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .cc-top img { max-height: 118px; max-width: 70%; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); transition: transform .2s; }
+  .cc-top:hover img { transform: scale(1.05); }
+  .cc-ico { font-size: 56px; }
+  .cc-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .cc-name { font-family: 'Oswald', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: .02em; }
+  .cc-venue { color: var(--chalk-dim); font-size: 13px; min-height: 18px; }
+  .cc-links, .ch-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .cc-links button, .cc-links a {
+    background: var(--bg-raised); border: 1px solid var(--line-strong); color: var(--chalk); border-radius: 20px;
+    padding: 6px 12px; font-size: 12.5px; cursor: pointer; text-decoration: none; font-family: inherit;
+  }
+  .cc-links button:hover, .cc-links a:hover { border-color: var(--flag); }
+  .cc-links .cl-web { background: var(--flag); border-color: var(--flag); color: #fff; }
+
+  /* Teamseite */
+  .club-head { margin-top: 22px; }
+  .ch-band { display: flex; align-items: center; gap: 24px; background: var(--c); color: var(--fg); padding: 22px 26px; border-radius: var(--radius); }
+  .ch-logo img { width: 110px; height: 110px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+  .ch-text h2 { margin: 0 0 6px; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 32px; letter-spacing: .02em; }
+  .ch-meta { font-size: 14px; opacity: .9; }
+  .ch-web { display: inline-block; margin-top: 12px; color: var(--fg); border: 1px solid currentColor; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 13px; }
+  .club-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 18px 0 6px; overflow-x: auto; }
+  .club-tabs button {
+    background: none; border: none; border-bottom: 3px solid transparent; color: var(--chalk-dim); padding: 12px 16px; cursor: pointer;
+    font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .04em; font-size: 14px; white-space: nowrap;
+  }
+  .club-tabs button.active { color: var(--chalk); border-bottom-color: var(--flag); }
+  .club-tab { display: none; }
+  .club-tab.active { display: block; }
+  .stats-tbl tr.avg td { color: var(--chalk-dim); font-style: italic; }
+
+  /* Spielplan */
+  .games { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; max-width: 980px; }
+  .game {
+    display: grid; grid-template-columns: 170px 1fr 96px 1fr; grid-template-areas: "d h s a" ". v v v";
+    align-items: center; gap: 4px 12px; background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px;
+  }
+  .gd { grid-area: d; font-size: 13px; color: var(--chalk-dim); display: flex; flex-direction: column; }
+  .gr { font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; font-family: 'Oswald', sans-serif; }
+  .gh { grid-area: h; justify-self: end; text-align: right; }
+  .ga { grid-area: a; }
+  .gh .gt { flex-direction: row-reverse; }
+  .gt { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+  .gt img { width: 26px; height: 26px; object-fit: contain; background: #fff; border-radius: 50%; padding: 2px; }
+  .gt .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+  .gh.win, .ga.win { font-weight: 700; }
+  .game.done .gh:not(.win), .game.done .ga:not(.win) { opacity: .7; }
+  .gs { grid-area: s; justify-self: center; font-family: 'Oswald', sans-serif; font-size: 20px; font-variant-numeric: tabular-nums; }
+  .gs.open { font-size: 14px; color: var(--chalk-dim); border: 1px solid var(--line-strong); padding: 2px 10px; border-radius: 20px; }
+  .gs.abg { font-size: 12px; color: var(--gold); }
+  .gv { grid-area: v; font-size: 12.5px; color: var(--chalk-dim); text-align: center; }
+  .gv a { color: var(--turf-bright); }
+
+  /* Playoff-Baum */
+  .bracket-wrap { overflow-x: auto; margin-top: 20px; padding-bottom: 8px; }
+  .bracket { display: flex; gap: 26px; min-width: max-content; }
+  .bcol { display: flex; flex-direction: column; width: 240px; }
+  .bhead { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; color: var(--chalk-dim); margin-bottom: 12px; text-align: center; }
+  .bgames { display: flex; flex-direction: column; justify-content: space-around; gap: 18px; flex: 1; }
+  .bgame { background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; position: relative; }
+  .bl { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 8px; padding: 9px 12px; border-top: 1px solid var(--line); cursor: pointer; }
+  .bl:first-child { border-top: none; }
+  .bl img { width: 22px; height: 22px; object-fit: contain; background: #fff; border-radius: 50%; padding: 1px; }
+  .bl .dot { width: 14px; height: 14px; border-radius: 50%; }
+  .bl.win { font-weight: 700; background: var(--bg-raised); }
+  .bl .bs { font-family: 'Oswald', sans-serif; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .bdate { font-size: 11px; color: var(--chalk-dim); padding: 4px 12px 7px; border-top: 1px dashed var(--line); }
+  .bchamp { background: var(--c); color: var(--fg); border-radius: var(--radius); padding: 22px 14px; text-align: center; font-family: 'Oswald', sans-serif; font-size: 20px; text-transform: uppercase; }
+  .bchamp img { width: 96px; height: 96px; object-fit: contain; display: block; margin: 0 auto 10px; }
+  .bc-ico { font-size: 48px; display: block; margin-bottom: 8px; }
+
+  /* Info-Karten (Austrian Bowl) */
+  .info-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-top: 20px; max-width: 760px; }
+  .info-card h2 { margin: 0 0 6px; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+  .ic-meta { color: var(--chalk-dim); }
+  .btn-primary { display: inline-block; background: var(--flag); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: var(--radius); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .04em; font-size: 14px; margin-top: 6px; }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .prog { max-width: 520px; margin-top: 12px; }
+
+  /* Fußzeile */
+  footer.site-foot { text-align: left; padding: 0; }
+  .foot-inner { max-width: 1180px; margin: 0 auto; padding: 28px 24px calc(28px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 18px; }
+  .insta-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+  .insta-title { font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 18px; color: var(--chalk); }
+  .insta-handle { color: var(--chalk-dim); font-size: 14px; }
+  .insta-posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 14px; }
+  .social { display: flex; gap: 10px; flex-wrap: wrap; }
+  .social a { color: var(--chalk); text-decoration: none; border: 1px solid var(--line-strong); padding: 8px 16px; border-radius: 20px; font-size: 13.5px; }
+  .social a:hover { border-color: var(--flag); }
+  .foot-copy { color: var(--chalk-dim); font-size: 12.5px; }
+
+  @media (max-width: 980px) {
+    .home-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .menu-toggle { display: block; }
+    .top-inner { flex-wrap: nowrap !important; }
+    nav.tabs {
+      display: none !important; position: absolute; top: 100%; left: 0; right: 0; margin: 0 !important; width: auto !important;
+      flex-direction: column; align-items: stretch; justify-content: flex-start !important; gap: 0 !important;
+      background: var(--bg); border-bottom: 1px solid var(--line); padding: 6px 16px 16px; z-index: 40;
+      max-height: calc(100vh - 110px); overflow-y: auto; box-shadow: var(--shadow);
+    }
+    header.top.nav-open nav.tabs { display: flex !important; }
+    nav.tabs .dd-toggle { width: 100%; justify-content: space-between; padding: 14px 4px !important; font-size: 15px !important; border-bottom: 1px solid var(--line) !important; }
+    nav.tabs .dropdown-menu,
+    nav.tabs .nav-dropdown:last-child .dropdown-menu,
+    nav.tabs .nav-dropdown:not(:first-child):not(:last-child) .dropdown-menu {
+      position: static !important; transform: none !important; box-shadow: none !important; border: none !important;
+      background: transparent !important; min-width: 0 !important; padding: 4px 0 8px 12px !important; max-height: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .bb-inner { padding: 18px 12px 16px; }
+    .bb-kicker { font-size: 11.5px; }
+    .bb-team { font-size: 14px; }
+    .bb-team img { width: 70px; height: 70px; }
+    .bb-dot { width: 60px; height: 60px; }
+    .bb-score { font-size: 40px; }
+    .game { grid-template-columns: 1fr auto 1fr; grid-template-areas: "d d d" "h s a" "v v v"; padding: 10px 12px; }
+    .gd { flex-direction: row; gap: 8px; justify-content: center; }
+    .gt { font-size: 13px; }
+    .ch-band { flex-direction: column; text-align: center; gap: 12px; padding: 18px; }
+    .ch-text h2 { font-size: 24px; }
+    .ch-logo img { width: 84px; height: 84px; }
+  }
 </style>
 </head>
 <body>
@@ -435,12 +618,29 @@
         <div class="name">Austrian Football League</div>
       </div>
     </div>
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
     <nav class="tabs" id="tabs">
+      <div class="nav-dropdown" id="dd-bowl">
+        <button type="button" class="dd-toggle">Austrian Bowl <span class="caret">▾</span></button>
+        <div class="dropdown-menu">
+          <button data-panel="bowl-tickets">Tickets</button>
+          <button data-panel="bowl-program">Programm</button>
+          <button data-panel="bowl-venue">Venue</button>
+        </div>
+      </div>
       <div class="nav-dropdown" id="dd-saison">
         <button type="button" class="dd-toggle">Saison <span class="caret">▾</span></button>
         <div class="dropdown-menu">
           <button data-panel="competitions">Tabelle</button>
-          <a href="https://live.football.at" target="_blank" rel="noopener noreferrer">Spielplan ↗</a>
+          <button data-panel="schedule">Spielplan</button>
+          <button data-panel="playoffs">Playoffs</button>
+          <a href="https://live.football.at" target="_blank" rel="noopener noreferrer">Live Scores ↗</a>
+        </div>
+      </div>
+      <div class="nav-dropdown" id="dd-teams">
+        <button type="button" class="dd-toggle">Teams <span class="caret">▾</span></button>
+        <div class="dropdown-menu" id="teams-menu">
+          <button data-panel="teams">Alle Teams</button>
         </div>
       </div>
       <div class="nav-dropdown" id="dd-stats">
@@ -471,10 +671,19 @@
 
   <!-- STARTSEITE -->
   <section class="panel active" id="panel-home">
-    <div class="st-title"><span id="st-title-text">Tabelle</span></div>
-    <p class="result-count st-sub" id="comp-intro"></p>
-    <div class="st-list" id="standings-list"></div>
-    <button class="st-more" type="button" data-panel="competitions">Ausführliche Tabelle →</button>
+    <div class="bowl-banner" id="bowl-banner"></div>
+    <div class="home-grid">
+      <div>
+        <div class="st-title"><span id="st-title-text">Tabelle</span></div>
+        <p class="result-count st-sub" id="comp-intro"></p>
+        <div class="st-list" id="standings-list"></div>
+      </div>
+      <div>
+        <div class="st-title"><span>League Leaders</span></div>
+        <p class="result-count st-sub" id="leaders-intro"></p>
+        <div class="leaders" id="leaders"></div>
+      </div>
+    </div>
   </section>
 
   <!-- SPIELER -->
@@ -500,31 +709,80 @@
     </div>
   </section>
 
-  <!-- TEAMS -->
+  <!-- TEAMS (Übersicht) -->
   <section class="panel" id="panel-teams">
-    <div class="toolbar">
-      <select id="team-select"></select>
-    </div>
-    <div id="team-header" class="team-header"></div>
-    <div class="list">
-      <div class="list-row head no-team" id="team-list-head">
-        <span data-key="number">#<span class="arrow">▲</span></span><span></span>
-        <span data-key="name">Name<span class="arrow">▲</span></span>
-        <span data-key="position">Pos.<span class="arrow">▲</span></span>
-        <span data-key="birth">Geburtsdatum<span class="arrow">▲</span></span>
-        <span data-key="nationality">Nationalität<span class="arrow">▲</span></span>
-        <span data-key="license">Lizenz<span class="arrow">▲</span></span>
-      </div>
-      <div id="team-roster"></div>
+    <div class="st-title wide"><span>Teams</span></div>
+    <div class="club-grid" id="club-grid"></div>
+  </section>
+
+  <!-- TEAMSEITE -->
+  <section class="panel" id="panel-club">
+    <div class="club-head" id="club-head"></div>
+    <div class="club-tabs" id="club-tabs">
+      <button type="button" data-tab="roster" class="active">Roster</button>
+      <button type="button" data-tab="schedule">Spielplan</button>
+      <button type="button" data-tab="pstats">Player Stats</button>
+      <button type="button" data-tab="tstats">Team Stats</button>
     </div>
 
-    <h3 class="subheading">Trainerstab</h3>
-    <div class="list">
-      <div class="list-row coach-head">
-        <span></span><span>Name</span><span>Funktion</span><span>Geburtsdatum</span><span>Nationalität</span><span>Lizenz</span>
+    <div class="club-tab active" id="club-tab-roster">
+      <div id="team-header" class="team-header"></div>
+      <div class="list">
+        <div class="list-row head no-team" id="team-list-head">
+          <span data-key="number">#<span class="arrow">▲</span></span><span></span>
+          <span data-key="name">Name<span class="arrow">▲</span></span>
+          <span data-key="position">Pos.<span class="arrow">▲</span></span>
+          <span data-key="birth">Geburtsdatum<span class="arrow">▲</span></span>
+          <span data-key="nationality">Nationalität<span class="arrow">▲</span></span>
+          <span data-key="license">Lizenz<span class="arrow">▲</span></span>
+        </div>
+        <div id="team-roster"></div>
       </div>
-      <div id="team-coaches"></div>
+      <h3 class="subheading">Trainerstab</h3>
+      <div class="list">
+        <div class="list-row coach-head">
+          <span></span><span>Name</span><span>Funktion</span><span>Geburtsdatum</span><span>Nationalität</span><span>Lizenz</span>
+        </div>
+        <div id="team-coaches"></div>
+      </div>
     </div>
+    <div class="club-tab" id="club-tab-schedule"><div class="games" id="club-schedule"></div></div>
+    <div class="club-tab" id="club-tab-pstats"><div id="club-pstats"></div></div>
+    <div class="club-tab" id="club-tab-tstats"><div id="club-tstats"></div></div>
+  </section>
+
+  <!-- SPIELPLAN -->
+  <section class="panel" id="panel-schedule">
+    <div class="st-title wide"><span id="schedule-title">Spielplan</span></div>
+    <div class="toolbar">
+      <select id="schedule-team"><option value="">Alle Teams</option></select>
+      <select id="schedule-phase">
+        <option value="">Ganze Saison</option>
+        <option value="regular">Grunddurchgang</option>
+        <option value="playoff">Playoffs</option>
+      </select>
+    </div>
+    <div class="games" id="schedule-list"></div>
+  </section>
+
+  <!-- PLAYOFFS -->
+  <section class="panel" id="panel-playoffs">
+    <div class="st-title wide"><span id="playoffs-title">Playoffs</span></div>
+    <div class="bracket-wrap"><div class="bracket" id="bracket"></div></div>
+  </section>
+
+  <!-- AUSTRIAN BOWL -->
+  <section class="panel" id="panel-bowl-tickets">
+    <div class="st-title wide"><span>Austrian Bowl · Tickets</span></div>
+    <div class="info-card" id="bowl-tickets"></div>
+  </section>
+  <section class="panel" id="panel-bowl-program">
+    <div class="st-title wide"><span>Austrian Bowl · Programm</span></div>
+    <div class="info-card" id="bowl-program"></div>
+  </section>
+  <section class="panel" id="panel-bowl-venue">
+    <div class="st-title wide"><span>Austrian Bowl · Venue</span></div>
+    <div class="info-card" id="bowl-venue"></div>
   </section>
 
   <!-- WETTBEWERBE -->
@@ -618,7 +876,13 @@
 
 </main>
 
-<footer>Austrian Football League · AFBÖ</footer>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="insta" id="insta"></div>
+    <div class="social" id="social"></div>
+    <div class="foot-copy">Austrian Football League · AFBÖ</div>
+  </div>
+</footer>
 
 <div class="overlay" id="overlay">
   <div class="detail" id="detail-content"></div>
@@ -710,7 +974,15 @@
         { id: 2, name: "Rushing", columns: [{ label: "SP" }, { label: "ATT" }, { label: "YDS" }, { label: "TD" }, { label: "LONG" }],
           rows: rushers.map(p => { const a = 30 + Math.floor(rnd() * 150);
             return { user_id: p.id, name: p.name, team_id: p.team, values: [10, a, a * (3 + Math.floor(rnd() * 4)), Math.floor(rnd() * 15), 10 + Math.floor(rnd() * 70)] }; })
-          .sort((a, b) => b.values[2] - a.values[2]) }
+          .sort((a, b) => b.values[2] - a.values[2]) },
+        { id: 3, name: "Receiving", columns: [{ label: "SP" }, { label: "REC" }, { label: "YDS" }, { label: "TD" }, { label: "LONG" }],
+          rows: players.filter(p => ["WR", "TE"].includes(p.position)).slice(0, 14).map(p => { const r = 10 + Math.floor(rnd() * 50);
+            return { user_id: p.id, name: p.name, team_id: p.team, values: [10, r, r * (9 + Math.floor(rnd() * 8)), Math.floor(rnd() * 12), 20 + Math.floor(rnd() * 60)] }; })
+          .sort((a, b) => b.values[2] - a.values[2]) },
+        { id: 4, name: "Defense", columns: [{ label: "SP" }, { label: "TOT" }, { label: "SOLO" }, { label: "SCK" }, { label: "INT" }, { label: "TD" }],
+          rows: players.filter(p => ["LB", "DL", "CB", "S"].includes(p.position)).slice(0, 18).map(p => { const t = 10 + Math.floor(rnd() * 60);
+            return { user_id: p.id, name: p.name, team_id: p.team, values: [10, t, Math.floor(t * 0.7), Math.floor(rnd() * 9), Math.floor(rnd() * 5), Math.floor(rnd() * 2)] }; })
+          .sort((a, b) => b.values[1] - a.values[1]) }
       ],
       teams: [
         { id: 1, name: "Offense", columns: [{ label: "SP" }, { label: "YDS" }, { label: "TD" }],
@@ -848,12 +1120,6 @@
       ? tc.map(coachRowHTML).join("") : `<div class="empty">Kein Trainerstab hinterlegt.</div>`;
   }
 
-  function renderTeams() {
-    document.getElementById("team-select").innerHTML =
-      teams.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join("");
-    if (teams.length) renderTeamRoster(teams[0].id);
-  }
-  document.getElementById("team-select").addEventListener("change", e => renderTeamRoster(e.target.value));
 
   // Farben und Kurznamen je Team (Clubee-Team-ID). Farben sind Näherungswerte –
   // bei Bedarf hier an die offiziellen Vereinsfarben anpassen.
@@ -877,14 +1143,7 @@
   function standingsRows() {
     if (live && Array.isArray(live.records) && live.records.length)
       return live.records.map(r => ({ ...r, team_id: String(r.team_id) }));
-    if (live) return [];
-    let seed = 7;
-    const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
-    return teams.map(t => {
-      const w = Math.floor(rnd() * 11), pf = 150 + Math.floor(rnd() * 200), pa = 120 + Math.floor(rnd() * 220);
-      const n = 1 + Math.floor(rnd() * 3);
-      return { team_id: t.id, w, l: 10 - w, t: 0, pf, pa, streak: `${n}${rnd() > .5 ? "S" : "N"}` };
-    }).sort((a, b) => b.w - a.w || (b.pf - b.pa) - (a.pf - a.pa));
+    return computeRecords(games);
   }
   function teamStyle(id) {
     const team = teams.find(t => t.id === id) || { name: "—", color: "#29527f", icon: "🏈" };
@@ -915,7 +1174,8 @@
     // Tabelle-Seite: ausführlich
     document.getElementById("tbl-intro").textContent = live ? "Grunddurchgang" : "Demo-Tabelle";
     document.getElementById("standings-head").innerHTML =
-      `<tr><th></th><th>Team</th><th>S</th><th>N</th>${rows.some(r => r.t) ? "<th>U</th>" : ""}<th>Sp.</th><th>Pct.</th><th>Diff.</th><th>PF</th><th>PA</th><th>Serie</th></tr>`;
+      `<tr><th></th><th>Team</th><th>S</th><th>N</th>${rows.some(r => r.t) ? "<th>U</th>" : ""}<th>Sp.</th><th>Pct.</th><th>Diff.</th><th>PF</th><th>PA</th><th>Serie</th><th title="Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang (inkl. noch offener Spiele), auf Basis der aktuellen Tabelle">SOS</th></tr>`;
+    const sos = sosMap();
     const showT = rows.some(r => r.t);
     document.getElementById("standings-body").innerHTML = rows.map((r, i) => {
       const { team, color } = teamStyle(r.team_id);
@@ -928,23 +1188,18 @@
         <td class="team"><span class="tl" data-team="${esc(r.team_id)}">${mark}${esc(team.name)}</span></td>
         <td>${r.w}</td><td>${r.l}</td>${showT ? `<td>${r.t || 0}</td>` : ""}<td>${g}</td><td>${pct}</td>
         <td>${diff > 0 ? "+" : ""}${diff}</td><td>${r.pf ?? "–"}</td><td>${r.pa ?? "–"}</td><td>${esc(r.streak || "–")}</td>
+        <td>${sos[r.team_id] === null || sos[r.team_id] === undefined ? "–" : sos[r.team_id].toFixed(3).replace(".", ",")}</td>
       </tr>`;
     }).join("");
   }
 
-  function openTeamFromStandings(teamId) {
-    if (!teams.some(t => t.id === teamId)) return;
-    activatePanel("teams");
-    document.getElementById("team-select").value = teamId;
-    renderTeamRoster(teamId);
-  }
+  function openTeamFromStandings(teamId) { openClub(teamId, "roster"); }
   document.getElementById("standings-list").addEventListener("click", e => {
     const row = e.target.closest(".st-row"); if (row) openTeamFromStandings(row.dataset.team);
   });
   document.getElementById("standings-body").addEventListener("click", e => {
     const t = e.target.closest(".tl"); if (t) openTeamFromStandings(t.dataset.team);
   });
-  document.querySelector(".st-more").addEventListener("click", () => activatePanel("competitions"));
   const brand = document.getElementById("brand-home");
   brand.addEventListener("click", () => activatePanel("home"));
   brand.addEventListener("keydown", e => { if (e.key === "Enter") activatePanel("home"); });
@@ -1060,7 +1315,7 @@
   // Je Saison: [League MVP, Offense MVP, Defense MVP, Young Star, Coach of the Year] als [Name, Team] oder null
   const MVPS = [
     ["2026", ["Chad Jeffries", "Speedfit Vienna Knights"], ["Ahmonte Watkins", "Prague Black Panthers"], ["Franz Korger", "Graz Giants"], ["Daniel Holzmann", "Swarco Raiders Tirol"], ["Darius Saint-Robinson", "Prague Black Panthers"]],
-    ["2025", ["Eddie Morales III", "Graz Giants"], ["Fritz Bleckmann", "Graz Giants"], ["M. Rebl", "Danube Dragons"], ["Jakob Scheucher", "Swarco Raiders Tirol"], ["Stefan Pokorny", "Graz Giants"]],
+    ["2025", ["Eddie Morales III", "Graz Giants"], ["Fritz Bleckmann", "Graz Giants"], ["Matthias Rebl", "Danube Dragons"], ["Jakob Scheucher", "Swarco Raiders Tirol"], ["Stefan Pokorny", "Graz Giants"]],
     ["2024", ["Nico Hrouda", "AFC Vienna Vikings"], ["Maximillion Fine", "AFC Vienna Vikings"], ["Jalen Dennis", "Prague Black Panthers"], ["Tim Tonko", "Swarco Raiders Tirol"], ["Benjamin Sobotka", "AFC Vienna Vikings"]],
     ["2023", ["Tyler Jarnagin", "Prague Black Panthers"], ["Devontae Jordan", "AFC Vienna Vikings"], ["Paul Schachner", "Danube Dragons"], ["Valentin Bader", "Graz Giants"], ["Spencer Ford", "Prague Black Panthers"]],
     ["2022", ["Chad Jeffries", "Danube Dragons"], ["Devontae Jordan", "Vienna Vikings"], ["Hugo Dyrendahl", "Telfs Patriots"], ["Nico Hrouda", "Vienna Vikings"], ["Nick Kleinhansl", "Telfs Patriots"]],
@@ -1070,10 +1325,16 @@
     ["2017", ["Anthony Gardner", "Ljubljana Silverhawks"], ["Matic Tomse", "Ljubljana Silverhawks"], ["Thomas Schnurrer", "Graz Giants"], ["Bernhard Seikovits", "Vienna Vikings"], ["Shuan Fatah", "Swarco Raiders Tirol"]],
     ["2016", ["Sean Shelton", "Swarco Raiders Tirol"], ["Dario Dobrolevski", "AFC Rangers Mödling"], ["Thomas Schnurrer", "Graz Giants"], ["Sandro Platzgummer", "Swarco Raiders Tirol"], ["Martin Kocian", "Graz Giants"]],
     ["2015", ["Kyle Newhall-Caballero", "Prague Black Panthers"], ["Jan Dundacek", "Prague Black Panthers"], ["Alexander Achammer", "Swarco Raiders Tirol"], ["Sandro Platzgummer", "Swarco Raiders Tirol"], ["Chris Calaycay", "Vienna Vikings"]],
-    ["2013", ["Christoph Gross", "Vienna Vikings"], ["Jesse Lewis", "Vienna Vikings"], ["Simon Blach", "Vienna Vikings"], ["Christoph Gubisch", "Graz Giants"], null],
-    ["2012", ["Alex Gross", "Graz Giants"], ["Christoph Gross", "Vienna Vikings"], ["Alex Gross", "Graz Giants"], ["Andreas Hofbauer", "Swarco Raiders Tirol"], null],
+    ["2014", ["Kyle Newhall-Caballero", "Prague Black Panthers"], ["Andreas Hofbauer", "Swarco Raiders Tirol"], ["Dustin Illetschko", "Vienna Vikings"], ["Florian Probst", "Graz Giants"], ["Taylor Breitzman", "Prague Black Panthers"]],
+    ["2013", ["Christoph Gross", "Vienna Vikings"], ["Jesse Lewis", "Vienna Vikings"], ["Simon Blach", "Vienna Vikings"], ["Christoph Gubisch", "Graz Giants"], ["Chris Calaycay", "Vienna Vikings"]],
+    ["2012", ["Alex Gross", "Graz Giants"], ["Christoph Gross", "Vienna Vikings"], ["Alex Gross", "Graz Giants"], ["Andreas Hofbauer", "Swarco Raiders Tirol"], ["Nick Johansen", "Graz Giants"]],
+    ["2011", ["Chris Gunn", "Graz Giants"], ["Florian Grein", "Swarco Raiders Tirol"], ["John Clements", "Swarco Raiders Tirol"], ["Laurinho Walch", "Vienna Vikings"], ["Rick Rhoades", "Graz Giants"]],
+    ["2010", ["Chris Gunn", "Graz Giants"], ["Germaine Race", "Invaders St. Pölten"], ["Mike Brannon", "Vienna Vikings"], ["Jakob Baran", "Danube Dragons"], ["Ivan Zivko", "Danube Dragons"]],
+    ["2009", ["Philipp Margreiter", "Swarco Raiders Tirol"], ["Joseph Brian Stein", "Danube Dragons"], ["Christoph Schreiner", "Graz Giants"], ["Alexander Taheri", "Vienna Vikings"], ["Rick Rhoades", "Graz Giants"]],
     ["2008", ["Mohammed Muheize", "Graz Giants"], ["Florian Grein", "Swarco Raiders Tirol"], ["Samuel Carter", "Graz Giants"], ["Michael Janik", "Danube Dragons"], ["Geoffrey Buffum", "Swarco Raiders Tirol"]],
-    ["2006", ["Christian Steffani", "Cineplexx Blue Devils"], ["Clinton Graham", "Vienna Vikings"], ["Mario Rinner", "Swarco Raiders Tirol"], ["Ramon Abdel Azim", "Carinthian Black Lions"], null]
+    ["2006", ["Christian Steffani", "Cineplexx Blue Devils"], ["Clinton Graham", "Vienna Vikings"], ["Mario Rinner", "Swarco Raiders Tirol"], ["Ramon Abdel Azim", "Carinthian Black Lions"], ["Chris Calaycay", ""]],
+    ["2007", ["Clinton Graham", ""], ["Jakob Dieplinger", ""], ["Mario Floredo", ""], ["Andrej Kliman", ""], ["Ivan Zivko", ""]],
+    ["2005", ["Lance Gustafson", "Vienna Vikings"], ["Lance Gustafson", "Vienna Vikings"], ["Gregor Kodella", "Graz Giants"], ["Christian Steffani", "Cineplexx Blue Devils"], ["Tom Smythe", "Vienna Vikings"]]
   ];
   const normName = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
   function findPersonByName(name) {
@@ -1091,7 +1352,7 @@
         const nameHtml = person
           ? `<button type="button" class="plink pn" data-person="${esc(person.id)}">${esc(name)}</button>`
           : `<span class="pn">${esc(name)}</span>`;
-        return `<td>${nameHtml}<span class="pt">${esc(team)}</span></td>`;
+        return `<td>${nameHtml}${team ? `<span class="pt">${esc(team)}</span>` : ""}</td>`;
       }).join("")}
     </tr>`).join("");
     document.getElementById("mvps-foot").textContent = "Die Liste wird laufend um frühere Saisons ergänzt.";
@@ -1299,14 +1560,458 @@
     : `<button class="team-badge" type="button" style="background:${t.color}" data-team="${esc(t.id)}" title="${esc(t.name)}">${t.icon}</button>`
   ).join("");
   document.getElementById("team-strip").addEventListener("click", e => {
-    const b = e.target.closest(".team-badge"); if (!b) return;
-    activatePanel("teams");
-    document.getElementById("team-select").value = b.dataset.team;
-    renderTeamRoster(b.dataset.team);
+    const b = e.target.closest(".team-badge"); if (b) openClub(b.dataset.team, "roster");
   });
+
+  // =====================================================================
+  // Konfiguration – hier pflegen
+  // =====================================================================
+  // Offizielle Vereins-Websites (Clubee-Team-ID → URL). Fehlende Teams zeigen keinen Website-Knopf.
+  const TEAM_WEBSITES = {
+    "355129": "https://viennavikings.com",
+    "355038": "https://www.raiders.at",
+    "355142": "https://www.danube-dragons.com/",
+    "355285": "https://enthroners.hu/",
+    "355103": "https://knights.at/",
+    "355311": "https://pragueblackpanthers.com/"
+  };
+  // Letzte Austrian Bowl (Banner auf der Startseite)
+  const LAST_BOWL = {
+    edition: "XLI", season: "2026", date: "25. Juli 2026", venue: "Datenpol Arena, Maria Enzersdorf",
+    home: { id: "354986", name: "Graz Giants", score: 16 },
+    away: { id: "355142", name: "Danube Dragons", score: 14 }
+  };
+  // Nächste Austrian Bowl (Seiten Tickets / Programm / Venue)
+  const AUSTRIAN_BOWL = {
+    edition: "XLII", year: "2027",
+    date: "",        // z. B. "Samstag, 24. Juli 2027"
+    venue: "",       // z. B. "Datenpol Arena"
+    address: "",     // z. B. "Johann-Steinböck-Straße 3, 2344 Maria Enzersdorf"
+    ticketsUrl: "https://www.oeticket.com/artist/austrian-bowl/",
+    program: []      // z. B. [["15:00", "Einlass"], ["18:15", "MVP-Ehrung"], ["19:00", "Kickoff"]]
+  };
+  // Social Media (derzeit die Kanäle des AFBÖ)
+  const SOCIAL = {
+    instagramHandle: "afl_austrianfootballleague",
+    instagram: "https://www.instagram.com/afl_austrianfootballleague/",
+    facebook: "https://www.facebook.com/touchdownaustria",
+    youtube: "https://www.youtube.com/channel/UCkiZHXsRDCyqer9V5w5Q0lQ"
+  };
+  // Optional: einzelne Instagram-Beiträge einbetten (Links zu Posts, z. B. "https://www.instagram.com/p/XXXXXXXX/")
+  const INSTAGRAM_POSTS = [];
+
+  // =====================================================================
+  // Spiele, Records, Strength of Schedule
+  // =====================================================================
+  const PLAYOFF_RE = /playoff|play-off|wild|semi|halb|final|bowl|viertel|quarter/i;
+  const isPlayoff = g => PLAYOFF_RE.test(`${g.phase || ""} ${g.round || ""}`);
+
+  function demoGames() {
+    let seed = 11;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+    const score = () => 7 * Math.floor(rnd() * 5) + (rnd() > .5 ? 3 : 0) + (rnd() > .6 ? 7 : 0);
+    const ids = teams.map(t => t.id), n = ids.length, arr = [...ids], rounds = [];
+    for (let r = 0; r < n - 1; r++) {
+      const pairs = [];
+      for (let i = 0; i < n / 2; i++) pairs.push([arr[i], arr[n - 1 - i]]);
+      rounds.push(pairs);
+      arr.splice(1, 0, arr.pop());
+    }
+    const all = [...rounds, ...rounds.map(p => p.map(([a, b]) => [b, a]))];
+    const out = []; let id = 1;
+    const start = new Date("2027-03-20T15:00:00");
+    const nameOf = x => teams.find(t => t.id === x)?.name || "";
+    const mk = (h, a, date, phase, round) => {
+      let hs = score(), as = score(); if (hs === as) hs += 3;
+      return { id: id++, date: date.toISOString(), home_id: h, home: nameOf(h), away_id: a, away: nameOf(a),
+        home_score: hs, away_score: as, completed: true, cancelled: false, phase, round,
+        venue: "Demo-Stadion", city: "", stream: null };
+    };
+    all.forEach((pairs, r) => pairs.forEach(([h, a]) =>
+      out.push(mk(h, a, new Date(start.getTime() + r * 7 * 864e5), "Grunddurchgang", `Spieltag ${r + 1}`))));
+    const seeds = computeRecords(out).map(r => r.team_id);
+    const win = g => (g.home_score > g.away_score ? g.home_id : g.away_id);
+    let d = new Date(start.getTime() + all.length * 7 * 864e5);
+    const wc1 = mk(seeds[2], seeds[5], d, "Playoffs", "Wild Card"), wc2 = mk(seeds[3], seeds[4], d, "Playoffs", "Wild Card");
+    d = new Date(d.getTime() + 7 * 864e5);
+    const sf1 = mk(seeds[0], win(wc2), d, "Playoffs", "Halbfinale"), sf2 = mk(seeds[1], win(wc1), d, "Playoffs", "Halbfinale");
+    d = new Date(d.getTime() + 14 * 864e5);
+    const bowl = mk(win(sf1), win(sf2), d, "Playoffs", "Austrian Bowl");
+    out.push(wc1, wc2, sf1, sf2, bowl);
+    return out;
+  }
+
+  function computeRecords(list) {
+    const rec = new Map(teams.map(t => [t.id, { team_id: t.id, w: 0, l: 0, t: 0, pf: 0, pa: 0, res: [] }]));
+    list.filter(g => !isPlayoff(g) && g.completed && !g.cancelled && g.home_score !== null && g.away_score !== null)
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+      .forEach(g => {
+        const h = rec.get(String(g.home_id)), a = rec.get(String(g.away_id));
+        if (!h || !a) return;
+        h.pf += g.home_score; h.pa += g.away_score; a.pf += g.away_score; a.pa += g.home_score;
+        if (g.home_score > g.away_score) { h.w++; a.l++; h.res.push("S"); a.res.push("N"); }
+        else if (g.away_score > g.home_score) { a.w++; h.l++; a.res.push("S"); h.res.push("N"); }
+        else { h.t++; a.t++; h.res.push("U"); a.res.push("U"); }
+      });
+    const pct = r => (r.w + r.l + r.t) ? (r.w + r.t / 2) / (r.w + r.l + r.t) : 0;
+    return [...rec.values()].map(r => {
+      let k = 0; for (let i = r.res.length - 1; i >= 0 && r.res[i] === r.res[r.res.length - 1]; i--) k++;
+      return { ...r, streak: k ? `${k}${r.res[r.res.length - 1]}` : null };
+    }).sort((x, y) => pct(y) - pct(x) || y.w - x.w || (y.pf - y.pa) - (x.pf - x.pa) || y.pf - x.pf);
+  }
+
+  const games = (live && Array.isArray(live.games) && live.games.length)
+    ? live.games.map(g => ({ ...g, home_id: idStr(g.home_id), away_id: idStr(g.away_id) }))
+    : (live ? [] : demoGames());
+
+  // Strength of Schedule: kombinierte Siegquote aller Gegner im Grunddurchgang
+  // (gespielte + noch offene Spiele), gewichtet nach Anzahl der Begegnungen,
+  // auf Basis der aktuellen Bilanz der Gegner. Ändert sich die Tabelle, ändert sich der SOS mit.
+  function sosMap() {
+    const recs = {};
+    standingsRows().forEach(r => { recs[r.team_id] = r; });
+    const regular = games.filter(g => !isPlayoff(g) && !g.cancelled);
+    const out = {};
+    teams.forEach(t => {
+      let w = 0, l = 0, ti = 0;
+      regular.forEach(g => {
+        const opp = g.home_id === t.id ? g.away_id : g.away_id === t.id ? g.home_id : null;
+        const r = opp && recs[opp];
+        if (!r) return;
+        w += r.w; l += r.l; ti += r.t || 0;
+      });
+      const gp = w + l + ti;
+      out[t.id] = gp ? (w + ti / 2) / gp : null;
+    });
+    return out;
+  }
+
+  // =====================================================================
+  // Spielplan
+  // =====================================================================
+  function fmtDateTime(iso) {
+    if (!iso) return { d: "Termin offen", t: "" };
+    const dt = new Date(iso);
+    if (isNaN(dt)) return { d: String(iso), t: "" };
+    const t = dt.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
+    return { d: dt.toLocaleDateString("de-AT", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }), t: t === "00:00" ? "" : t };
+  }
+  function teamRef(id, fallbackName) {
+    const t = teams.find(x => x.id === idStr(id)) || teams.find(x => x.name === fallbackName);
+    const { color } = teamStyle(t ? t.id : "");
+    return { t, name: t ? t.name : (fallbackName || "—"), color, logo: t ? (t.logo || null) : null };
+  }
+  function teamChip(id, name) {
+    const r = teamRef(id, name);
+    const mark = r.logo ? `<img src="${esc(r.logo)}" alt="">` : `<span class="dot" style="background:${r.color}"></span>`;
+    return `<span class="gt">${mark}<span>${esc(r.name)}</span></span>`;
+  }
+  const roundLabel = g => g.round || g.phase || "";
+  function gameRow(g) {
+    const { d, t } = fmtDateTime(g.date);
+    const done = g.completed && g.home_score !== null && g.away_score !== null;
+    const hw = done && g.home_score > g.away_score, aw = done && g.away_score > g.home_score;
+    const mid = g.cancelled ? `<span class="gs abg">abgesagt</span>`
+      : done ? `<span class="gs">${g.home_score} : ${g.away_score}</span>`
+      : `<span class="gs open">${esc(t || "vs")}</span>`;
+    const where = [g.venue, g.city].filter(Boolean).join(", ");
+    return `<div class="game${done ? " done" : ""}">
+      <div class="gd">${esc(d)}${roundLabel(g) ? `<span class="gr">${esc(roundLabel(g))}</span>` : ""}</div>
+      <div class="gh${hw ? " win" : ""}">${teamChip(g.home_id, g.home)}</div>
+      ${mid}
+      <div class="ga${aw ? " win" : ""}">${teamChip(g.away_id, g.away)}</div>
+      <div class="gv">${esc(where)}${g.stream ? `${where ? " · " : ""}<a href="${esc(g.stream)}" target="_blank" rel="noopener noreferrer">Stream ↗</a>` : ""}</div>
+    </div>`;
+  }
+  function gamesHTML(list) {
+    if (!list.length) return `<div class="empty">Keine Spiele gefunden.</div>`;
+    return list.map(gameRow).join("");
+  }
+  function renderSchedule() {
+    const team = document.getElementById("schedule-team").value;
+    const phase = document.getElementById("schedule-phase").value;
+    const list = games.filter(g => (!team || g.home_id === team || g.away_id === team) &&
+      (!phase || (phase === "playoff" ? isPlayoff(g) : !isPlayoff(g))));
+    document.getElementById("schedule-list").innerHTML = gamesHTML(list);
+  }
+  document.getElementById("schedule-team").insertAdjacentHTML("beforeend",
+    teams.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join(""));
+  ["schedule-team", "schedule-phase"].forEach(id => document.getElementById(id).addEventListener("input", renderSchedule));
+
+  // =====================================================================
+  // Playoffs (Turnierbaum)
+  // =====================================================================
+  function roundName(key) {
+    if (/wild/i.test(key)) return "Wild Card Round";
+    if (/viertel|quarter/i.test(key)) return "Viertelfinale";
+    if (/semi|halb/i.test(key)) return "Halbfinale";
+    if (/bowl|final/i.test(key)) return "Austrian Bowl";
+    return key || "Playoffs";
+  }
+  function renderPlayoffs() {
+    const seasonName = live?.season?.name || "2027";
+    document.getElementById("playoffs-title").textContent = `Playoffs ${seasonName}`;
+    const po = games.filter(g => isPlayoff(g) && !g.cancelled);
+    const el = document.getElementById("bracket");
+    if (!po.length) { el.innerHTML = `<div class="empty">Für diese Saison sind noch keine Playoff-Spiele erfasst.</div>`; return; }
+    const groups = new Map();
+    po.forEach(g => {
+      const key = roundName(PLAYOFF_RE.test(g.round || "") ? g.round : (g.phase && !/^play-?offs?$/i.test(g.phase.trim()) ? g.phase : g.round || g.phase));
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(g);
+    });
+    const cols = [...groups.entries()].sort((a, b) =>
+      String(a[1][0].date).localeCompare(String(b[1][0].date)));
+    const line = (id, name, sc, win) => {
+      const r = teamRef(id, name);
+      const mark = r.logo ? `<img src="${esc(r.logo)}" alt="">` : `<span class="dot" style="background:${r.color}"></span>`;
+      return `<div class="bl${win ? " win" : ""}" data-team="${esc(r.t ? r.t.id : "")}">${mark}<span class="bn">${esc(r.name)}</span><span class="bs">${sc ?? ""}</span></div>`;
+    };
+    let html = cols.map(([name, list]) => `<div class="bcol"><div class="bhead">${esc(name)}</div><div class="bgames">${
+      list.map(g => {
+        const done = g.completed && g.home_score !== null;
+        const { d } = fmtDateTime(g.date);
+        return `<div class="bgame">${line(g.home_id, g.home, done ? g.home_score : null, done && g.home_score > g.away_score)}${
+          line(g.away_id, g.away, done ? g.away_score : null, done && g.away_score > g.home_score)}<div class="bdate">${esc(d)}</div></div>`;
+      }).join("")}</div></div>`).join("");
+    const final = cols[cols.length - 1][1][0];
+    if (final && final.completed && final.home_score !== null && final.home_score !== final.away_score) {
+      const w = final.home_score > final.away_score ? teamRef(final.home_id, final.home) : teamRef(final.away_id, final.away);
+      html += `<div class="bcol champ-col"><div class="bhead">Champion</div><div class="bgames"><div class="bchamp" style="--c:${w.color};--fg:${textOn(w.color)}">
+        ${w.logo ? `<img src="${esc(w.logo)}" alt="">` : `<span class="bc-ico">🏆</span>`}<div>${esc(w.name)}</div></div></div></div>`;
+    }
+    el.innerHTML = html;
+  }
+  document.getElementById("bracket").addEventListener("click", e => {
+    const l = e.target.closest(".bl[data-team]"); if (l && l.dataset.team) openClub(l.dataset.team, "roster");
+  });
+
+  // =====================================================================
+  // Teams: Übersicht, Menü, Teamseite
+  // =====================================================================
+  function homeVenue(id) {
+    const count = {};
+    games.filter(g => g.home_id === id && g.venue).forEach(g => {
+      const k = [g.venue, g.city].filter(Boolean).join(", "); count[k] = (count[k] || 0) + 1;
+    });
+    return Object.entries(count).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+  }
+  function clubLinks(id) {
+    const site = TEAM_WEBSITES[id];
+    return `${site ? `<a class="cl-web" href="${esc(site)}" target="_blank" rel="noopener noreferrer">Website ↗</a>` : ""}
+      <button type="button" data-club="${esc(id)}" data-tab="roster">Roster</button>
+      <button type="button" data-club="${esc(id)}" data-tab="schedule">Spielplan</button>
+      <button type="button" data-club="${esc(id)}" data-tab="pstats">Player Stats</button>
+      <button type="button" data-club="${esc(id)}" data-tab="tstats">Team Stats</button>`;
+  }
+  function renderTeamsOverview() {
+    const sorted = [...teams].sort((a, b) => a.name.localeCompare(b.name));
+    document.getElementById("club-grid").innerHTML = sorted.map(t => {
+      const { color } = teamStyle(t.id);
+      const logo = t.logoBig || t.logo;
+      return `<div class="club-card" style="--c:${color};--fg:${textOn(color)}">
+        <button type="button" class="cc-top" data-club="${esc(t.id)}" data-tab="roster" aria-label="${esc(t.name)}">
+          ${logo ? `<img src="${esc(logo)}" alt="">` : `<span class="cc-ico">${t.icon}</span>`}
+        </button>
+        <div class="cc-body">
+          <div class="cc-name">${esc(t.name)}</div>
+          <div class="cc-venue">${esc(homeVenue(t.id) || t.city || "")}</div>
+          <div class="cc-links">${clubLinks(t.id)}</div>
+        </div>
+      </div>`;
+    }).join("");
+    document.getElementById("teams-menu").insertAdjacentHTML("beforeend",
+      sorted.map(t => `<button type="button" data-club="${esc(t.id)}">${esc(t.name)}</button>`).join(""));
+  }
+  let currentClub = null;
+  function setClubTab(tab) {
+    document.querySelectorAll("#club-tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+    document.querySelectorAll(".club-tab").forEach(t => t.classList.toggle("active", t.id === "club-tab-" + tab));
+  }
+  function openClub(id, tab = "roster") {
+    id = idStr(id);
+    if (!teams.some(t => t.id === id)) return;
+    currentClub = id;
+    renderClubHead(id);
+    renderTeamRoster(id);
+    document.getElementById("club-schedule").innerHTML = gamesHTML(games.filter(g => g.home_id === id || g.away_id === id));
+    renderClubPlayerStats(id);
+    renderClubTeamStats(id);
+    setClubTab(tab);
+    activatePanel("club");
+    document.querySelectorAll("#teams-menu [data-club]").forEach(b => b.classList.toggle("active", b.dataset.club === id));
+    document.getElementById("dd-teams").classList.add("active-parent");
+    window.scrollTo({ top: 0 });
+  }
+  function renderClubHead(id) {
+    const t = teams.find(x => x.id === id);
+    const { color } = teamStyle(id);
+    const rows = standingsRows();
+    const pos = rows.findIndex(r => r.team_id === id);
+    const r = rows[pos];
+    const rec = r ? `Bilanz ${r.w}-${r.l}${r.t ? "-" + r.t : ""} · Platz ${pos + 1}` : "";
+    const venue = homeVenue(id) || t.city || "";
+    const logo = t.logoBig || t.logo;
+    const site = TEAM_WEBSITES[id];
+    document.getElementById("club-head").innerHTML = `<div class="ch-band" style="--c:${color};--fg:${textOn(color)}">
+      <div class="ch-logo">${logo ? `<img src="${esc(logo)}" alt="">` : `<span class="cc-ico">${t.icon}</span>`}</div>
+      <div class="ch-text">
+        <h2>${esc(t.name)}</h2>
+        <div class="ch-meta">${[rec, venue].filter(Boolean).map(esc).join(" · ")}</div>
+        ${site ? `<a class="ch-web" href="${esc(site)}" target="_blank" rel="noopener noreferrer">Offizielle Website ↗</a>` : ""}
+      </div>
+    </div>`;
+  }
+  function renderClubPlayerStats(id) {
+    const blocks = ((statsData && statsData.players) || []).map(b => ({ ...b, rows: b.rows.filter(r => idStr(r.team_id) === id) })).filter(b => b.rows.length);
+    document.getElementById("club-pstats").innerHTML = blocks.length ? blocks.map(b => `
+      <h3 class="subheading">${esc(b.name)}</h3>
+      <div class="tbl-wrap"><table class="standings stats-tbl"><thead><tr><th>Spieler</th>${b.columns.map(c => `<th title="${esc(c.title || "")}">${esc(c.label)}</th>`).join("")}</tr></thead>
+      <tbody>${b.rows.map(r => { const pid = personIdForStat(r.user_id);
+        return `<tr><td class="team"><span class="tl ${pid ? "" : "nolink"}" ${pid ? `data-person="${esc(pid)}"` : ""}>${esc(r.name)}</span></td>${r.values.map(v => `<td>${fmtStat(v)}</td>`).join("")}</tr>`; }).join("")}</tbody></table></div>`).join("")
+      : `<div class="empty">Noch keine Spielerstatistiken für dieses Team.</div>`;
+  }
+  function renderClubTeamStats(id) {
+    const blocks = ((statsData && statsData.teams) || []).filter(b => !/^standings$/i.test(String(b.name || "").trim()));
+    const html = blocks.map(b => {
+      const row = b.rows.find(r => idStr(r.team_id) === id);
+      if (!row) return "";
+      const avg = b.columns.map((c, i) => { const v = b.rows.map(r => r.values[i]).filter(x => typeof x === "number"); return v.length ? v.reduce((a, x) => a + x, 0) / v.length : null; });
+      return `<h3 class="subheading">${esc(b.name)}</h3>
+        <div class="tbl-wrap"><table class="standings stats-tbl"><thead><tr><th></th>${b.columns.map(c => `<th title="${esc(c.title || "")}">${esc(c.label)}</th>`).join("")}</tr></thead>
+        <tbody><tr><td class="team">${esc(teams.find(t => t.id === id).name)}</td>${row.values.map(v => `<td>${fmtStat(v)}</td>`).join("")}</tr>
+        <tr class="avg"><td class="team">Ligaschnitt</td>${avg.map(v => `<td>${v === null ? "–" : fmtStat(Math.round(v * 10) / 10)}</td>`).join("")}</tr></tbody></table></div>`;
+    }).join("");
+    document.getElementById("club-tstats").innerHTML = html || `<div class="empty">Noch keine Teamstatistiken für dieses Team.</div>`;
+  }
+  document.getElementById("club-tabs").addEventListener("click", e => {
+    const b = e.target.closest("button[data-tab]"); if (b) setClubTab(b.dataset.tab);
+  });
+  document.getElementById("club-pstats").addEventListener("click", e => {
+    const t = e.target.closest(".tl[data-person]"); if (t) openDetail(t.dataset.person);
+  });
+  document.getElementById("club-grid").addEventListener("click", e => {
+    const b = e.target.closest("[data-club]"); if (b) openClub(b.dataset.club, b.dataset.tab || "roster");
+  });
+
+  // =====================================================================
+  // Startseite: Austrian-Bowl-Banner und League Leaders
+  // =====================================================================
+  function renderBanner() {
+    const side = s => {
+      const r = teamRef(s.id, s.name);
+      const mark = r.logo ? `<img src="${esc(r.logo)}" alt="">` : `<span class="bb-dot" style="background:${r.color}"></span>`;
+      return { html: `<div class="bb-team${s.score > (s === LAST_BOWL.home ? LAST_BOWL.away.score : LAST_BOWL.home.score) ? " win" : ""}">${mark}<span>${esc(r.name)}</span></div>`, r };
+    };
+    const h = side(LAST_BOWL.home), a = side(LAST_BOWL.away);
+    const champ = LAST_BOWL.home.score > LAST_BOWL.away.score ? h.r : a.r;
+    document.getElementById("bowl-banner").innerHTML = `<div class="bb-inner">
+      <div class="bb-kicker">Austrian Bowl ${esc(LAST_BOWL.edition)} · ${esc(LAST_BOWL.date)} · ${esc(LAST_BOWL.venue)}</div>
+      <div class="bb-match">${h.html}<div class="bb-score">${LAST_BOWL.home.score}<span>:</span>${LAST_BOWL.away.score}</div>${a.html}</div>
+      <div class="bb-champ">🏆 Champion ${esc(LAST_BOWL.season)}: ${esc(champ.name)}</div>
+    </div>`;
+  }
+  const normLbl = s => String(s || "").toUpperCase().replace(/[\s.]/g, "");
+  function leaderBoards() {
+    const P = (statsData && statsData.players) || [];
+    const colIdx = (b, names) => b.columns.findIndex(c => names.includes(normLbl(c.label)));
+    const byCat = re => P.find(b => re.test(b.name) && !b.computed);
+    const boards = [];
+    const single = (title, re, names) => {
+      const b = byCat(re); if (!b) return;
+      const i = colIdx(b, names); if (i < 0) return;
+      boards.push({ title, rows: b.rows.map(r => ({ user_id: r.user_id, name: r.name, team_id: r.team_id, v: r.values[i] })).filter(r => typeof r.v === "number" && r.v > 0) });
+    };
+    single("Passing Yards", /pass/i, ["YDS", "YARDS", "NETYDS", "PASSYDS"]);
+    single("Receiving Yards", /receiv/i, ["YDS", "YARDS", "RECYDS"]);
+    single("Rushing Yards", /rush/i, ["YDS", "YARDS", "NETYDS", "RUSHYDS"]);
+    const td = new Map();
+    P.filter(b => !/pass/i.test(b.name) && !b.computed).forEach(b => {
+      const i = colIdx(b, ["TD", "TDS"]); if (i < 0) return;
+      b.rows.forEach(r => {
+        const v = r.values[i]; if (typeof v !== "number" || !v) return;
+        const k = idStr(r.user_id) || r.name;
+        const e = td.get(k) || { user_id: r.user_id, name: r.name, team_id: r.team_id, v: 0 };
+        e.v += v; td.set(k, e);
+      });
+    });
+    boards.push({ title: "Total Touchdowns", rows: [...td.values()] });
+    single("Total Tackles", /def/i, ["TOT", "TKL", "TOTAL", "TT", "TACKLES", "TOTTKL", "TOTALTACKLES"]);
+    single("Sacks", /def|sack/i, ["SCK", "SACKS", "SACK", "SK"]);
+    boards.forEach(b => b.rows.sort((x, y) => y.v - x.v));
+    return boards.filter(b => b.rows.length);
+  }
+  function renderLeaders() {
+    const boards = leaderBoards();
+    document.getElementById("leaders-intro").textContent = live ? `Saison ${live.season?.name || ""}` : "Demo-Daten";
+    document.getElementById("leaders").innerHTML = boards.length ? boards.map(b => {
+      const top = b.rows[0];
+      const pid = personIdForStat(top.user_id);
+      const person = pid ? (players.find(p => p.id === pid) || null) : null;
+      const tr = teamRef(top.team_id, "");
+      const photo = person?.photo ? `<img src="${esc(person.photo)}" alt="">` : `<span>${esc(person ? person.initials : (top.name.split(" ").map(x => x[0]).join("").slice(0, 2)))}</span>`;
+      return `<div class="lb">
+        <div class="lb-title">${esc(b.title)}</div>
+        <div class="lb-top ${pid ? "click" : ""}" ${pid ? `data-person="${esc(pid)}"` : ""} style="--c:${tr.color}">
+          <div class="lb-photo">${photo}</div>
+          <div class="lb-who"><div class="lb-name">${esc(top.name)}</div><div class="lb-team">${esc(tr.t ? tr.t.name : "")}</div></div>
+          <div class="lb-val">${fmtStat(top.v)}</div>
+        </div>
+        <ol class="lb-list" start="2">${b.rows.slice(1, 5).map(r => { const p2 = personIdForStat(r.user_id);
+          return `<li ${p2 ? `class="click" data-person="${esc(p2)}"` : ""}><span class="lb-n">${esc(r.name)}</span><span class="lb-v">${fmtStat(r.v)}</span></li>`; }).join("")}</ol>
+      </div>`;
+    }).join("") : `<div class="empty">Noch keine Statistiken verfügbar.</div>`;
+  }
+  document.getElementById("leaders").addEventListener("click", e => {
+    const el = e.target.closest("[data-person]"); if (el) openDetail(el.dataset.person);
+  });
+
+  // =====================================================================
+  // Austrian-Bowl-Seiten
+  // =====================================================================
+  function renderBowlPages() {
+    const B = AUSTRIAN_BOWL;
+    const head = `<h2>Austrian Bowl ${esc(B.edition)}${B.year ? ` · ${esc(B.year)}` : ""}</h2>
+      <p class="ic-meta">${B.date ? esc(B.date) : "Termin wird bekanntgegeben"}${B.venue ? ` · ${esc(B.venue)}` : ""}</p>`;
+    document.getElementById("bowl-tickets").innerHTML = head + `
+      <p>Tickets für das Finale der Austrian Football League gibt es im offiziellen Vorverkauf.</p>
+      ${B.ticketsUrl ? `<a class="btn-primary" href="${esc(B.ticketsUrl)}" target="_blank" rel="noopener noreferrer">Tickets kaufen ↗</a>` : "<p>Der Vorverkauf startet in Kürze.</p>"}`;
+    document.getElementById("bowl-program").innerHTML = head + (B.program.length
+      ? `<table class="standings prog"><tbody>${B.program.map(([t, x]) => `<tr><td class="season">${esc(t)}</td><td>${esc(x)}</td></tr>`).join("")}</tbody></table>`
+      : `<p>Das Programm für den Finaltag wird rechtzeitig vor der Austrian Bowl ${esc(B.edition)} veröffentlicht.</p>`);
+    const q = [B.venue, B.address].filter(Boolean).join(", ");
+    document.getElementById("bowl-venue").innerHTML = head + (B.venue
+      ? `<p><strong>${esc(B.venue)}</strong>${B.address ? `<br>${esc(B.address)}` : ""}</p>
+         <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer">In Google Maps öffnen ↗</a>`
+      : `<p>Der Austragungsort der Austrian Bowl ${esc(B.edition)} wird bekanntgegeben.</p>
+         <p class="ic-meta">Zuletzt: Austrian Bowl ${esc(LAST_BOWL.edition)} · ${esc(LAST_BOWL.venue)}</p>`);
+  }
+
+  // =====================================================================
+  // Fußzeile: Instagram und Social Links
+  // =====================================================================
+  function renderFooter() {
+    const posts = INSTAGRAM_POSTS.filter(u => /^https:\/\/www\.instagram\.com\/(p|reel)\//.test(u));
+    document.getElementById("insta").innerHTML = `
+      <div class="insta-head">
+        <div><div class="insta-title">Folge der AFL auf Instagram</div><div class="insta-handle">@${esc(SOCIAL.instagramHandle)}</div></div>
+        <a class="btn-primary" href="${esc(SOCIAL.instagram)}" target="_blank" rel="noopener noreferrer">Auf Instagram ansehen ↗</a>
+      </div>
+      ${posts.length ? `<div class="insta-posts">${posts.map(u => `<blockquote class="instagram-media" data-instgrm-permalink="${esc(u)}" data-instgrm-version="14"></blockquote>`).join("")}</div>` : ""}`;
+    if (posts.length) {
+      const sc = document.createElement("script");
+      sc.async = true; sc.src = "https://www.instagram.com/embed.js";
+      document.body.appendChild(sc);
+    }
+    document.getElementById("social").innerHTML = [["Facebook", SOCIAL.facebook], ["Instagram", SOCIAL.instagram], ["YouTube", SOCIAL.youtube]]
+      .filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${n}</a>`).join("");
+  }
 
   // ---------- Navigation ----------
   function activatePanel(panelId) {
+    document.querySelector("header.top").classList.remove("nav-open");
+    document.getElementById("menu-toggle").setAttribute("aria-expanded", "false");
+    if (panelId !== "club") document.querySelectorAll("#teams-menu [data-club]").forEach(b => b.classList.remove("active"));
     document.querySelectorAll(".dropdown-menu button[data-panel]").forEach(b =>
       b.classList.toggle("active", b.dataset.panel === panelId));
     document.querySelectorAll(".nav-dropdown").forEach(dd =>
@@ -1324,7 +2029,17 @@
   });
   document.addEventListener("click", () =>
     document.querySelectorAll(".nav-dropdown").forEach(dd => dd.classList.remove("open")));
+  document.getElementById("menu-toggle").addEventListener("click", e => {
+    e.stopPropagation();
+    const open = document.querySelector("header.top").classList.toggle("nav-open");
+    e.currentTarget.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", e => {
+    if (!e.target.closest("header.top")) document.querySelector("header.top").classList.remove("nav-open");
+  });
   document.getElementById("tabs").addEventListener("click", e => {
+    const club = e.target.closest("button[data-club]");
+    if (club) { openClub(club.dataset.club, "roster"); document.querySelectorAll(".nav-dropdown").forEach(dd => dd.classList.remove("open")); return; }
     const btn = e.target.closest("button[data-panel]");
     if (!btn) return;
     activatePanel(btn.dataset.panel);
@@ -1332,8 +2047,14 @@
   });
 
   renderPlayers();
-  renderTeams();
+  renderTeamsOverview();
   renderStandings();
+  renderSchedule();
+  renderPlayoffs();
+  renderBanner();
+  renderLeaders();
+  renderBowlPages();
+  renderFooter();
   renderChampions();
   renderMvps();
   renderPlayerStats();
