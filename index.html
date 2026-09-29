@@ -295,6 +295,14 @@
   .detail-stats td.season, .detail-stats th.season { text-align: left; font-weight: 600; color: var(--chalk); }
   .detail-stats td.season, .detail-stats th.season { position: sticky; left: 0; z-index: 1; background: var(--bg-card); }
   .detail-stats tr.total td { font-weight: 700; border-top: 2px solid var(--line-strong); background: var(--bg-raised); }
+  /* Saisonauswahl und Archiv (Hockeydata 2014–2025) */
+  .toolbar select.season-select { font-family: 'Oswald', sans-serif; letter-spacing: .03em; font-size: 15px; }
+  .stats-tbl thead th.calc, .detail-stats th.calc { text-decoration: underline dotted; text-underline-offset: 3px; }
+  .season-src { font-size: 12.5px; color: var(--chalk-dim); margin: 0 0 12px; }
+  .detail-stats td.season .tm { font-weight: 400; color: var(--chalk-dim); margin-left: 6px; font-size: 11px; }
+  .detail .arch-note { font-size: 12.5px; color: var(--chalk-dim); margin: 0 0 6px; }
+  #detail-content { max-width: 640px; }
+  .stats-tbl .tl .dot.arch { display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: var(--line-strong); vertical-align: middle; }
   #panel-competitions .st-title { max-width: 980px; }
 
   section.panel { display: none; }
@@ -811,6 +819,7 @@
     <div class="cat-tabs" id="sp-cats"></div>
     <p class="result-count" id="sp-note" style="margin:10px 0 0"></p>
     <div class="toolbar">
+      <select id="sp-season" class="season-select" aria-label="Saison"></select>
       <input type="search" id="sp-search" placeholder="Spieler suchen…">
       <select id="sp-team"><option value="">Alle Teams</option></select>
     </div>
@@ -823,13 +832,17 @@
   <section class="panel" id="panel-stats-teams">
     <div class="st-title wide"><span id="ts-title">Teamstatistiken</span></div>
     <div class="cat-tabs" id="ts-cats"></div>
+    <div class="toolbar">
+      <select id="ts-season" class="season-select" aria-label="Saison"></select>
+    </div>
+    <p class="season-src" id="ts-note"></p>
     <div class="tbl-wrap"><table class="standings stats-tbl"><thead id="ts-head"></thead><tbody id="ts-body"></tbody></table></div>
   </section>
 
   <!-- MVPs -->
   <section class="panel" id="panel-mvps">
     <div class="st-title wide"><span>AFL MVPs</span></div>
-    <p class="result-count st-sub">Die Auszeichnungen des AFBÖ für die Regular Season. Spieler der aktuellen Saison sind anklickbar und öffnen ihre Statistiken.</p>
+    <p class="result-count st-sub">Die Auszeichnungen des AFBÖ für die Regular Season. Verlinkte Spieler öffnen ihre Statistiken (Archiv ab 2014).</p>
     <div class="tbl-wrap">
       <table class="standings mvp-tbl">
         <thead><tr><th>Saison</th><th>League MVP</th><th>Offense MVP</th><th>Defense MVP</th><th>Young Star</th><th>Coach of the Year</th></tr></thead>
@@ -932,8 +945,8 @@
     "Berechnet aus den Spielprotokollen und Box Scores der Saison – keine offizielle Clubee-Kategorie.":
       "Calculated from the season's play-by-play logs and box scores – not an official Clubee category.",
     "Die Liste wird laufend um frühere Saisons ergänzt.": "Earlier seasons are being added continuously.",
-    "Die Auszeichnungen des AFBÖ für die Regular Season. Spieler der aktuellen Saison sind anklickbar und öffnen ihre Statistiken.":
-      "The AFBÖ awards for the regular season. Players from the current season are clickable and open their statistics.",
+    "Die Auszeichnungen des AFBÖ für die Regular Season. Verlinkte Spieler öffnen ihre Statistiken (Archiv ab 2014).":
+      "The AFBÖ awards for the regular season. Linked players open their statistics (archive from 2014).",
     "Alle Austrian-Bowl-Sieger seit 1984. In Klammern die Anzahl der Austrian-Bowl-Titel des Vereins bis zu diesem Jahr.":
       "All Austrian Bowl winners since 1984. In brackets: the club's number of Austrian Bowl titles up to that year.",
     "Keine Austrian Bowl (Covid-19): Best-of-five-Finalserie, 31:19, 45:13, 46:29.":
@@ -957,6 +970,13 @@
       "The AFL is organised by the AFBÖ (Austrian American Football Federation) as the governing body, which also runs Divisions 1 to 3.",
     "Die AFL 2027 spielt mit 6 Teams im doppelten Round Robin (jeder gegen jeden zweimal) — 10 Spiele pro Team im Grunddurchgang, anschließend Playoffs um den Austrian Bowl.":
       "The 2027 AFL season features 6 teams in a double round robin (everyone plays everyone twice) — 10 regular-season games per team, followed by the playoffs for the Austrian Bowl.",
+    // Saisonauswahl und Hockeydata-Archiv
+    "Lädt …": "Loading …", "Diese Saison konnte nicht geladen werden.": "This season could not be loaded.",
+    "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet.":
+      "Source: Hockeydata archive (AFL 2014–2025). Columns with a dotted underline are not part of the Hockeydata leaderboards and were calculated from the play-by-play logs.",
+    "Archiv-Profil": "Archive profile", "Keine Statistiken vorhanden.": "No statistics available.", "Spiele": "Games",
+    "Archiv-Profil · Statistiken aus dem Hockeydata-Archiv (AFL 2014–2025) und aus Clubee (ab 2026).":
+      "Archive profile · Statistics from the Hockeydata archive (AFL 2014–2025) and from Clubee (since 2026).",
     // Spaltenköpfe der berechneten Kategorien
     "SP": "GP", "FGV": "FGA", "GEBL": "BLK", "AUS": "OOB", "PKT": "PTS",
     // Tooltips
@@ -984,7 +1004,9 @@
     [/^Das Programm für den Finaltag wird rechtzeitig vor der Austrian Bowl (\S+) veröffentlicht\.$/, "The programme for the final will be published ahead of Austrian Bowl $1."],
     [/^Der Austragungsort der Austrian Bowl (\S+) wird bekanntgegeben\.$/, "The venue for Austrian Bowl $1 will be announced."],
     [/^Zuletzt: (.+)$/, "Last held: $1"],
-    [/^(.+) · Trikot #(\d+)$/, "$1 · Jersey #$2"]
+    [/^(.+) · Trikot #(\d+)$/, "$1 · Jersey #$2"],
+    [/^(.*?)\s*\(bis 2025 berechnet aus den Spielprotokollen\)$/, "$1 (until 2025 calculated from the play-by-play logs)"],
+    [/^(.+) \(berechnet aus den Spielprotokollen\)$/, "$1 (calculated from the play-by-play logs)"]
   ];
   function trText(raw) {
     const key = raw.replace(/\s+/g, " ").trim();
@@ -1344,6 +1366,7 @@
   const idStr = v => (v === null || v === undefined) ? "" : String(v);
   function personIdForStat(userId) {
     const u = idStr(userId);
+    if (!u) return null;
     if (players.some(p => p.id === u)) return u;          // Demo
     if (players.some(p => p.id === "u" + u)) return "u" + u; // Live
     return null;
@@ -1356,32 +1379,148 @@
     const { team, color } = teamStyle(idStr(teamId));
     return team.logo ? `<img src="${esc(team.logo)}" alt="">` : `<span class="dot" style="background:${color}"></span>`;
   }
+
+  // ---------- Saisons: aktuelle Saison aus Clubee (afl.json), frühere Clubee-Saisons aus
+  // data/history (vom Sync angelegt) und das Hockeydata-Archiv 2014–2025 aus data/archive ----------
+  const normKey = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+  const fetchJSON = url => fetch(url, { cache: "no-cache" }).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  const CURRENT_SEASON = live?.season?.name ? String(live.season.name) : "";
+  let seasonList = [{ name: CURRENT_SEASON || "Demo", file: null, source: "clubee" }];
+  let archiveIndex = null;   // data/archive/index.json (Saisons + Teams des Archivs)
+  let playerMap = {};        // Archiv-Schlüssel (hd…) -> Clubee-Spieler-ID
+  const seasonCache = new Map();
+  const seasonsReady = (async () => {
+    const [hist, arch, pmap] = await Promise.all([
+      fetchJSON("data/history/index.json"), fetchJSON("data/archive/index.json"), fetchJSON("data/archive/player-map.json")]);
+    archiveIndex = arch;
+    playerMap = pmap || {};
+    const list = [...seasonList];
+    (hist?.seasons || []).forEach(s => {
+      if (s && s.file && !list.some(x => x.name === String(s.name))) list.push({ name: String(s.name), file: s.file, source: "clubee" });
+    });
+    (arch?.seasons || []).forEach(s => {
+      if (s && s.file && !list.some(x => x.name === String(s.name))) list.push({ name: String(s.name), file: s.file, source: "hockeydata" });
+    });
+    list.sort((a, b) => (a.file === null ? -1 : b.file === null ? 1 : String(b.name).localeCompare(String(a.name), "de", { numeric: true })));
+    seasonList = list;
+  })();
+  function loadSeason(name) {
+    const s = seasonList.find(x => x.name === name) || seasonList[0];
+    if (!s.file) return Promise.resolve({ name: s.name, source: "clubee", current: true, stats: statsData, teams: null });
+    if (!seasonCache.has(s.file)) {
+      seasonCache.set(s.file, fetchJSON(s.file).then(d => d ? {
+        name: s.name, source: d.source || s.source, current: false,
+        stats: d.stats || { players: [], teams: [] }, teams: d.teams || []
+      } : { name: s.name, source: s.source, current: false, stats: { players: [], teams: [] }, teams: [], failed: true }));
+    }
+    return seasonCache.get(s.file);
+  }
+  // Archiv-Team (hd-…) -> aktuelles Clubee-Team desselben Vereins (für Logo, Farbe und Teamseite)
+  const archiveTeam = id => archiveIndex?.teams?.[idStr(id)] || null;
+  function currentTeamFor(ctx, teamId) {
+    const id = idStr(teamId);
+    if (ctx.current) return teams.find(t => t.id === id) || null;
+    const a = archiveTeam(id);
+    if (a) return a.club ? (teams.find(t => t.name.toLowerCase().includes(a.club)) || null) : null;
+    const st = (ctx.teams || []).find(t => idStr(t.id) === id);
+    return teams.find(t => t.id === id) || (st ? teams.find(t => normKey(t.name) === normKey(st.name)) : null) || null;
+  }
+  function seasonTeamName(ctx, teamId, fallback) {
+    const id = idStr(teamId);
+    const st = (ctx.teams || []).find(t => idStr(t.id) === id);
+    return st?.name || archiveTeam(id)?.name || fallback || teamName(id);
+  }
+  function seasonTeamMark(ctx, teamId) {
+    if (ctx.current) return teamMark(teamId);
+    const cur = currentTeamFor(ctx, teamId);
+    if (cur) return teamMark(cur.id);
+    const st = (ctx.teams || []).find(t => idStr(t.id) === idStr(teamId));
+    return st?.logo ? `<img src="${esc(st.logo)}" alt="">` : `<span class="dot arch"></span>`;
+  }
+  // Klick auf einen Spieler einer früheren Saison: Clubee-Profil, sonst Archiv-Profil
+  function personTarget(ctx, r) {
+    if (r.pid) {
+      const cu = playerMap[r.pid];
+      const pid = cu !== undefined ? personIdForStat(cu) : null;
+      return pid ? { attr: "data-person", val: pid } : { attr: "data-arch", val: r.pid };
+    }
+    const pid = personIdForStat(r.user_id);
+    if (pid) return { attr: "data-person", val: pid };
+    if (!ctx.current && r.user_id) return { attr: "data-cu", val: idStr(r.user_id) + "|" + (r.name || "") };
+    return null;
+  }
+
   function makeStatsView(kind, prefix) {
-    const state = { cat: 0, sort: null, dir: -1, shown: 25 };
+    const state = { cat: 0, catName: null, sort: null, dir: -1, shown: 25, season: null, ctx: null };
     const HIDDEN = /^standings$/i; // Team-Kategorie "Standings" doppelt sich mit der Tabelle
-    const blocks = () => ((statsData && statsData[kind]) || []).filter(b => !(kind === "teams" && HIDDEN.test(String(b.name || "").trim())));
+    const blocks = () => ((state.ctx?.stats && state.ctx.stats[kind]) || []).filter(b => !(kind === "teams" && HIDDEN.test(String(b.name || "").trim())));
     const tabs = document.getElementById(prefix + "-cats");
     const head = document.getElementById(prefix + "-head");
     const body = document.getElementById(prefix + "-body");
-    function render() {
+    const seasonSel = document.getElementById(prefix + "-season");
+    const note = document.getElementById(prefix + "-note");
+    const teamSel = prefix === "sp" ? document.getElementById("sp-team") : null;
+
+    function fillSeasonSelect() {
+      seasonSel.innerHTML = seasonList.map(s => `<option value="${esc(s.name)}">${esc(s.name)}</option>`).join("");
+      seasonSel.value = state.season || seasonList[0].name;
+      seasonSel.disabled = seasonList.length < 2;
+    }
+    function fillTeamSelect() {
+      if (!teamSel) return;
+      const keep = teamSel.value;
+      const ctx = state.ctx;
+      let opts;
+      if (ctx.current) opts = teams.map(t => ({ id: t.id, name: t.name }));
+      else {
+        const ids = new Set();
+        blocks().forEach(b => b.rows.forEach(r => { if (r.team_id !== null && r.team_id !== undefined) ids.add(idStr(r.team_id)); }));
+        opts = [...ids].map(id => ({ id, name: seasonTeamName(ctx, id) })).sort((a, b) => a.name.localeCompare(b.name));
+      }
+      teamSel.innerHTML = `<option value="">Alle Teams</option>` + opts.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join("");
+      teamSel.value = opts.some(t => t.id === keep) ? keep : "";
+    }
+    async function selectSeason(name) {
+      state.season = name;
+      body.innerHTML = `<tr><td class="empty">Lädt …</td></tr>`;
+      const ctx = await loadSeason(name);
+      if (state.season !== name) return; // inzwischen andere Saison gewählt
+      state.ctx = ctx;
       const list = blocks();
+      const i = state.catName ? list.findIndex(b => b.name === state.catName) : -1;
+      state.cat = i >= 0 ? i : 0;
+      state.sort = null; state.dir = -1; state.shown = 25;
+      fillTeamSelect();
+      render();
+    }
+    function render() {
+      const ctx = state.ctx;
+      if (!ctx) return;
+      const list = blocks();
+      const archived = ctx.source === "hockeydata";
+      const srcNote = archived
+        ? "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet."
+        : "";
       if (!list.length) {
         tabs.innerHTML = "";
         head.innerHTML = "";
-        body.innerHTML = `<tr><td class="empty">Noch keine Statistiken verfügbar.</td></tr>`;
+        body.innerHTML = `<tr><td class="empty">${ctx.failed ? "Diese Saison konnte nicht geladen werden." : "Noch keine Statistiken verfügbar."}</td></tr>`;
+        if (note) note.innerHTML = srcNote ? `<span>${esc(srcNote)}</span>` : "";
         if (prefix === "sp") { document.getElementById("sp-count").textContent = ""; document.getElementById("sp-more").style.display = "none"; }
         return;
       }
       const block = list[Math.min(state.cat, list.length - 1)];
+      state.catName = block.name;
       tabs.innerHTML = list.map((b, i) => `<button type="button" data-i="${i}" class="${i === state.cat ? "active" : ""}">${esc(b.name)}</button>`).join("");
-      if (prefix === "sp") document.getElementById("sp-note").textContent = block.computed
+      if (note) note.innerHTML = [srcNote, prefix === "sp" && block.computed && !archived
         ? "Berechnet aus den Spielprotokollen und Box Scores der Saison – keine offizielle Clubee-Kategorie."
-        : "";
+        : ""].filter(Boolean).map(t => `<span>${esc(t)}</span>`).join(" ");
+      const calc = new Set(block.calc || []);
       let rows = block.rows;
       if (prefix === "sp") {
         const q = document.getElementById("sp-search").value.trim().toLowerCase();
-        const team = document.getElementById("sp-team").value;
-        rows = rows.filter(r => (!q || r.name.toLowerCase().includes(q)) && (!team || idStr(r.team_id) === team));
+        const team = teamSel.value;
+        rows = rows.filter(r => (!q || String(r.name || "").toLowerCase().includes(q)) && (!team || idStr(r.team_id) === team));
       }
       if (state.sort !== null) {
         const k = state.sort;
@@ -1394,14 +1533,20 @@
       }
       const total = rows.length;
       if (prefix === "sp") rows = rows.slice(0, state.shown);
-      head.innerHTML = `<tr><th></th><th>${kind === "players" ? "Spieler" : "Team"}</th>${block.columns.map((c, i) =>
-        `<th data-col="${i}" title="${esc(c.title || "")}" class="${state.sort === i ? "sorted" + (state.dir === 1 ? " asc" : "") : ""}">${esc(c.label)}</th>`).join("")}</tr>`;
+      head.innerHTML = `<tr><th></th><th>${kind === "players" ? "Spieler" : "Team"}</th>${block.columns.map((c, i) => {
+        const title = calc.has(i) ? `${c.title || c.label} (berechnet aus den Spielprotokollen)` : (c.title || "");
+        const cls = [state.sort === i ? "sorted" + (state.dir === 1 ? " asc" : "") : "", calc.has(i) ? "calc" : ""].filter(Boolean).join(" ");
+        return `<th data-col="${i}" title="${esc(title)}" class="${cls}">${esc(c.label)}</th>`;
+      }).join("")}</tr>`;
       body.innerHTML = rows.map((r, i) => {
-        const pid = kind === "players" ? personIdForStat(r.user_id) : null;
-        const tid = idStr(r.team_id);
-        const nameCell = kind === "players"
-          ? `<span class="tl ${pid ? "" : "nolink"}" ${pid ? `data-person="${esc(pid)}"` : ""}>${teamMark(r.team_id)}${esc(r.name)}</span>`
-          : `<span class="tl" data-team="${esc(tid)}">${teamMark(r.team_id)}${esc(r.name || teamName(tid))}</span>`;
+        let nameCell;
+        if (kind === "players") {
+          const tg = personTarget(ctx, r);
+          nameCell = `<span class="tl ${tg ? "" : "nolink"}" ${tg ? `${tg.attr}="${esc(tg.val)}"` : ""}>${seasonTeamMark(ctx, r.team_id)}${esc(r.name)}</span>`;
+        } else {
+          const cur = currentTeamFor(ctx, r.team_id);
+          nameCell = `<span class="tl ${cur ? "" : "nolink"}" ${cur ? `data-team="${esc(cur.id)}"` : ""}>${seasonTeamMark(ctx, r.team_id)}${esc(r.name || seasonTeamName(ctx, r.team_id))}</span>`;
+        }
         return `<tr><td class="rank">${i + 1}</td><td class="team">${nameCell}</td>${r.values.map(v => `<td>${fmtStat(v)}</td>`).join("")}</tr>`;
       }).join("");
       if (prefix === "sp") {
@@ -1411,7 +1556,7 @@
     }
     tabs.addEventListener("click", e => {
       const b = e.target.closest("button[data-i]"); if (!b) return;
-      state.cat = Number(b.dataset.i); state.sort = null; state.dir = -1; state.shown = 25; render();
+      state.cat = Number(b.dataset.i); state.catName = null; state.sort = null; state.dir = -1; state.shown = 25; render();
     });
     head.addEventListener("click", e => {
       const th = e.target.closest("th[data-col]"); if (!th) return;
@@ -1422,14 +1567,19 @@
     body.addEventListener("click", e => {
       const t = e.target.closest(".tl"); if (!t) return;
       if (t.dataset.person) openDetail(t.dataset.person);
+      else if (t.dataset.arch) openArchiveDetail({ key: t.dataset.arch });
+      else if (t.dataset.cu) { const [cu, ...n] = t.dataset.cu.split("|"); openArchiveDetail({ clubeeId: cu, name: n.join("|") }); }
       else if (t.dataset.team) openTeamFromStandings(t.dataset.team);
     });
+    seasonSel.addEventListener("change", () => selectSeason(seasonSel.value));
     if (prefix === "sp") {
-      document.getElementById("sp-team").insertAdjacentHTML("beforeend",
-        teams.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join(""));
       ["sp-search", "sp-team"].forEach(id => document.getElementById(id).addEventListener("input", () => { state.shown = 25; render(); }));
       document.getElementById("sp-more").addEventListener("click", () => { state.shown += 25; render(); });
     }
+    // Start: aktuelle Saison sofort, Saisonliste sobald das Archiv-Verzeichnis geladen ist
+    fillSeasonSelect();
+    selectSeason(seasonList[0].name);
+    seasonsReady.then(() => fillSeasonSelect());
     return render;
   }
   const renderPlayerStats = makeStatsView("players", "sp");
@@ -1474,16 +1624,45 @@
     const n = normName(name);
     return players.find(p => normName(p.name) === n) || coaches.find(c => normName(c.name) === n) || null;
   }
+  // Frühere Saisons: MVP-Spieler über das Hockeydata-Archiv verlinken (Name + Saison eindeutig)
+  let archiveNameIdx = null;
+  // "Chad Allen Jeffries" -> "chad jeffries" (erster Vorname + Nachname)
+  const shortName = n => { const t = normName(n).split(" "); return t.length > 2 ? `${t[0]} ${t[t.length - 1]}` : t.join(" "); };
+  function archivePersonFor(name, season) {
+    if (!archiveNameIdx) return null;
+    const cands = new Set([...(archiveNameIdx.idx.get(normName(name)) || []), ...(archiveNameIdx.idx.get(shortName(name)) || [])]);
+    const hits = [...cands].filter(k => archiveNameIdx.people[k]?.teams?.[season]);
+    return hits.length === 1 ? hits[0] : null;
+  }
+  function loadMvpLinks() {
+    if (archiveNameIdx) return;
+    Promise.all([seasonsReady, loadArchiveCareer()]).then(([, arch]) => {
+      if (!arch?.people || archiveNameIdx) return;
+      const idx = new Map();
+      const add = (n, k) => { if (!idx.has(n)) idx.set(n, []); if (!idx.get(n).includes(k)) idx.get(n).push(k); };
+      Object.entries(arch.people).forEach(([k, p]) => { add(normName(p.name), k); add(shortName(p.name), k); });
+      archiveNameIdx = { idx, people: arch.people };
+      renderMvps();
+    });
+  }
   function renderMvps() {
     const latest = MVPS[0][0];
     document.getElementById("mvps-body").innerHTML = MVPS.map(([season, ...awards]) => `<tr>
       <td class="season">${esc(season)}</td>
-      ${awards.map(a => {
+      ${awards.map((a, ai) => {
         if (!a) return `<td><span class="none">–</span></td>`;
         const [name, team] = a;
         const person = season === latest ? findPersonByName(name) : null;
-        const nameHtml = person
-          ? `<button type="button" class="plink pn" data-person="${esc(person.id)}">${esc(name)}</button>`
+        let attr = person ? `data-person="${esc(person.id)}"` : "";
+        if (!attr && ai < 4) {
+          const k = archivePersonFor(name, season);
+          if (k) {
+            const pid = playerMap[k] !== undefined ? personIdForStat(playerMap[k]) : null;
+            attr = pid ? `data-person="${esc(pid)}"` : `data-arch="${esc(k)}"`;
+          }
+        }
+        const nameHtml = attr
+          ? `<button type="button" class="plink pn" ${attr}>${esc(name)}</button>`
           : `<span class="pn">${esc(name)}</span>`;
         return `<td>${nameHtml}${team ? `<span class="pt">${esc(team)}</span>` : ""}</td>`;
       }).join("")}
@@ -1491,7 +1670,9 @@
     document.getElementById("mvps-foot").textContent = "Die Liste wird laufend um frühere Saisons ergänzt.";
   }
   document.getElementById("mvps-body").addEventListener("click", e => {
-    const b = e.target.closest(".plink"); if (b) openDetail(b.dataset.person);
+    const b = e.target.closest(".plink"); if (!b) return;
+    if (b.dataset.person) openDetail(b.dataset.person);
+    else if (b.dataset.arch) openArchiveDetail({ key: b.dataset.arch });
   });
 
   // ---------- Champions (Austrian Bowl) ----------
@@ -1577,12 +1758,19 @@
   }
 
   // ---------- Karriere-Statistiken (Detailansicht) ----------
+  // Clubee-Saisons aus data/career.json (vom Sync), frühere Saisons 2014–2025 aus dem
+  // Hockeydata-Archiv (data/archive/career.json). Die Verknüpfung Archiv -> Clubee-Spieler steht in
+  // data/archive/player-map.json und kann dort korrigiert werden.
   let careerPromise = null;
   function loadCareer() {
     if (!live) return Promise.resolve(null);
-    return careerPromise ||= fetch("data/career.json", { cache: "no-cache" })
-      .then(r => (r.ok ? r.json() : null)).catch(() => null);
+    return careerPromise ||= fetchJSON("data/career.json");
   }
+  let archiveCareerPromise = null;
+  function loadArchiveCareer() {
+    return archiveCareerPromise ||= fetchJSON("data/archive/career.json");
+  }
+  const archiveKeysFor = clubeeId => Object.keys(playerMap).filter(k => idStr(playerMap[k]) === idStr(clubeeId));
   const normLabel = l => String(l).toUpperCase().replace(/\s+/g, "");
   // Summe über die Saisons; Quoten und Schnitte werden neu berechnet, Bestwerte als Maximum
   function careerTotal(labels, rows) {
@@ -1601,6 +1789,7 @@
         const made = a ? sum(a) : null, miss = m ? (sum(m) || 0) : 0;
         return made !== null && made + miss ? Math.round((made / (made + miss)) * 1000) / 10 : null;
       }
+      if (n === "CTCH%") { const a = find("REC"), b = find("TGT"); return a && b ? ratio(a, b, 100) : null; }
       if (["PCT", "PCT.", "COMP%", "CMP%", "%"].includes(n)) {
         const a = find("COMP", "CMP", "COM"), b = find("ATT", "ATT.", "ATTEMPTS");
         return a && b ? ratio(a, b, 100) : null;
@@ -1613,35 +1802,92 @@
       return sum(l);
     });
   }
-  function careerTableHTML(cat, seasonsRows, titles) {
+  function careerTableHTML(cat, seasonsRows, titles, calcLabels) {
     // Spalten: die der neuesten Saison zuerst, dann ggf. ältere zusätzliche
     const labels = [];
     for (const sr of [...seasonsRows].reverse()) for (const l of sr.labels) if (!labels.includes(l)) labels.push(l);
-    const rows = seasonsRows.map(sr => { const m = {}; sr.labels.forEach((l, i) => { m[l] = sr.values[i]; }); return { season: sr.season, m }; });
+    const rows = seasonsRows.map(sr => { const m = {}; sr.labels.forEach((l, i) => { m[l] = sr.values[i]; }); return { season: sr.season, team: sr.team, m }; });
     const total = rows.length > 1 ? careerTotal(labels, rows.map(r => r.m)) : null;
+    const calc = new Set(calcLabels || []);
     return `<h4>${esc(cat)}</h4><div class="ds-wrap"><table>
-      <tr><th class="season">Saison</th>${labels.map(l => `<th title="${esc(titles?.[l] || "")}">${esc(l)}</th>`).join("")}</tr>
-      ${rows.map(r => `<tr><td class="season">${esc(r.season)}</td>${labels.map(l => `<td>${fmtStat(r.m[l])}</td>`).join("")}</tr>`).join("")}
+      <tr><th class="season">Saison</th>${labels.map(l => `<th title="${esc((titles?.[l] || "") + (calc.has(l) ? " (bis 2025 berechnet aus den Spielprotokollen)" : ""))}"${calc.has(l) ? ` class="calc"` : ""}>${esc(l)}</th>`).join("")}</tr>
+      ${rows.map(r => `<tr><td class="season">${esc(r.season)}${r.team ? `<span class="tm">${esc(r.team)}</span>` : ""}</td>${labels.map(l => `<td>${fmtStat(r.m[l])}</td>`).join("")}</tr>`).join("")}
       ${total ? `<tr class="total"><td class="season">Total</td>${total.map(v => `<td>${fmtStat(v)}</td>`).join("")}</tr>` : ""}
     </table></div>`;
   }
-  async function fillDetailStats(personId) {
+  // Kürzel eines Teams für die Saisonzeile (Archiv: Vereinsname -> Kürzel)
+  function archiveShort(teamNames) {
+    const all = Object.values(archiveIndex?.teams || {});
+    return (teamNames || []).map(n => {
+      const a = all.find(t => t.name === n);
+      if (!a) return n;
+      const cur = a.club ? teams.find(t => t.name.toLowerCase().includes(a.club)) : null;
+      return cur ? teamStyle(cur.id).short : (a.short || n);
+    }).join("/");
+  }
+  // Saisonzeilen ohne Werte (nur Spiele, sonst 0) werden in der Karriere ausgeblendet
+  const hasValues = values => (values || []).slice(1).some(v => typeof v === "number" && v !== 0);
+  // Karriere einer Person: Archiv-Schlüssel (hd…) und/oder Clubee-ID
+  async function careerHTML({ keys = [], clubeeId = null, currentTeamShort = "" }) {
+    await seasonsReady;
+    const [career, arch] = await Promise.all([clubeeId ? loadCareer() : Promise.resolve(null), keys.length ? loadArchiveCareer() : Promise.resolve(null)]);
+    const cats = [...new Set([...(arch?.categories || []), ...(career?.categories || [])])];
+    const clubeeMine = clubeeId ? career?.players?.[idStr(clubeeId)] : null;
+    const html = cats.map(cat => {
+      const seasonsRows = [];
+      if (arch) {
+        for (const sn of arch.seasons || []) {
+          // mehrere Archiv-Schlüssel (Doppel-IDs) – erster Treffer je Saison
+          const k = keys.find(k => arch.players?.[k]?.[sn]?.[cat]);
+          if (!k || !hasValues(arch.players[k][sn][cat])) continue;
+          seasonsRows.push({ season: sn, team: archiveShort(arch.people?.[k]?.teams?.[sn]), labels: arch.columns?.[cat]?.[sn] || [], values: arch.players[k][sn][cat] });
+        }
+      }
+      if (clubeeMine) {
+        for (const sn of career.seasons || []) {
+          if (!clubeeMine[sn]?.[cat] || !hasValues(clubeeMine[sn][cat]) || seasonsRows.some(r => r.season === sn)) continue;
+          seasonsRows.push({ season: sn, team: sn === CURRENT_SEASON ? currentTeamShort : "", labels: career.columns?.[cat]?.[sn] || [], values: clubeeMine[sn][cat] });
+        }
+      }
+      seasonsRows.sort((a, b) => String(a.season).localeCompare(String(b.season), "de", { numeric: true }));
+      if (!seasonsRows.length) return "";
+      const titles = { ...(arch?.titles?.[cat] || {}), ...(career?.titles?.[cat] || {}) };
+      const calc = seasonsRows.some(r => !(career?.seasons || []).includes(r.season)) ? (arch?.calc?.[cat] || []) : [];
+      return careerTableHTML(cat, seasonsRows, titles, calc);
+    }).join("");
+    // Übersicht Saisons / Teams / Spiele – zeigt auch Saisons ohne Statistikwerte (z. B. Offensive Line)
+    const overview = [];
+    if (arch) {
+      for (const sn of arch.seasons || []) {
+        const ks = keys.filter(k => arch.people?.[k]?.games?.[sn]);
+        if (!ks.length) continue;
+        overview.push({ season: sn, team: archiveShort(arch.people[ks[0]].teams?.[sn]), g: Math.max(...ks.map(k => arch.people[k].games[sn])) });
+      }
+    }
+    if (overview.length && clubeeMine) {
+      for (const sn of career.seasons || []) {
+        if (overview.some(r => r.season === sn)) continue;
+        const g = Math.max(0, ...Object.values(clubeeMine[sn] || {}).map(v => (Array.isArray(v) && typeof v[0] === "number") ? v[0] : 0));
+        if (g) overview.push({ season: sn, team: sn === CURRENT_SEASON ? currentTeamShort : "", g });
+      }
+    }
+    overview.sort((a, b) => String(a.season).localeCompare(String(b.season), "de", { numeric: true }));
+    const ovHTML = overview.length ? `<h4>Spiele</h4><div class="ds-wrap"><table>
+      <tr><th class="season">Saison</th><th>Team</th><th title="Games">G</th></tr>
+      ${overview.map(r => `<tr><td class="season">${esc(r.season)}</td><td>${esc(r.team || "–")}</td><td>${r.g}</td></tr>`).join("")}
+      ${overview.length > 1 ? `<tr class="total"><td class="season">Total</td><td></td><td>${overview.reduce((a, r) => a + r.g, 0)}</td></tr>` : ""}
+    </table></div>` : "";
+    return { html: ovHTML + html, hasArchive: keys.some(k => arch?.players?.[k] || arch?.people?.[k]?.games) };
+  }
+  async function fillDetailStats(personId, currentTeamShort) {
     const box = document.getElementById("detail-stats");
     if (!box) return;
     const raw = personId.startsWith("u") ? personId.slice(1) : personId;
-    const career = await loadCareer();
+    await seasonsReady;
+    const keys = archiveKeysFor(raw);
+    const { html } = await careerHTML({ keys, clubeeId: raw, currentTeamShort });
     if (document.getElementById("detail-stats") !== box) return; // Ansicht inzwischen geschlossen/gewechselt
-    const mine = career?.players?.[raw];
-    if (mine) {
-      const html = (career.categories || []).map(cat => {
-        const seasonsRows = (career.seasons || [])
-          .filter(sn => mine[sn]?.[cat])
-          .map(sn => ({ season: sn, labels: career.columns?.[cat]?.[sn] || [], values: mine[sn][cat] }));
-        return seasonsRows.length ? careerTableHTML(cat, seasonsRows, career.titles?.[cat]) : "";
-      }).join("");
-      box.innerHTML = html;
-      return;
-    }
+    if (html) { box.innerHTML = html; return; }
     // Ohne Karriere-Datei: nur aktuelle Saison
     const seasonName = live?.season?.name || "2027";
     box.innerHTML = statsForPerson(personId).map(b =>
@@ -1672,7 +1918,44 @@
       <button class="detail-close" id="close-detail">Schließen</button>`;
     document.getElementById("overlay").classList.add("open");
     document.getElementById("close-detail").addEventListener("click", closeDetail);
-    fillDetailStats(p.id);
+    fillDetailStats(p.id, teamStyle(p.team).short);
+  }
+  // Archiv-Profil: ehemalige Spieler (nur Name, Teams und Statistiken – keine weiteren Personendaten)
+  async function openArchiveDetail({ key = null, clubeeId = null, name = "" }) {
+    await seasonsReady;
+    if (key && !clubeeId && playerMap[key] !== undefined) clubeeId = playerMap[key];
+    const keys = key ? [key] : [];
+    if (clubeeId) for (const k of archiveKeysFor(clubeeId)) if (!keys.includes(k)) keys.push(k);
+    const arch = keys.length ? await loadArchiveCareer() : null;
+    const person = keys.map(k => arch?.people?.[k]).find(Boolean) || null;
+    const nm = (key && person?.name) || name || person?.name || "—";
+    // Teams mit Saisons, z. B. "Graz Giants 2016–2019, 2022" (über alle Archiv-Schlüssel der Person)
+    const bySeason = {};
+    keys.forEach(k => Object.entries(arch?.people?.[k]?.teams || {}).forEach(([sn, ts]) => {
+      bySeason[sn] = [...new Set([...(bySeason[sn] || []), ...ts])];
+    }));
+    const teamYears = new Map();
+    Object.keys(bySeason).sort().forEach(sn => (bySeason[sn] || []).forEach(t => { if (!teamYears.has(t)) teamYears.set(t, []); teamYears.get(t).push(Number(sn)); }));
+    const span = ys => ys.reduce((out, y, i) => { if (i && y === ys[i - 1] + 1) out[out.length - 1][1] = y; else out.push([y, y]); return out; }, [])
+      .map(([a, b]) => a === b ? String(a) : `${a}–${b}`).join(", ");
+    const teamLine = [...teamYears.entries()].map(([t, ys]) => `${t} ${span(ys)}`).join(" · ");
+    const initialsOf = n => n.split(/\s+/).filter(Boolean).map(x => x[0]).slice(0, 2).join("").toUpperCase();
+    document.getElementById("detail-content").innerHTML = `
+      <div class="detail-top">
+        <div class="avatar">${esc(initialsOf(nm))}</div>
+        <div>
+          <h2>${esc(nm)}</h2>
+          <div class="role">${esc(teamLine || "Archiv-Profil")}</div>
+        </div>
+      </div>
+      <p class="arch-note">Archiv-Profil · Statistiken aus dem Hockeydata-Archiv (AFL 2014–2025) und aus Clubee (ab 2026).</p>
+      <div class="detail-stats" id="detail-stats"><p class="arch-note">Lädt …</p></div>
+      <button class="detail-close" id="close-detail">Schließen</button>`;
+    document.getElementById("overlay").classList.add("open");
+    document.getElementById("close-detail").addEventListener("click", closeDetail);
+    const box = document.getElementById("detail-stats");
+    const { html } = await careerHTML({ keys, clubeeId });
+    if (document.getElementById("detail-stats") === box) box.innerHTML = html || `<p class="arch-note">Keine Statistiken vorhanden.</p>`;
   }
   function closeDetail() { document.getElementById("overlay").classList.remove("open"); }
   document.getElementById("overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeDetail(); });
@@ -2148,6 +2431,7 @@
       dd.classList.toggle("active-parent", !!dd.querySelector(`.dropdown-menu button[data-panel="${panelId}"]`)));
     document.querySelectorAll("section.panel").forEach(p => p.classList.remove("active"));
     document.getElementById("panel-" + panelId).classList.add("active");
+    if (panelId === "mvps") loadMvpLinks();
   }
   document.querySelectorAll(".nav-dropdown").forEach(dd => {
     dd.querySelector(".dd-toggle").addEventListener("click", e => {

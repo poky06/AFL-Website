@@ -10,6 +10,9 @@
 | `scripts/sync.mjs` | Holt die Daten aus Clubee und schreibt nur freigegebene Felder in `data/afl.json`. |
 | `.github/workflows/sync.yml` | Startet den Sync jeden **Mittwoch um 12:00 Uhr (Wien)** oder manuell. |
 | `data/afl.json` | Wird vom Sync erzeugt. Nicht von Hand bearbeiten. |
+| `data/career.json`, `data/history/` | Vom Sync erzeugt: Karrierewerte und die Statistiken früherer Clubee-Saisons (für die Saisonauswahl). |
+| `data/archive/` | Statistik-Archiv 2014–2025 aus Hockeydata (fester Datenstand, siehe unten). |
+| `tools/hockeydata-import/` | Skript, mit dem `data/archive` aus dem Hockeydata-Export erzeugt wurde. |
 
 Auf die Website gelangen ausschließlich: Vor- und Nachname, Trikotnummer, Position, Geburtsdatum,
 Nationalität (Kürzel), Foto, Lizenzklasse und Team – und nur für Mitglieder mit
@@ -90,6 +93,47 @@ Admins brauchen einen GitHub-Account mit Schreibrechten auf das Repository
   Unbekannte Rollen erscheinen als „Trainerstab“. Die Zuordnung steht in `STAFF_ROLE` in
   `scripts/sync.mjs` und kann ergänzt werden.
 - **Tabelle:** Die Spaltennamen kommen aus Clubee. Nach dem ersten echten Sync prüfen, ob sie passen.
+- **Mehr als 200 Spieler je Kategorie:** Der Sync lädt die Statistik-Kategorien jetzt seitenweise vollständig
+  (vorher brach er nach 200 Spielern ab).
+
+## Statistik-Archiv 2014–2025 (Hockeydata)
+
+Bis 2025 wurden die AFL-Statistiken von Hockeydata geführt, ab 2026 von Clubee. Das Archiv liegt in
+`data/archive` und wird vom Sync **nicht** verändert:
+
+| Datei | Inhalt |
+|---|---|
+| `index.json` | Liste der Archiv-Saisons und der Teams (inkl. Zuordnung zu den heutigen Vereinen für Logo/Farbe) |
+| `season-2014.json` … `season-2025.json` | Spieler- und Teamstatistiken je Saison, im selben Aufbau wie die Clubee-Statistiken |
+| `career.json` | Karrierewerte je Archiv-Spieler (für die Detailansicht) |
+| `player-map.json` | Verknüpfung Archiv-Spieler → Clubee-Spieler |
+
+**Bezeichnungen:** Kategorien, Spaltennamen und Spaltenreihenfolge sind exakt die aus Clubee.
+**Werte:** Wo Hockeydata einen offiziellen Wert hat, wird er unverändert übernommen. Spalten, die es bei
+Hockeydata nicht gibt (z. B. Tgt, Ctch%, FUM, Sk beim Passing, DEF TD, Returns, Kicking, Punting sowie die
+„Allowed“-Werte der Teamstatistiken), wurden aus den Spielprotokollen (EGREP-AF) berechnet. Auf der Website
+sind diese Spalten gepunktet unterstrichen; der Tooltip sagt „berechnet aus den Spielprotokollen“.
+Wie bei Clubee gilt in der Kategorie Defense: Tot = Solo + Ast (Ast = halbe Tackles).
+
+**Saisonauswahl:** Spieler- und Teamstatistiken haben eine Saisonauswahl. Die aktuelle Saison kommt aus
+`data/afl.json`, frühere Clubee-Saisons aus `data/history/stats-<Saison-ID>.json` (legt der Sync nach jedem Lauf
+automatisch an) und 2014–2025 aus dem Archiv.
+
+**Spieler-Detailansicht:** Zeigt alle Saisons eines Spielers – Archiv und Clubee zusammen. Ehemalige Spieler
+ohne Clubee-Profil sind in den alten Ranglisten ebenfalls anklickbar und öffnen ein Archiv-Profil (nur Name,
+Teams und Statistiken – keine weiteren Personendaten).
+
+**Verknüpfung korrigieren (`data/archive/player-map.json`):** Jede Zeile verbindet einen Archiv-Spieler
+(`"hd<LOS-ID>"`) mit einer Clubee-Spieler-ID, z. B. `"hd2545": 979941` (Franz Korger). Verknüpft wurde
+automatisch über Name + Geburtsdatum. Fehlt eine Verknüpfung, Zeile ergänzen; ist eine falsch, Zeile löschen.
+Ein Clubee-Spieler darf mehrere Archiv-Schlüssel haben (Doppel-Einträge im alten System). Die Clubee-ID steht in
+`data/afl.json` bei `players[].id`, der Archiv-Schlüssel in `data/archive/career.json` unter `people`.
+Änderungen wirken sofort, ein Sync ist nicht nötig.
+
+**Neu erzeugen** (nur nötig, wenn sich die Rechenregeln ändern):
+```bash
+python3 tools/hockeydata-import/build_archive.py /pfad/zum/DataPackage data/archive data/afl.json /tmp/bericht
+```
 
 ## Lokal testen
 
