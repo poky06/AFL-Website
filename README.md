@@ -116,7 +116,9 @@ sind diese Spalten gepunktet unterstrichen; der Tooltip sagt „berechnet aus de
 Wie bei Clubee gilt in der Kategorie Defense: Tot = Solo + Ast (Ast = halbe Tackles).
 Die Hockeydata-Ranglisten 2014–2018 sind unvollständig (z. B. fehlt Thomas Schnurrer 2014–2017). Spieler ohne
 Ranglisten-Eintrag wurden ebenfalls aus den Spielprotokollen berechnet; ihr Name ist gepunktet unterstrichen.
-Doppelte Spieler-IDs aus dem alten System (z. B. „Junjie Gao“ / „Jun Jie Gao“) sind zu einer Person zusammengeführt.
+Doppelte Spieler-IDs aus dem alten System (andere Schreibweise, vertauschte Vor-/Nachnamen, fehlendes oder falsches
+Geburtsdatum – z. B. „Junjie Gao“ / „Jun Jie Gao“, „Curis Sven“ / „Sven Curis“) sind zu einer Person zusammengeführt
+(`tools/hockeydata-import/dedupe.py`, bestätigte Fälle in `CONFIRMED_DUPES` in `build_archive.py`).
 
 **Saisonauswahl:** Spieler- und Teamstatistiken haben eine Saisonauswahl. Die aktuelle Saison kommt aus
 `data/afl.json`, frühere Clubee-Saisons aus `data/history/stats-<Saison-ID>.json` (legt der Sync nach jedem Lauf
