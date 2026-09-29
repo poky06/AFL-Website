@@ -26,6 +26,7 @@ from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import egrep  # noqa: E402
+import dedupe  # noqa: E402
 
 if len(sys.argv) < 4:
     sys.exit('Aufruf: python3 build_archive.py <DataPackage-Ordner> <Zielordner data/archive> <data/afl.json> [Berichtsordner]')
@@ -89,10 +90,41 @@ def tname(yr, tid):
     return team_name.get((yr, tid)) or team_name.get(('2025', tid)) or f'Team {tid}'
 
 
+_official_cache = {}
+SUM_FIELDS = ('games', 'attempts', 'complete', 'intercepted', 'netYards', 'touchdowns', 'number', 'yards',
+              'yardsGained', 'yardsLost', 'soloTackles', 'assistTackles', 'totalTackles', 'tackleForLoss',
+              'tackleForLossYards', 'interceptions', 'fumblesForced', 'passBreakups', 'sacks')
+
+
 def official(yr, kind, cat):
+    key = (yr, kind, cat)
+    if key in _official_cache:
+        return _official_cache[key]
     base = 'PlayerStats' if kind == 'players' else 'TeamStats'
     path = f'{RAW}/{base}/Saison {yr}/{cat}.json'
-    return json.load(open(path))['data']['rows'] if os.path.exists(path) else []
+    rows = json.load(open(path))['data']['rows'] if os.path.exists(path) else []
+    if kind == 'players' and 'canon_map' in globals():
+        merged = {}
+        for r in rows:
+            r = dict(r)
+            r['id'] = canon(r['id'])
+            k = (r['id'], r['teamId'])
+            if k not in merged:
+                merged[k] = r
+                continue
+            m = merged[k]   # dieselbe Person unter zwei IDs im selben Team: Werte addieren
+            for f in SUM_FIELDS:
+                if f in m:
+                    m[f] = (m.get(f) or 0) + (r.get(f) or 0)
+            if 'longest' in m:
+                m['longest'] = max(m.get('longest') or 0, r.get('longest') or 0)
+            if cat == 'LeaderPassing' and m['attempts']:
+                m['quarterbackRatingNcaa'] = (8.4 * m['netYards'] + 330 * m['touchdowns'] + 100 * m['complete']
+                                              - 200 * m['intercepted']) / m['attempts']
+            report['official_merged'].append((yr, cat, r['id']))
+        rows = list(merged.values())
+    _official_cache[key] = rows
+    return rows
 
 
 gamereports = {}
@@ -110,6 +142,64 @@ for f in sorted(glob.glob(f'{RAW}/AFL-EGREP-Gamereports/*/*.xml')):
     seen.add(g.guid)
     parsed[all_games[g.guid]['SeasonName'][-4:]].append((g, P, PS, T))
 print({k: len(v) for k, v in sorted(parsed.items())})
+
+
+# ---------------------------------------------------------------- Doppelte Spieler-IDs (siehe dedupe.py)
+# Vom Ligamanagement bestätigte bzw. abgelehnte Paare (LOS-IDs); ergänzen, wenn die Prüfliste bearbeitet wurde
+CONFIRMED_DUPES = [   # bestätigt am 29.09.2026
+    (743, 749),     # Alexander Didlin = Alexander Dildin (Black Panthers 2016)
+    (1177, 1178),   # Petr Vitorec = Petr Vitovec (Black Panthers)
+    (1342, 1344),   # Pavlo Hornik = Pavol Hornik (Monarchs 2018)
+    (990, 996),     # Florian Mathes = Florian Methes (Dragons)
+    (559, 1263),    # Jan Beran = Jan Beranek (Black Panthers)
+    (413, 7898),    # Valentin Mayer = Valentin Mayr (Rangers/Steelsharks)
+    (467, 842),     # Michael Hinterwirth-Haider = Michael Haider (Vikings)
+    (423, 6224),    # Adrian Soto = Adrian Soto Espinosa (Steelsharks)
+    (1314, 8080),   # Patrick Kenney (Silverhawks 2018 / Ducks 2023)
+    (49, 2219),     # Michael Hantich (Dragons 2017 / Ducks 2022–2025)
+    (748, 1956),    # Charles = Charleus Dieuseul (Vikings / Rangers)
+    (14, 6151),     # Daniel Brandmayer = Daniel Brandmayr (Dragons / Rangers, Vikings)
+    (345, 658),     # Amr Ali = Ali Amr (Vikings / Rangers)
+]
+REJECTED_DUPES = []
+dup_records = {}
+for yr_, lst_ in parsed.items():
+    for g, P, PS, T in lst_:
+        for side in ('Home', 'Away'):
+            tid = g.team[side][0]
+            for pid in g.on_roster[side]:
+                if pid not in spieler:
+                    continue
+                sp_ = spieler[pid]
+                r = dup_records.setdefault(pid, {'first': (sp_.get('Firstname') or '').strip(),
+                                                 'last': (sp_.get('Lastname') or '').strip(),
+                                                 'birth': (sp_.get('Birthdate') or '')[:10], 'games': set(),
+                                                 'seasons': set(), 'team_by_season': defaultdict(set), 'jerseys': set()})
+                r['games'].add(g.guid)
+                r['seasons'].add(yr_)
+                r['team_by_season'][yr_].add(tname(yr_, tid))
+                r['jerseys'].add(g.names.get(pid, ('', '', ''))[2])
+dup_groups, dup_merged, dup_review, canon_map = dedupe.find_duplicates(dup_records, CONFIRMED_DUPES, REJECTED_DUPES)
+print('Doppelte IDs:', sum(len(v) - 1 for v in dup_groups.values()), 'zusammengeführt,', len(dup_review), 'zur Prüfung')
+
+
+def canon(pid):
+    return canon_map.get(pid, pid)
+
+
+# Spielprotokolle auf die kanonische ID umschreiben
+for yr_, lst_ in parsed.items():
+    for idx, (g, P, PS, T) in enumerate(lst_):
+        P2 = defaultdict(egrep._dd)
+        for pid, st in P.items():
+            c = canon(pid)
+            for k, v in st.items():
+                if k.endswith('_long'):
+                    P2[c][k] = max(P2[c].get(k, -999), v)
+                else:
+                    P2[c][k] += v
+        g.on_roster = {s: {canon(p) for p in ids} for s, ids in g.on_roster.items()}
+        lst_[idx] = (g, P2, {canon(p): s for p, s in PS.items()}, T)
 
 
 def in_team_set(guid):
@@ -181,11 +271,29 @@ def person_key(pid):
     return f'hd{pid}'
 
 
+def display_name(ids):
+    """Schreibweise mit den meisten Saisons (bei Gleichstand die jüngere) + alle Varianten."""
+    def nm(i):
+        sp = spieler.get(i, {})
+        return clean_name(f"{sp.get('Firstname', '')} {sp.get('Lastname', '')}") or f'Spieler {i}'
+    ranked = sorted(ids, key=lambda i: (len(dup_records.get(i, {}).get('seasons', ())),
+                                        max(dup_records.get(i, {}).get('seasons', {'0'}))), reverse=True)
+    aliases = []
+    for i in ranked:
+        if nm(i) not in aliases:
+            aliases.append(nm(i))
+    return aliases[0], aliases
+
+
 def note_person(pid, yr, team_label):
     k = person_key(pid)
-    sp = spieler.get(pid, {})
-    nm = clean_name(f"{sp.get('Firstname', '')} {sp.get('Lastname', '')}") or f'Spieler {pid}'
-    p = people.setdefault(k, {'name': nm, 'ids': [pid], 'teams': {}})
+    if k not in people:
+        ids = dup_groups.get(pid, [pid])
+        nm, aliases = display_name(ids)
+        people[k] = {'name': nm, 'ids': list(ids), 'teams': {}}
+        if len(aliases) > 1:
+            people[k]['aliases'] = aliases
+    p = people[k]
     lst = p['teams'].setdefault(yr, [])
     if team_label and team_label not in lst:
         lst.append(team_label)
@@ -628,98 +736,6 @@ for yr in SEASONS:
                 gm[yr] = gm.get(yr, 0) + 1
     print(yr, 'Spieler-Kategorien:', [(b['name'], len(b['rows'])) for b in pblocks], '| Teams:', len(tids))
 
-# ---------------------------------------------------------------- Personen zusammenführen (Doppel-IDs im LOS)
-# Gleiche Person, wenn: Nachname gleich, Vornamen vereinbar ("Thomas" / "Thomas Johannes", "Junjie" / "Jun Jie"),
-# Geburtsdatum gleich – oder eines davon fehlt/Platzhalter und beide spielten im selben Team – und keine Saison doppelt.
-def weak_birth(x):
-    return (not x) or x.endswith('-01-01') or x.startswith('1900') or x == '1969-12-31'
-
-
-def first_ok(a, b):
-    a, b = norm(a), norm(b)
-    ca, cb = a.replace(' ', ''), b.replace(' ', '')
-    return bool(set(a.split()) & set(b.split())) or ca == cb or (min(len(ca), len(cb)) >= 4 and (ca.startswith(cb) or cb.startswith(ca)))
-
-
-parent = {}
-
-
-def root(k):
-    while parent.get(k, k) != k:
-        k = parent[k]
-    return k
-
-
-by_last = defaultdict(list)
-for k, p in people.items():
-    by_last[norm(spieler[p['ids'][0]].get('Lastname'))].append(k)
-for last, keys in by_last.items():
-    if len(keys) < 2 or not last:
-        continue
-    keys = sorted(keys, key=lambda k: int(k[2:]))
-    for i, ka in enumerate(keys):
-        for kb in keys[i + 1:]:
-            ra, rb = root(ka), root(kb)
-            if ra == rb:
-                continue
-            sa, sb = spieler[int(ka[2:])], spieler[int(kb[2:])]
-            if not first_ok(sa.get('Firstname'), sb.get('Firstname')):
-                continue
-            ba, bb = (sa.get('Birthdate') or '')[:10], (sb.get('Birthdate') or '')[:10]
-            # Saisons/Teams der bereits zusammengeführten Gruppen vergleichen
-            grp_a = [k for k in people if root(k) == ra]
-            grp_b = [k for k in people if root(k) == rb]
-            seasons_a = {yr for k in grp_a for yr in people[k]['teams']}
-            seasons_b = {yr for k in grp_b for yr in people[k]['teams']}
-            if seasons_a & seasons_b:
-                continue
-            teams_a = {t for k in grp_a for ts in people[k]['teams'].values() for t in ts}
-            teams_b = {t for k in grp_b for ts in people[k]['teams'].values() for t in ts}
-            same_birth = ba and bb and ba == bb and not weak_birth(ba)
-            if same_birth or ((weak_birth(ba) or weak_birth(bb)) and teams_a & teams_b):
-                lo, hi = sorted([ra, rb], key=lambda k: int(k[2:]))
-                parent[hi] = lo
-                report['merged'].append((lo, hi, people[ka]['name'] + ' / ' + people[kb]['name'], ba, bb))
-
-
-
-
-last_season = {k: max(p['teams']) for k, p in people.items() if p['teams']}
-own_seasons = {k: len(p['teams']) for k, p in people.items()}
-for k in list(people):
-    r = root(k)
-    if r == k:
-        continue
-    pr, pk = people[r], people.pop(k)
-    pr['ids'] = sorted(set(pr['ids'] + pk['ids']))
-    pr.setdefault('aliases', [pr['name']])
-    if pk['name'] not in pr['aliases']:
-        pr['aliases'].append(pk['name'])
-    # angezeigt wird die Schreibweise mit den meisten Saisons (bei Gleichstand die jüngere)
-    cand = (own_seasons.get(k, 0), last_season.get(k, '0'))
-    if cand > pr.get('name_rank', (own_seasons.get(r, 0), last_season.get(r, '0'))):
-        pr['name_rank'] = cand
-        pr['name'] = pk['name']
-    calc_rows[r].extend(calc_rows.pop(k, []))
-    for yr, n in pk.get('games', {}).items():
-        pr.setdefault('games', {})[yr] = max(pr.get('games', {}).get(yr, 0), n)
-    for yr, ts in pk['teams'].items():
-        for t in ts:
-            if t not in pr['teams'].setdefault(yr, []):
-                pr['teams'][yr].append(t)
-    for yr, cats in career.pop(k, {}).items():
-        for cat, vals in cats.items():
-            career[r][yr].setdefault(cat, vals)
-# Schlüssel in den Saisondateien nachziehen
-if parent:
-    for yr in list(seasons_out):
-        path = f'{OUT}/season-{yr}.json'
-        data = json.load(open(path))
-        for b in data['stats']['players']:
-            for r in b['rows']:
-                r['pid'] = root(r['pid'])
-        json.dump(data, open(path, 'w'), ensure_ascii=False, separators=(',', ':'))
-
 # ---------------------------------------------------------------- Zuordnung zu Clubee
 clubee = {}
 teams26 = {t['id']: t['name'] for t in afl['teams']}
@@ -818,7 +834,8 @@ for u, c in clubee.items():
 
 # Manuell bestätigt (Ligamanagement, 29.09.2026): gleiche Person trotz fehlendem Geburtsdatum im Archiv
 CONFIRMED = {'hd58': 986648, 'hd259': 977710, 'hd205': 989524,    # Chad Jeffries, Julian Perfler, Yannick Mayr
-             'hd365': 977542, 'hd261': 988253}                    # Roman Seybold, Aaron Schernig
+             'hd365': 977542, 'hd261': 988253,                    # Roman Seybold, Aaron Schernig
+             'hd6031': 988676}                                    # Javarian Smith (Black Panthers 2022 / Enthroners)
 for l in links:
     if l['key'] in CONFIRMED and CONFIRMED[l['key']] == l['user_id']:
         l['conf'] = 'sicher: manuell bestätigt'
@@ -890,6 +907,28 @@ with open(f'{REPORT_DIR}/report.json', 'w') as fh:
     json.dump({k: v for k, v in report.items()}, fh, ensure_ascii=False, indent=0)
 st = Counter(l['conf'].split(':')[0] for l in links)
 print('Personen im Archiv:', len(car['people']), '| mit Statistikwerten:', len(car['players']), '| verknüpft mit Clubee:', len(player_map), '| Status:', dict(st))
-print('zusammengeführte Doppel-IDs:', len(report['merged']))
+print('zusammengeführte Doppel-IDs:', sum(len(v) - 1 for v in dup_groups.values()), '| zur Prüfung:', len(dup_review))
+
+
+def dup_label(i):
+    r = dup_records[i]
+    return [f"hd{i}", clean_name(f"{r['first']} {r['last']}"), r['birth'] or '',
+            f"{min(r['seasons'])}–{max(r['seasons'])}", ', '.join(sorted({t for ts in r['team_by_season'].values() for t in ts}))]
+
+
+with open(f'{REPORT_DIR}/Doppelte-IDs-zusammengefuehrt.csv', 'w', newline='', encoding='utf-8-sig') as fh:
+    w = csv.writer(fh, delimiter=';')
+    w.writerow(['Person (Archiv-Schlüssel)', 'ID', 'Name', 'Geburtsdatum', 'Saisons', 'Teams'])
+    for r, ids in sorted(dup_groups.items(), key=lambda x: dup_records[x[0]]['last']):
+        for i in ids:
+            w.writerow([f'hd{r}'] + dup_label(i))
+with open(f'{REPORT_DIR}/Pruefliste-Doppelte-IDs.csv', 'w', newline='', encoding='utf-8-sig') as fh:
+    w = csv.writer(fh, delimiter=';')
+    w.writerow(['ID A', 'Name A', 'Geburtsdatum A', 'Saisons A', 'Teams A', 'ID B', 'Name B', 'Geburtsdatum B',
+                'Saisons B', 'Teams B', 'Hinweis'])
+    for a, b, f in dup_review:
+        note = ', '.join(x for x in (f.get('last_kind'), 'gleiche Saison' if f.get('same_season') else '',
+                                     'gleiches Team' if f.get('shared_team') else 'anderes Team') if x)
+        w.writerow(dup_label(a) + dup_label(b) + [note])
 for f in sorted(glob.glob(f'{OUT}/*.json')):
     print(os.path.basename(f), os.path.getsize(f))
