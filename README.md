@@ -96,15 +96,15 @@ Admins brauchen einen GitHub-Account mit Schreibrechten auf das Repository
 - **Mehr als 200 Spieler je Kategorie:** Der Sync lädt die Statistik-Kategorien jetzt seitenweise vollständig
   (vorher brach er nach 200 Spielern ab).
 
-## Statistik-Archiv 2014–2025 (Hockeydata)
+## Statistik-Archiv 2004–2025 (AFBÖ/StatCrew und Hockeydata)
 
-Bis 2025 wurden die AFL-Statistiken von Hockeydata geführt, ab 2026 von Clubee. Das Archiv liegt in
-`data/archive` und wird vom Sync **nicht** verändert:
+Bis 2013 wurden die AFL-Statistiken mit StatCrew auf der AFBÖ-Website veröffentlicht, 2014–2025 von Hockeydata geführt,
+ab 2026 von Clubee. Das Archiv liegt in `data/archive` und wird vom Sync **nicht** verändert:
 
 | Datei | Inhalt |
 |---|---|
 | `index.json` | Liste der Archiv-Saisons und der Teams (inkl. Zuordnung zu den heutigen Vereinen für Logo/Farbe) |
-| `season-2014.json` … `season-2025.json` | Spieler- und Teamstatistiken je Saison, im selben Aufbau wie die Clubee-Statistiken |
+| `season-2004.json` … `season-2025.json` | Spieler- und Teamstatistiken je Saison, im selben Aufbau wie die Clubee-Statistiken |
 | `career.json` | Karrierewerte je Archiv-Spieler (für die Detailansicht) |
 | `player-map.json` | Verknüpfung Archiv-Spieler → Clubee-Spieler |
 
@@ -120,9 +120,36 @@ Doppelte Spieler-IDs aus dem alten System (andere Schreibweise, vertauschte Vor-
 Geburtsdatum – z. B. „Junjie Gao“ / „Jun Jie Gao“, „Curis Sven“ / „Sven Curis“) sind zu einer Person zusammengeführt
 (`tools/hockeydata-import/dedupe.py`, bestätigte Fälle in `CONFIRMED_DUPES` in `build_archive.py`).
 
+**Saisons 2004–2013:** Quelle sind die StatCrew-Seiten der AFBÖ-Website (Kopien aus der Wayback Machine):
+Teamseiten mit den Saisonsummen und Boxscores der Spiele, die darin fehlen. Wie in den übrigen Archiv-Saisons zählen
+die Play-offs mit, soweit es dafür eine Statistik gibt (2010–2013).
+- 2013: Teamseiten (Grunddurchgang) + Boxscores von Halbfinale und Austrian Bowl XXIX – 33 Spiele.
+- 2012: Teamseiten (Grunddurchgang) + Boxscores der Halbfinals – 32 Spiele. Der Boxscore der Austrian Bowl XXVIII
+  fehlt.
+- 2011: Teamseiten (Grunddurchgang, 6 Spiele je Team) + Boxscores der Halbfinals und der Austrian Bowl XXVII –
+  24 Spiele. Die Teamseiten 2011 enthalten nur Saisonsummen (keine Spiel-für-Spiel-Seiten): Sacks je Quarterback
+  (Sk) und Fumbles je Spieler (FUM) fehlen deshalb, ebenso die Spiele mit Kick/Punt (SP).
+- 2010: nur Boxscores – 24 Conference-Spiele, 2 Halbfinale, Austrian Bowl XXVI (27 Spiele). Nicht gezählt werden
+  Europacup-Spiele und zwei Spiele, die nicht in der AFBÖ-Conference-Statistik stehen (Liste in `STATCREW_SEASONS`).
+- 2004–2009: nur Teamseiten, also nur der Grunddurchgang (2004: 21, 2005: 18, 2006: 19, 2007: 23, 2008: 18,
+  2009: 28 Spiele). Für die Play-offs gibt es keine Statistik-Seiten (2004 sind sie in den Saisonsummen ausdrücklich
+  nicht enthalten). 2007 und 2008 haben keine Spiel-für-Spiel-Seiten (Sk, FUM je Spieler und SP fehlen).
+  2009 zählen die Spiele von Blue Devils und Lions gegen Teams der Division I mit (wie in der AFBÖ-Statistik).
+  Fehler der Quelle: Die Lions-Seite 2007 zählt das Spiel Raiders – Lions (19.05., 28:0) als Lions-Sieg mit den
+  Werten der Raiders – für die Lions 2007 gibt es deshalb keine Teamwerte (Spielerwerte sind nicht betroffen).
+  Punkte werden wie in der AFBÖ-Rangliste aus TD, XP, FG, 2-Pt, Safety und DXP berechnet (strafverifizierte Spiele
+  und Spiele ohne Statistik zählen nicht). Kontrolle: alle 956 Teamwerte der offiziellen Leaders-Seiten 2004–2009
+  stimmen überein.
+Nicht erfasst wurden damals Targets (Tgt, Ctch%) sowie Punts ins Aus bzw. mit Return; bei Teams mit mehreren
+Kickern/Puntern ohne Boxscores fehlen die Spiele je Kicker (SP). Die Spieler sind über Name und Team mit den
+Archiv-Personen verknüpft (bestätigte Fälle in `LINKS_STATCREW` in `build_archive.py`). Teams, die es heute nicht
+mehr gibt (Salzburg Bulls, St. Pölten Invaders, Carinthian Lions, Carinthian Cowboys, Carinthian Falcons), haben
+eigene Archiv-Teams; die Blue Devils Hohenems sind das Hockeydata-Team „Cineplexx Blue Devils“. Teamnamen 2004–2009
+wie auf den damaligen Seiten (z. B. „Vikings Vienna“, „Raiders Tirol“).
+
 **Saisonauswahl:** Spieler- und Teamstatistiken haben eine Saisonauswahl. Die aktuelle Saison kommt aus
 `data/afl.json`, frühere Clubee-Saisons aus `data/history/stats-<Saison-ID>.json` (legt der Sync nach jedem Lauf
-automatisch an) und 2014–2025 aus dem Archiv.
+automatisch an) und 2004–2025 aus dem Archiv.
 Ganz unten im Dropdown steht **All Time**: alle Saisons zusammengezählt (Archiv und Clubee). Spieler werden über
 `player-map.json` zusammengeführt, Teams über den Verein (`club` in `data/archive/index.json`, bei Clubee-Teams über
 den Namen). Quoten und Schnitte werden aus den Summen neu berechnet (z. B. CMP%, Y/A, FG%, Passer Rating, KR Avg),
@@ -142,7 +169,7 @@ Ein Clubee-Spieler darf mehrere Archiv-Schlüssel haben (Doppel-Einträge im alt
 
 **Neu erzeugen** (nur nötig, wenn sich die Rechenregeln ändern):
 ```bash
-python3 tools/hockeydata-import/build_archive.py /pfad/zum/DataPackage data/archive data/afl.json /tmp/bericht
+python3 tools/hockeydata-import/build_archive.py /pfad/zum/DataPackage data/archive data/afl.json /tmp/bericht /pfad/zu/Statistiken
 ```
 
 ## Lokal testen

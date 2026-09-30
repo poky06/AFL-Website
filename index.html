@@ -295,7 +295,7 @@
   .detail-stats td.season, .detail-stats th.season { text-align: left; font-weight: 600; color: var(--chalk); }
   .detail-stats td.season, .detail-stats th.season { position: sticky; left: 0; z-index: 1; background: var(--bg-card); }
   .detail-stats tr.total td { font-weight: 700; border-top: 2px solid var(--line-strong); background: var(--bg-raised); }
-  /* Saisonauswahl und Archiv (Hockeydata 2014–2025) */
+  /* Saisonauswahl und Archiv (2004–2013 AFBÖ/StatCrew, 2014–2025 Hockeydata) */
   .toolbar select.season-select { font-family: 'Oswald', sans-serif; letter-spacing: .03em; font-size: 15px; }
   .stats-tbl thead th.calc, .detail-stats th.calc, .stats-tbl .tl .nm.calc, .detail-stats td.season.calc { text-decoration: underline dotted; text-underline-offset: 3px; }
   .season-src { font-size: 12.5px; color: var(--chalk-dim); margin: 0 0 12px; }
@@ -845,7 +845,7 @@
   <!-- MVPs -->
   <section class="panel" id="panel-mvps">
     <div class="st-title wide"><span>AFL MVPs</span></div>
-    <p class="result-count st-sub">Die Auszeichnungen des AFBÖ für die Regular Season. Verlinkte Spieler öffnen ihre Statistiken (Archiv ab 2014).</p>
+    <p class="result-count st-sub">Die Auszeichnungen des AFBÖ für die Regular Season. Verlinkte Spieler öffnen ihre Statistiken (Archiv ab 2004).</p>
     <div class="tbl-wrap">
       <table class="standings mvp-tbl">
         <thead><tr><th>Saison</th><th>League MVP</th><th>Offense MVP</th><th>Defense MVP</th><th>Young Star</th><th>Coach of the Year</th></tr></thead>
@@ -948,8 +948,8 @@
     "Berechnet aus den Spielprotokollen und Box Scores der Saison – keine offizielle Clubee-Kategorie.":
       "Calculated from the season's play-by-play logs and box scores – not an official Clubee category.",
     "Die Liste wird laufend um frühere Saisons ergänzt.": "Earlier seasons are being added continuously.",
-    "Die Auszeichnungen des AFBÖ für die Regular Season. Verlinkte Spieler öffnen ihre Statistiken (Archiv ab 2014).":
-      "The AFBÖ awards for the regular season. Linked players open their statistics (archive from 2014).",
+    "Die Auszeichnungen des AFBÖ für die Regular Season. Verlinkte Spieler öffnen ihre Statistiken (Archiv ab 2004).":
+      "The AFBÖ awards for the regular season. Linked players open their statistics (archive from 2004).",
     "Alle Austrian-Bowl-Sieger seit 1984. In Klammern die Anzahl der Austrian-Bowl-Titel des Vereins bis zu diesem Jahr.":
       "All Austrian Bowl winners since 1984. In brackets: the club's number of Austrian Bowl titles up to that year.",
     "Keine Austrian Bowl (Covid-19): Best-of-five-Finalserie, 31:19, 45:13, 46:29.":
@@ -981,8 +981,8 @@
     "Nicht in den Hockeydata-Ranglisten – berechnet aus den Spielprotokollen": "Not part of the Hockeydata leaderboards – calculated from the play-by-play logs",
     "Enthält Saisons, die nicht in den Hockeydata-Ranglisten stehen – berechnet aus den Spielprotokollen":
       "Includes seasons that are not part of the Hockeydata leaderboards – calculated from the play-by-play logs",
-    "Archiv-Profil · Statistiken aus dem Hockeydata-Archiv (AFL 2014–2025) und aus Clubee (ab 2026).":
-      "Archive profile · Statistics from the Hockeydata archive (AFL 2014–2025) and from Clubee (since 2026).",
+    "Archiv-Profil · Statistiken aus dem Archiv (AFL 2004–2025) und aus Clubee (ab 2026).":
+      "Archive profile · Statistics from the archive (AFL 2004–2025) and from Clubee (since 2026).",
     // Spaltenköpfe der berechneten Kategorien
     "SP": "GP", "FGV": "FGA", "GEBL": "BLK", "AUS": "OOB", "PKT": "PTS",
     // Tooltips
@@ -1387,7 +1387,8 @@
   }
 
   // ---------- Saisons: aktuelle Saison aus Clubee (afl.json), frühere Clubee-Saisons aus
-  // data/history (vom Sync angelegt) und das Hockeydata-Archiv 2014–2025 aus data/archive ----------
+  // data/history (vom Sync angelegt) und das Archiv aus data/archive: 2004–2013 AFBÖ-Statistik (StatCrew),
+  // 2014–2025 Hockeydata ----------
   const normKey = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
   const fetchJSON = url => fetch(url, { cache: "no-cache" }).then(r => (r.ok ? r.json() : null)).catch(() => null);
   const CURRENT_SEASON = live?.season?.name ? String(live.season.name) : "";
@@ -1405,7 +1406,7 @@
       if (s && s.file && !list.some(x => x.name === String(s.name))) list.push({ name: String(s.name), file: s.file, source: "clubee" });
     });
     (arch?.seasons || []).forEach(s => {
-      if (s && s.file && !list.some(x => x.name === String(s.name))) list.push({ name: String(s.name), file: s.file, source: "hockeydata" });
+      if (s && s.file && !list.some(x => x.name === String(s.name))) list.push({ name: String(s.name), file: s.file, source: s.source || "hockeydata" });
     });
     list.sort((a, b) => (a.file === null ? -1 : b.file === null ? 1 : String(b.name).localeCompare(String(a.name), "de", { numeric: true })));
     seasonList = list;
@@ -1416,7 +1417,7 @@
     if (!s.file) return Promise.resolve({ name: s.name, source: "clubee", current: true, stats: statsData, teams: null });
     if (!seasonCache.has(s.file)) {
       seasonCache.set(s.file, fetchJSON(s.file).then(d => d ? {
-        name: s.name, source: d.source || s.source, current: false,
+        name: s.name, source: d.source || s.source, current: false, note: d.note || "", note_en: d.note_en || "",
         stats: d.stats || { players: [], teams: [] }, teams: d.teams || []
       } : { name: s.name, source: s.source, current: false, stats: { players: [], teams: [] }, teams: [], failed: true }));
     }
@@ -1424,6 +1425,7 @@
   }
   // Archiv-Team (hd-…) -> aktuelles Clubee-Team desselben Vereins (für Logo, Farbe und Teamseite)
   const archiveTeam = id => archiveIndex?.teams?.[idStr(id)] || null;
+  const isArchive = ctx => ctx?.source === "hockeydata" || ctx?.source === "statcrew";
   function currentTeamFor(ctx, teamId) {
     const id = idStr(teamId);
     if (ctx.current) return teams.find(t => t.id === id) || null;
@@ -1469,7 +1471,7 @@
   function franchiseOf(ctx, teamId, rowName) {
     const id = idStr(teamId);
     if (!id) return null;   // Zeile ohne Team (z. B. berechnete Kicking-Werte)
-    if (ctx.source === "hockeydata") {
+    if (isArchive(ctx)) {
       const a = archiveTeam(id);
       return a?.club ? "club:" + a.club : "hd:" + id;
     }
@@ -1680,7 +1682,9 @@
     }
     function allTimeNote() {
       const ys = (state.ctx.seasons || []).map(Number).filter(Boolean);
-      const range = ys.length ? `${Math.min(...ys)}–${Math.max(...ys)}` : "";
+      const lo = Math.min(...ys), hi = Math.max(...ys);
+      const gaps = ys.length ? Array.from({ length: hi - lo + 1 }, (_, i) => lo + i).filter(y => !ys.includes(y)) : [];
+      const range = ys.length ? `${lo}–${hi}` + (gaps.length ? tf(` (ohne ${gaps.join(", ")})`, ` (excluding ${gaps.join(", ")})`) : "") : "";
       return tf(`All Time: alle Saisons ${range} zusammengezählt. Quoten, Schnitte und Werte pro Spiel sind über alle Saisons neu berechnet; gepunktet unterstrichen: enthält Werte, die bis 2025 aus den Spielprotokollen berechnet wurden.`
           + (prefix === "sp" ? " Mit Teamauswahl zählen nur die Saisons für dieses Team." : ""),
         `All Time: all seasons ${range} combined. Percentages, averages and per-game values are recalculated across all seasons; dotted underline: includes values calculated from the play-by-play logs up to 2025.`
@@ -1690,8 +1694,11 @@
       const ctx = state.ctx;
       if (!ctx) return;
       const list = blocks();
-      const archived = ctx.source === "hockeydata";
-      const srcNote = ctx.allTime ? allTimeNote() : archived
+      const archived = isArchive(ctx);
+      const srcNote = ctx.allTime ? allTimeNote() : ctx.source === "statcrew"
+        ? tf(`Quelle: AFBÖ-Statistik ${ctx.name} (StatCrew). ${ctx.note} Targets, Catch-% sowie Punts ins Aus bzw. mit Return wurden damals nicht erfasst. Gepunktet unterstrichen: aus den Spiel-für-Spiel-Daten abgeleitet.`,
+            `Source: AFBÖ statistics ${ctx.name} (StatCrew). ${ctx.note_en} Targets, catch % and punts out of bounds or returned were not recorded at the time. Dotted underline: derived from the game-by-game data.`)
+        : archived
         ? "Quelle: Hockeydata-Archiv (AFL 2014–2025). Gepunktet unterstrichene Spalten und Spieler fehlen in den Hockeydata-Ranglisten und wurden aus den Spielprotokollen berechnet."
         : "";
       if (!list.length) {
@@ -1824,7 +1831,8 @@
     "Nick Milgate": "Nicholas Milgate",
     "Eddie Morales III": "Edwin Morales III",
     "Kyle Newhall-Caballero": "Kyle Newhall",
-    "Ahmonte Watkins": "Ahmonte D'Shon Watkins"
+    "Ahmonte Watkins": "Ahmonte D'Shon Watkins",
+    "Ramon Abdel Azim": "Ramon Azim"
   };
   // Vergleich ohne Akzente, Groß-/Kleinschreibung, Bindestriche und Apostrophe
   const normName = n => String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
@@ -1972,7 +1980,7 @@
   }
 
   // ---------- Karriere-Statistiken (Detailansicht) ----------
-  // Clubee-Saisons aus data/career.json (vom Sync), frühere Saisons 2014–2025 aus dem
+  // Clubee-Saisons aus data/career.json (vom Sync), frühere Saisons 2004–2025 aus dem
   // Hockeydata-Archiv (data/archive/career.json). Die Verknüpfung Archiv -> Clubee-Spieler steht in
   // data/archive/player-map.json und kann dort korrigiert werden.
   let careerPromise = null;
@@ -2012,6 +2020,11 @@
         const y = find("YDS", "YARDS"), d = find("ATT", "CAR", "REC", "NO", "RET", "PUNTS");
         return y && d ? ratio(y, d, 1) : null;
       }
+      if (n === "RTG") {   // NCAA-Passer-Rating aus den Summen (wie Clubee)
+        const a = find("ATT"), c = find("CMP"), y = find("YDS"), td = find("PASSTD"), it = find("INT");
+        const A = a ? sum(a) : null;
+        return A && c && y && td && it ? Math.round((8.4 * sum(y) + 330 * sum(td) + 100 * sum(c) - 200 * sum(it)) / A * 10) / 10 : null;
+      }
       if (/%|AVG|RTG|RATING|QBR|EFF|PCT|RATE/.test(n)) return null; // nicht sinnvoll summierbar
       return sum(l);
     });
@@ -2033,7 +2046,7 @@
   function archiveShort(teamNames) {
     const all = Object.values(archiveIndex?.teams || {});
     return (teamNames || []).map(n => {
-      const a = all.find(t => t.name === n);
+      const a = all.find(t => t.name === n || (t.names || []).includes(n));
       if (!a) return n;
       const cur = a.club ? teams.find(t => t.name.toLowerCase().includes(a.club)) : null;
       return cur ? teamStyle(cur.id).short : (a.short || n);
@@ -2151,7 +2164,7 @@
           <div class="role">${esc(teamLine || "Archiv-Profil")}</div>
         </div>
       </div>
-      <p class="arch-note">Archiv-Profil · Statistiken aus dem Hockeydata-Archiv (AFL 2014–2025) und aus Clubee (ab 2026).</p>
+      <p class="arch-note">Archiv-Profil · Statistiken aus dem Archiv (AFL 2004–2025) und aus Clubee (ab 2026).</p>
       <div class="detail-stats" id="detail-stats"><p class="arch-note">Lädt …</p></div>
       <button class="detail-close" id="close-detail">Schließen</button>`;
     document.getElementById("overlay").classList.add("open");
