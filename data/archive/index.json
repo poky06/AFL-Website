@@ -60,6 +60,86 @@
    "name": "2014",
    "file": "data/archive/season-2014.json",
    "games": 23
+  },
+  {
+   "name": "2013",
+   "file": "data/archive/season-2013.json",
+   "games": 33,
+   "source": "statcrew",
+   "note": "Grunddurchgang und Play-offs.",
+   "note_en": "Regular season and playoffs."
+  },
+  {
+   "name": "2012",
+   "file": "data/archive/season-2012.json",
+   "games": 32,
+   "source": "statcrew",
+   "note": "Grunddurchgang und Halbfinals – der Boxscore der Austrian Bowl XXVIII fehlt.",
+   "note_en": "Regular season and semi-finals – the box score of Austrian Bowl XXVIII is missing."
+  },
+  {
+   "name": "2011",
+   "file": "data/archive/season-2011.json",
+   "games": 24,
+   "source": "statcrew",
+   "note": "Grunddurchgang (6 Spiele je Team), Halbfinals und Austrian Bowl XXVII. Für den Grunddurchgang gibt es nur Saisonsummen: Sacks (QB) und Fumbles je Spieler sowie die Spiele mit Kick/Punt fehlen deshalb.",
+   "note_en": "Regular season (6 games per team), semi-finals and Austrian Bowl XXVII. Only season totals exist for the regular season, so sacks taken, fumbles per player and games with a kick/punt are missing."
+  },
+  {
+   "name": "2010",
+   "file": "data/archive/season-2010.json",
+   "games": 27,
+   "source": "statcrew",
+   "note": "Grunddurchgang (24 Conference-Spiele) und Play-offs.",
+   "note_en": "Regular season (24 conference games) and playoffs."
+  },
+  {
+   "name": "2009",
+   "file": "data/archive/season-2009.json",
+   "games": 28,
+   "source": "statcrew",
+   "note": "Nur Grunddurchgang (28 Spiele): Play-offs und Austrian Bowl XXV sind in der AFBÖ-Statistik nicht enthalten. Blue Devils und Lions spielten auch je viermal gegen Teams der Division I (St. Pölten Invaders, ASKOE Steelsharks, CNC Gladiators, Salzburg Bulls); diese Spiele zählen mit. Für das Spiel der Lions in St. Pölten (27:36) gibt es keine Statistik.",
+   "note_en": "Regular season only (28 games): the playoffs and Austrian Bowl XXV are not part of the AFBÖ statistics. Blue Devils and Lions also played four games each against Division I teams (St. Pölten Invaders, ASKOE Steelsharks, CNC Gladiators, Salzburg Bulls); these games are included. There are no statistics for the Lions' game in St. Pölten (27:36)."
+  },
+  {
+   "name": "2008",
+   "file": "data/archive/season-2008.json",
+   "games": 18,
+   "source": "statcrew",
+   "note": "Nur Grunddurchgang (18 Spiele): Play-offs und Austrian Bowl XXIV sind in der AFBÖ-Statistik nicht enthalten. Sacks (QB) und Fumbles je Spieler sowie die Spiele mit Kick/Punt wurden nicht veröffentlicht.",
+   "note_en": "Regular season only (18 games): the playoffs and Austrian Bowl XXIV are not part of the AFBÖ statistics. Sacks taken, fumbles per player and games with a kick/punt were not published."
+  },
+  {
+   "name": "2007",
+   "file": "data/archive/season-2007.json",
+   "games": 23,
+   "source": "statcrew",
+   "note": "Nur Grunddurchgang (23 Spiele; Blue Devils – Lions wurde nicht gespielt): die Austrian Bowl XXIII ist in der AFBÖ-Statistik nicht enthalten. Keine Teamwerte der Carinthian Lions: die AFBÖ-Statistik zählt das Spiel Raiders – Lions (19.05., 28:0) bei den Lions als Sieg mit den Werten der Raiders. Die Spielerwerte der Lions sind davon nicht betroffen (ohne dieses Spiel). Sacks (QB) und Fumbles je Spieler sowie die Spiele mit Kick/Punt wurden nicht veröffentlicht.",
+   "note_en": "Regular season only (23 games; Blue Devils vs Lions was not played): Austrian Bowl XXIII is not part of the AFBÖ statistics. No team figures for the Carinthian Lions: the AFBÖ statistics count Raiders vs Lions (19 May, 28:0) as a Lions win with the Raiders' figures. The Lions' player figures are not affected (without that game). Sacks taken, fumbles per player and games with a kick/punt were not published."
+  },
+  {
+   "name": "2006",
+   "file": "data/archive/season-2006.json",
+   "games": 19,
+   "source": "statcrew",
+   "note": "Nur Grunddurchgang (19 Spiele, 5 Teams): die Austrian Bowl XXII ist in der AFBÖ-Statistik nicht enthalten.",
+   "note_en": "Regular season only (19 games, 5 teams): Austrian Bowl XXII is not part of the AFBÖ statistics."
+  },
+  {
+   "name": "2005",
+   "file": "data/archive/season-2005.json",
+   "games": 18,
+   "source": "statcrew",
+   "note": "Nur Grunddurchgang (18 Spiele): die Austrian Bowl XXI ist in der AFBÖ-Statistik nicht enthalten.",
+   "note_en": "Regular season only (18 games): Austrian Bowl XXI is not part of the AFBÖ statistics."
+  },
+  {
+   "name": "2004",
+   "file": "data/archive/season-2004.json",
+   "games": 21,
+   "source": "statcrew",
+   "note": "Nur Grunddurchgang (21 Spiele): Halbfinals und Austrian Bowl XX sind in den AFBÖ-Saisonwerten nicht enthalten. Zwei Spiele der Cowboys wurden mit 0:35 strafverifiziert und haben keine Statistik (die 35 Punkte fehlen deshalb bei Blue Devils und Vikings).",
+   "note_en": "Regular season only (21 games): the semi-finals and Austrian Bowl XX are not part of the AFBÖ season totals. Two Cowboys games were forfeited 0:35 and have no statistics (so these 35 points are missing for Blue Devils and Vikings)."
   }
  ],
  "teams": {
@@ -76,22 +156,38 @@
   "hd-3": {
    "name": "Prague Black Panthers",
    "club": "panthers",
-   "short": "Black Panthers"
+   "short": "Black Panthers",
+   "names": [
+    "Prague Panthers"
+   ]
   },
   "hd-4": {
    "name": "Vienna Vikings",
    "club": "vikings",
-   "short": "Vikings"
+   "short": "Vikings",
+   "names": [
+    "Vikings Vienna"
+   ]
   },
   "hd-5": {
    "name": "Swarco Raiders Tirol",
    "club": "raiders",
-   "short": "Raiders"
+   "short": "Raiders",
+   "names": [
+    "Tyrolean Raiders",
+    "Raiders Tyrol",
+    "Raiders Tirol"
+   ]
   },
   "hd-16": {
    "name": "Cineplexx Blue Devils",
    "club": null,
-   "short": "Blue Devils"
+   "short": "Blue Devils",
+   "names": [
+    "Hohenems Blue Devils",
+    "Blue Devils Hohenems",
+    "Blue Devils"
+   ]
   },
   "hd-17": {
    "name": "Ljubljana Silverhawks",
@@ -137,6 +233,31 @@
    "name": "PROVENTOR Styrian Bears",
    "club": null,
    "short": "Bears"
+  },
+  "hd-901": {
+   "name": "Salzburg Bulls",
+   "club": null,
+   "short": "Bulls"
+  },
+  "hd-903": {
+   "name": "Carinthian Lions",
+   "club": null,
+   "short": "Lions"
+  },
+  "hd-902": {
+   "name": "St. Pölten Invaders",
+   "club": null,
+   "short": "Invaders"
+  },
+  "hd-905": {
+   "name": "Carinthian Falcons",
+   "club": null,
+   "short": "Falcons"
+  },
+  "hd-904": {
+   "name": "Carinthian Cowboys",
+   "club": null,
+   "short": "Cowboys"
   }
  },
  "calc_note": "Werte mit dem Hinweis „berechnet“ sind in den Hockeydata-Ranglisten nicht enthalten und wurden aus den Spielprotokollen (EGREP-AF) berechnet."
