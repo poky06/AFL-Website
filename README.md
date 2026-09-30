@@ -11,10 +11,12 @@
 | `.github/workflows/sync.yml` | Startet den Sync jeden **Mittwoch um 12:00 Uhr (Wien)** oder manuell. |
 | `data/afl.json` | Wird vom Sync erzeugt. Nicht von Hand bearbeiten. |
 | `data/career.json`, `data/history/` | Vom Sync erzeugt: Karrierewerte und die Statistiken früherer Clubee-Saisons (für die Saisonauswahl). |
-| `data/archive/` | Statistik-Archiv 2014–2025 aus Hockeydata (fester Datenstand, siehe unten). |
+| `data/archive/` | Statistik-Archiv 2004–2025 aus AFBÖ-Statistik/StatCrew und Hockeydata (fester Datenstand, siehe unten). |
+| `impressum.html`, `datenschutz.html` | Impressum und Datenschutzerklärung (verlinkt in der Fußzeile). |
+| `fonts/` | Schriften Oswald und IBM Plex Sans, lokal eingebunden (keine Verbindung zu Google Fonts), Lizenz OFL. |
 | `tools/hockeydata-import/` | Skript, mit dem `data/archive` aus dem Hockeydata-Export erzeugt wurde. |
 
-Auf die Website gelangen ausschließlich: Vor- und Nachname, Trikotnummer, Position, Geburtsdatum,
+Auf die Website gelangen ausschließlich: Vor- und Nachname, Trikotnummer, Position, Jahrgang (nicht das volle Geburtsdatum),
 Nationalität (Kürzel), Foto, Lizenzklasse und Team – und nur für Mitglieder mit
 „auf Website anzeigen“ in Clubee. Adressen, Telefonnummern, E-Mails und Dokumente werden
 im Sync verworfen und nie gespeichert.
@@ -162,7 +164,7 @@ Teams und Statistiken – keine weiteren Personendaten).
 
 **Verknüpfung korrigieren (`data/archive/player-map.json`):** Jede Zeile verbindet einen Archiv-Spieler
 (`"hd<LOS-ID>"`) mit einer Clubee-Spieler-ID, z. B. `"hd2545": 979941` (Franz Korger). Verknüpft wurde
-automatisch über Name + Geburtsdatum. Fehlt eine Verknüpfung, Zeile ergänzen; ist eine falsch, Zeile löschen.
+automatisch über Name + Geburtsdatum (seit der Sync nur noch den Jahrgang speichert: Name + Jahrgang). Fehlt eine Verknüpfung, Zeile ergänzen; ist eine falsch, Zeile löschen.
 Ein Clubee-Spieler darf mehrere Archiv-Schlüssel haben (Doppel-Einträge im alten System). Die Clubee-ID steht in
 `data/afl.json` bei `players[].id`, der Archiv-Schlüssel in `data/archive/career.json` unter `people`.
 Änderungen wirken sofort, ein Sync ist nicht nötig.
