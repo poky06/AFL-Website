@@ -85,6 +85,11 @@ function normalizeLicenseClass(name) {
   return name.trim();
 }
 
+function birthYear(value) {
+  const iso = isoDate(value);
+  return iso ? Number(iso.slice(0, 4)) : null;
+}
+
 function isoDate(value) {
   if (!value) return null;
   const d = String(value).slice(0, 10);
@@ -531,7 +536,7 @@ async function main() {
         team_id: team.id,
         firstname: m.firstname || "",
         lastname: m.lastname || "",
-        birthday: isoDate(m.birthday),
+        birth_year: birthYear(m.birthday),   // nur der Jahrgang, nicht das volle Geburtsdatum (Datensparsamkeit)
         nationality: countryIoc.get(m.nationality?.id) || null,
         photo: IMAGE_URL.test(m.pic_roster || m.picture || "") ? (m.pic_roster || m.picture) : null
       };
