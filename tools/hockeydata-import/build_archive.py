@@ -1252,7 +1252,9 @@ if STATCREW_DIR:
 clubee = {}
 teams26 = {t['id']: t['name'] for t in afl['teams']}
 for p in afl['players']:
-    clubee[p['id']] = {'first': p['firstname'], 'last': p['lastname'], 'birth': p.get('birthday'),
+    # Clubee-Daten enthalten nur noch den Jahrgang (birth_year); ältere Dateien das volle Geburtsdatum (birthday)
+    clubee[p['id']] = {'first': p['firstname'], 'last': p['lastname'],
+                       'birth': p.get('birthday') or (str(p['birth_year']) if p.get('birth_year') else None),
                        'team': teams26.get(p['team_id']), 'web': True}
 for b in afl['stats']['players']:
     for r in b['rows']:
@@ -1260,6 +1262,7 @@ for b in afl['stats']['players']:
             clubee[r['user_id']] = {'first': None, 'last': None, 'full': r['name'], 'birth': None,
                                     'team': teams26.get(r['team_id']), 'web': False}
 by_name, by_name_birth, by_birth = defaultdict(list), defaultdict(list), defaultdict(list)
+by_name_year, by_year = defaultdict(list), defaultdict(list)
 for k, p in people.items():
     for pid in p['ids']:
         sp = spieler[pid]
@@ -1271,6 +1274,10 @@ for k, p in people.items():
             by_name_birth[(nk, b)].append(k)
         if b and k not in by_birth[b]:
             by_birth[b].append(k)
+        if b and k not in by_name_year[(nk, b[:4])]:
+            by_name_year[(nk, b[:4])].append(k)
+        if b and k not in by_year[b[:4]]:
+            by_year[b[:4]].append(k)
 CLUB_WORDS = set(CLUB_KEY.values())
 
 
@@ -1307,22 +1314,24 @@ for u, c in clubee.items():
         cands_names = [norm(' '.join(parts[:i])) + '|' + norm(' '.join(parts[i:])) for i in range(1, len(parts))]
         full = c['full']
     b = c['birth']
+    year_only = bool(b) and len(b) == 4
     hits = {}
-    # 1) gleicher Name + gleiches Geburtsdatum
+    # 1) gleicher Name + gleiches Geburtsdatum (bzw. gleicher Jahrgang)
     if b:
         for nk in cands_names:
-            for k in by_name_birth.get((nk, b), []):
-                hits.setdefault(k, 'sicher: Name + Geburtsdatum')
+            for k in (by_name_year if year_only else by_name_birth).get((nk, b), []):
+                hits.setdefault(k, 'sicher: Name + Jahrgang' if year_only else 'sicher: Name + Geburtsdatum')
     # 2) gleiches Geburtsdatum + Nachname, Vorname in Kurz-/Langform ("Chad" / "Chad Allen")
     if b and c['first'] is not None:
-        for k in by_birth.get(b, []):
+        for k in (by_year if year_only else by_birth).get(b, []):
             if k in hits:
                 continue
             for pid in people[k]['ids']:
                 sp = spieler[pid]
-                if (sp.get('Birthdate') or '')[:10] == b and lastname_ok(sp['Lastname'], c['last']) \
+                if (sp.get('Birthdate') or '')[:len(b)] == b and lastname_ok(sp['Lastname'], c['last']) \
                         and first_names_compatible(sp['Firstname'], c['first']):
-                    hits[k] = 'sicher: Geburtsdatum + Nachname, Vorname in Kurzform'
+                    hits[k] = ('wahrscheinlich: Jahrgang + Nachname, Vorname in Kurzform' if year_only
+                               else 'sicher: Geburtsdatum + Nachname, Vorname in Kurzform')
                     break
     # 3) nur Name – wenn eine Seite kein Geburtsdatum hat und der Name eindeutig ist
     for nk in cands_names:
@@ -1330,7 +1339,7 @@ for u, c in clubee.items():
         if not ks:
             continue
         undated = [k for k in ks if not births_of(k) or not b]
-        conflicting = [k for k in ks if b and births_of(k) and b not in births_of(k)]
+        conflicting = [k for k in ks if b and births_of(k) and b not in {x[:len(b)] for x in births_of(k)}]
         if len(undated) == 1:
             k = undated[0]
             hits[k] = ('wahrscheinlich: Name eindeutig, Team passt' if team_fits(k, c['team'])
