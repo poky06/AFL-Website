@@ -3,6 +3,7 @@
 Hockeydata-Archiv (AFL 2014–2025) -> Website-Dateien im Clubee-Format.
 
 Aufruf:  python3 build_archive.py <DataPackage-Ordner> <Zielordner data/archive> <data/afl.json> [Berichtsordner]
+                                  [Ordner Statistiken mit Unterordnern 2004–2013]
 
 Quellen (alle aus dem AFBÖ-Datenexport von Hockeydata):
   PlayerStats/*, TeamStats/*          offizielle Saisonwerte (werden 1:1 übernommen)
@@ -10,6 +11,10 @@ Quellen (alle aus dem AFBÖ-Datenexport von Hockeydata):
   GameReportsJSON/*.json              offizielle Team-Boxscores je Spiel (2023–2025)
   AlleSpieleMitErgebnis.json          Ergebnisse (Punkte, Spielstatus)
   Spieler.json, Team-Bewerb-Zuordnung.json
+
+Saisons vor 2014 (optional, 5. Argument): StatCrew-Statistiken der AFBÖ-Website (siehe statcrew.py) – Teamseiten
+und Boxscores, je Saison ein Unterordner (2004–2013). Die Spieler werden über Name und Team mit den
+Archiv-Personen verknüpft; bestätigte bzw. abgelehnte Fälle stehen in LINKS_STATCREW.
 
 Spaltennamen und -reihenfolge kommen aus der aktuellen Clubee-Datei (afl.json), damit das Archiv
 exakt die Clubee-Bezeichnungen verwendet.
@@ -32,6 +37,7 @@ if len(sys.argv) < 4:
     sys.exit('Aufruf: python3 build_archive.py <DataPackage-Ordner> <Zielordner data/archive> <data/afl.json> [Berichtsordner]')
 RAW, OUT, AFL_JSON = sys.argv[1], sys.argv[2], sys.argv[3]
 REPORT_DIR = sys.argv[4] if len(sys.argv) > 4 else os.path.join(os.getcwd(), 'hockeydata-bericht')
+STATCREW_DIR = sys.argv[5] if len(sys.argv) > 5 else None   # Ordner mit Unterordnern 2004–2013 …
 os.makedirs(OUT, exist_ok=True)
 os.makedirs(REPORT_DIR, exist_ok=True)
 
@@ -103,6 +109,8 @@ def official(yr, kind, cat):
     base = 'PlayerStats' if kind == 'players' else 'TeamStats'
     path = f'{RAW}/{base}/Saison {yr}/{cat}.json'
     rows = json.load(open(path))['data']['rows'] if os.path.exists(path) else []
+    if kind == 'players':
+        rows = [dict(r, id=fix_id(r['id'])) if r['id'] in ID_FIX else r for r in rows]
     if kind == 'players' and 'canon_map' in globals():
         merged = {}
         for r in rows:
@@ -132,6 +140,34 @@ for f in glob.glob(f'{RAW}/GameReportsJSON/*/*.json'):
     gamereports[os.path.basename(f)[:-5]] = f
 
 # ---------------------------------------------------------------- Spielprotokolle
+# Hockeydata-IDs, unter denen die Werte einer anderen Person erfasst sind (vom Ligamanagement bestätigt):
+# alle Einträge der ID werden der richtigen Person zugeschrieben
+ID_FIX = {   # bestätigt am 29.09.2026
+    28: 374,     # "Felix Tomenendal" (QB Dragons 2017, Black Panthers 2019) = Dylan Potts (Rangers 2018)
+}
+
+
+def fix_id(pid):
+    return ID_FIX.get(pid, pid)
+
+
+def fix_game_ids(g, P, PS):
+    if not any(i in ID_FIX for i in list(g.names) + list(P) + list(PS)):
+        return P, PS
+    P2 = defaultdict(egrep._dd)
+    for pid, st in P.items():
+        for k, v in st.items():
+            if k.endswith('_long'):
+                P2[fix_id(pid)][k] = max(P2[fix_id(pid)].get(k, -999), v)
+            else:
+                P2[fix_id(pid)][k] += v
+    g.on_roster = {sd: {fix_id(p) for p in ids} for sd, ids in g.on_roster.items()}
+    g.roster = {sd: {j: fix_id(p) for j, p in r.items()} for sd, r in g.roster.items()}
+    g.names = {fix_id(p): v for p, v in g.names.items()}
+    g.pos = {fix_id(p): v for p, v in g.pos.items()}
+    return P2, {fix_id(p): sd for p, sd in PS.items()}
+
+
 print('Spielprotokolle einlesen …')
 parsed = defaultdict(list)
 seen = set()
@@ -140,6 +176,7 @@ for f in sorted(glob.glob(f'{RAW}/AFL-EGREP-Gamereports/*/*.xml')):
     if g.guid in seen or g.guid not in all_games:
         continue
     seen.add(g.guid)
+    P, PS = fix_game_ids(g, P, PS)
     parsed[all_games[g.guid]['SeasonName'][-4:]].append((g, P, PS, T))
 print({k: len(v) for k, v in sorted(parsed.items())})
 
@@ -160,6 +197,7 @@ CONFIRMED_DUPES = [   # bestätigt am 29.09.2026
     (748, 1956),    # Charles = Charleus Dieuseul (Vikings / Rangers)
     (14, 6151),     # Daniel Brandmayer = Daniel Brandmayr (Dragons / Rangers, Vikings)
     (345, 658),     # Amr Ali = Ali Amr (Vikings / Rangers)
+    (296, 630),     # Lemay Marqueira = Lemay Maqueira Palau (Raiders 2018 / 2019, 2022)
 ]
 REJECTED_DUPES = []
 dup_records = {}
@@ -675,22 +713,26 @@ def build_teams(yr):
         'Rushing Defense': {'Rush Attempts Against', 'Rush Yards Allowed', 'Rush Yards Allowed per Game',
                             'Rush Yards per Attempt Allowed', 'Rush TDs Allowed'},
     }
-    SORT = {'Penalties': 'Penalty Against Yards', 'Scoring Offense': 'Points', 'Scoring Defense': 'Points Allowed',
-            'Special Teams': 'Field Goals Made', 'Turnover Margin': 'Turnover Margin', 'Total Offense': 'Yards per Game',
-            'Passing Offense': 'Passing Yards', 'Rushing Offense': 'Rushing Yards', 'Total Defense': 'Points against',
-            'Passing Defense': 'Completion Yards Against', 'Rushing Defense': 'Rush Yards Allowed'}
+    SORT = TEAM_SORT
     order = [b['name'] for b in afl['stats']['teams']]
     out = []
     for cat in order:
         if cat not in rows:
             continue
         b = block('teams', cat, rows[cat], CALC.get(cat, set()), SORT[cat])
-        if cat in ('Scoring Defense', 'Total Defense', 'Passing Defense', 'Rushing Defense', 'Penalties'):
+        if cat in TEAM_ASC:
             # "weniger ist besser": aufsteigend
             si = [c['title'] for c in b['columns']].index(SORT[cat])
             b['rows'].sort(key=lambda r: (r['values'][si] is None, r['values'][si] or 0))
         out.append(b)
     return out, sorted(tids)
+
+
+TEAM_SORT = {'Penalties': 'Penalty Against Yards', 'Scoring Offense': 'Points', 'Scoring Defense': 'Points Allowed',
+             'Special Teams': 'Field Goals Made', 'Turnover Margin': 'Turnover Margin', 'Total Offense': 'Yards per Game',
+             'Passing Offense': 'Passing Yards', 'Rushing Offense': 'Rushing Yards', 'Total Defense': 'Points against',
+             'Passing Defense': 'Completion Yards Against', 'Rushing Defense': 'Rush Yards Allowed'}
+TEAM_ASC = ('Scoring Defense', 'Total Defense', 'Passing Defense', 'Rushing Defense', 'Penalties')   # weniger ist besser
 
 
 # ---------------------------------------------------------------- Aufbau
@@ -735,6 +777,476 @@ for yr in SEASONS:
                 gm = people[k].setdefault('games', {})
                 gm[yr] = gm.get(yr, 0) + 1
     print(yr, 'Spieler-Kategorien:', [(b['name'], len(b['rows'])) for b in pblocks], '| Teams:', len(tids))
+
+
+# ---------------------------------------------------------------- Saisons vor 2014 (StatCrew, AFBÖ-Website)
+# Unterordner des 5. Arguments (…/Statistiken/<Jahr>). Neueste zuerst, damit ältere Saisons auch mit Personen
+# verknüpft werden können, die es nur in einer späteren StatCrew-Saison gibt.
+STATCREW_SEASONS = {
+    '2013': {'exclude': (), 'note': 'Grunddurchgang und Play-offs.',
+             'note_en': 'Regular season and playoffs.'},
+    '2012': {'exclude': (), 'note': 'Grunddurchgang und Halbfinals – der Boxscore der Austrian Bowl XXVIII fehlt.',
+             'note_en': 'Regular season and semi-finals – the box score of Austrian Bowl XXVIII is missing.'},
+    '2011': {'exclude': (),
+             'note': 'Grunddurchgang (6 Spiele je Team), Halbfinals und Austrian Bowl XXVII. Für den Grunddurchgang '
+                     'gibt es nur Saisonsummen: Sacks (QB) und Fumbles je Spieler sowie die Spiele mit Kick/Punt '
+                     'fehlen deshalb.',
+             'note_en': 'Regular season (6 games per team), semi-finals and Austrian Bowl XXVII. Only season totals '
+                        'exist for the regular season, so sacks taken, fumbles per player and games with a kick/punt '
+                        'are missing.'},
+    '2010': {'exclude': ('VIK_DRA_02_05_10.htm', 'DRA_PAN_17_04_10.htm',      # Europacup (Badalona Dracs, Thonon)
+                         'GIA_DRA_15_05_10.htm', 'VIK_GIA_06_06_10.htm'),     # nicht in der AFBÖ-Conference-Statistik
+             'note': 'Grunddurchgang (24 Conference-Spiele) und Play-offs.',
+             'note_en': 'Regular season (24 conference games) and playoffs.'},
+    # 2004–2009: nur Teamseiten (Grunddurchgang); für die Play-offs gibt es keine Statistik-Seiten
+    '2009': {'exclude': (), 'page_names': True,
+             'note': 'Nur Grunddurchgang (28 Spiele): Play-offs und Austrian Bowl XXV sind in der AFBÖ-Statistik nicht '
+                     'enthalten. Blue Devils und Lions spielten auch je viermal gegen Teams der Division I (St. Pölten '
+                     'Invaders, ASKOE Steelsharks, CNC Gladiators, Salzburg Bulls); diese Spiele zählen mit. Für das '
+                     'Spiel der Lions in St. Pölten (27:36) gibt es keine Statistik.',
+             'note_en': 'Regular season only (28 games): the playoffs and Austrian Bowl XXV are not part of the AFBÖ '
+                        'statistics. Blue Devils and Lions also played four games each against Division I teams (St. '
+                        'Pölten Invaders, ASKOE Steelsharks, CNC Gladiators, Salzburg Bulls); these games are included. '
+                        'There are no statistics for the Lions\' game in St. Pölten (27:36).'},
+    '2008': {'exclude': (), 'page_names': True,
+             'note': 'Nur Grunddurchgang (18 Spiele): Play-offs und Austrian Bowl XXIV sind in der AFBÖ-Statistik nicht '
+                     'enthalten. Sacks (QB) und Fumbles je Spieler sowie die Spiele mit Kick/Punt wurden nicht '
+                     'veröffentlicht.',
+             'note_en': 'Regular season only (18 games): the playoffs and Austrian Bowl XXIV are not part of the AFBÖ '
+                        'statistics. Sacks taken, fumbles per player and games with a kick/punt were not published.'},
+    '2007': {'exclude': (), 'page_names': True,
+             'fixes': {'drop_games': [('Lions', 'May 19, 2007')], 'no_team_stats': ['Lions']},
+             'note': 'Nur Grunddurchgang (23 Spiele; Blue Devils – Lions wurde nicht gespielt): die Austrian Bowl XXIII ist '
+                     'in der AFBÖ-Statistik nicht enthalten. Keine Teamwerte der Carinthian Lions: die AFBÖ-Statistik '
+                     'zählt das Spiel Raiders – Lions (19.05., 28:0) bei den Lions als Sieg mit den Werten der Raiders. '
+                     'Die Spielerwerte der Lions sind davon nicht betroffen (ohne dieses Spiel). Sacks (QB) und Fumbles '
+                     'je Spieler sowie die Spiele mit Kick/Punt wurden nicht veröffentlicht.',
+             'note_en': 'Regular season only (23 games; Blue Devils vs Lions was not played): Austrian Bowl XXIII is not '
+                        'part of the AFBÖ statistics. No team figures for the Carinthian Lions: the AFBÖ statistics count '
+                        'Raiders vs Lions (19 May, 28:0) as a Lions win with the Raiders\' figures. The Lions\' player '
+                        'figures are not affected (without that game). Sacks taken, fumbles per player and games with a '
+                        'kick/punt were not published.'},
+    '2006': {'exclude': (), 'page_names': True,
+             'note': 'Nur Grunddurchgang (19 Spiele, 5 Teams): die Austrian Bowl XXII ist in der AFBÖ-Statistik nicht '
+                     'enthalten.',
+             'note_en': 'Regular season only (19 games, 5 teams): Austrian Bowl XXII is not part of the AFBÖ statistics.'},
+    '2005': {'exclude': (), 'page_names': True,
+             'note': 'Nur Grunddurchgang (18 Spiele): die Austrian Bowl XXI ist in der AFBÖ-Statistik nicht enthalten.',
+             'note_en': 'Regular season only (18 games): Austrian Bowl XXI is not part of the AFBÖ statistics.'},
+    '2004': {'exclude': (), 'page_names': True,
+             'note': 'Nur Grunddurchgang (21 Spiele): Halbfinals und Austrian Bowl XX sind in den AFBÖ-Saisonwerten '
+                     'nicht enthalten. Zwei Spiele der Cowboys wurden mit 0:35 strafverifiziert und haben keine '
+                     'Statistik (die 35 Punkte fehlen deshalb bei Blue Devils und Vikings).',
+             'note_en': 'Regular season only (21 games): the semi-finals and Austrian Bowl XX are not part of the AFBÖ '
+                        'season totals. Two Cowboys games were forfeited 0:35 and have no statistics (so these 35 points '
+                        'are missing for Blue Devils and Vikings).'},
+}
+# Teamnamen, wie sie in der jeweiligen Saison hießen (sonst: Name der ersten Hockeydata-Saison)
+SEASON_TEAM_NAMES = {'2010': {3: 'Prague Panthers', 5: 'Tyrolean Raiders', 901: 'Salzburg Bulls',
+                              902: 'St. Pölten Invaders', 903: 'Carinthian Lions'},
+                     '2011': {3: 'Prague Panthers', 5: 'Tyrolean Raiders', 901: 'Salzburg Bulls',
+                              903: 'Carinthian Lions'}}
+SHORT.update({901: 'Bulls', 902: 'Invaders', 903: 'Lions', 904: 'Cowboys', 905: 'Falcons'})
+# Vorgänger-Vereine, die für die Spielerzuordnung als "gleiches Team" gelten (Kärnten: Cowboys und Falcons -> Lions)
+CLUB_GROUPS = {t: {903, 904, 905} for t in (903, 904, 905)}
+# Vom Ligamanagement geprüfte Zuordnungen -> Archiv-Person (Schlüssel hd…); None = eigene Person (nicht verknüpfen).
+# Schlüssel: "<Saison>|<Team>|<Name in dieser Saison>"
+LINKS_STATCREW = {   # bestätigt am 29.09.2026
+    '2013|Rangers|Lars Gabler': 'hd799', '2013|Rangers|Maximilian Zangl': 'hd199', '2013|Rangers|Roman Simmel': 'hd179',
+    '2013|Rangers|Stefan Postel': 'hd1063', '2013|Rangers|Christoph Weber': 'hd350', '2013|Dragons|Johannes Kain': 'hd900',
+    '2013|Vikings|Felix Tomenendal': None,      # nicht Hockeydata-ID 28 (deren Werte gehören Dylan Potts, s. ID_FIX)
+    '2013|Giants|Alex Good': 'hd816',
+    '2013|Dragons|Fabian Baumgartner': None,     # nicht Fabio Baumgartner
+    '2012|Raiders|Florian Grein': 'hd6168', '2012|Raiders|Lemay Maqueira': 'hd630',
+    '2012|Vikings|Andreas Dueringer': 'hd758', '2012|Giants|Clemens Safron': None,
+    '2010|Dragons|Bastian Daum': 'hd738', '2010|Vikings|Christopher James': ('2012', 'Raiders', 'Chris James'),
+    '2010|Bulls|Benedikt Brugnara': ('2012', 'Raiders', 'Bene Brugnara'), '2010|Bulls|Ralf Stefanisch': 'hd1133',
+    '2010|Dragons|Franz Kolohsar': ('2012', 'Vikings', 'Franz Kohlosar'), '2010|Lions|Pico Rabitsch': 'hd1257',
+    '2010|Dragons|Andreas Dueringer': 'hd758', '2010|Vikings|Josiah Alan Cravalho': 'hd229',
+    '2010|Lions|Jure Bezica': 'hd685', '2010|Panthers|Gabor Sviatko': 'hd6190',
+    # 2011: dieselben Personen wie 2010 (bestätigt) bzw. eindeutig (seltener Name, gleiches Team 2010–2018)
+    '2011|Dragons|Andreas Dueringer': 'hd758', '2011|Lions|Pico Rabitsch': 'hd1257',
+    '2011|Panthers|Gabor Sviatko': 'hd6190',
+    '2010|Giants|Ponce de Leon': 'hd85', '2011|Giants|Armando Ponce deLeon': 'hd85',
+    '2012|Giants|A. Ponce de Leon': 'hd85', '2013|Giants|A. Ponce de Leon': 'hd85',
+    # bestätigt am 30.09.2026: dieselben Spieler wie später
+    '2011|Bulls|Alen Jovic': 'hd2619', '2011|Bulls|Benjamin Ast': 'hd2201', '2011|Bulls|Michael Poschacher': 'hd2245',
+    '2011|Dragons|James Canetti': 'hd6041', '2011|Giants|Raimund Winkler': 'hd2333', '2011|Lions|Rock Sedej': 'hd1113',
+    '2011|Raiders|Max Pichler': 'hd246',
+    # 2004–2009: Schreibvarianten derselben Person bzw. Fortsetzung bei einem anderen Verein
+    '2009|Dragons|Andreas Dueringer': 'hd758', '2008|Dragons|Andreas Dueringer': 'hd758',
+    '2007|Dragons|Andreas Dueringer': 'hd758', '2005|Dragons|Andreas Dueringer': 'hd758',
+    '2004|Giants|A. Ponce de Leon': 'hd85', '2005|Giants|Armand.Ponce De Leon': 'hd85', '2007|Giants|A. Ponce de Leon': 'hd85',
+    '2006|Blue Devils|Philipp Bickel': ('2010', 'Vikings', 'Phillip Bickel'),
+    '2006|Raiders|Christopher Rosier': ('2007', 'Vikings', 'Chris Rosier'),
+    '2006|Raiders|Mohammed Muheize': ('2009', 'Giants', 'Mohamed Muheize'),
+    '2007|Dragons|Herbert Klack': 'hd912', '2007|Raiders|Michael Kruder': 'hd948',
+    '2009|Blue Devils|Wilfried Dieufaite': 'hd744',
+    '2005|Dragons|Matthew Crockett': ('2006', 'Lions', 'Matt Crockett'),
+    '2005|Blue Devils|Steven Carter': ('2006', 'Giants', 'Steve Carter'),
+    '2004|Falcons|Karlhein Buggelsheim': ('2009', 'Lions', 'Karl.H.Buggelsheim'),
+    # Ramon Abdel Azim Mohamed (Falcons 2005, Lions 2006–2011) = Ramon Azim (Dragons 2012–2019), bestätigt 30.09.2026
+    '2011|Lions|Azim Mohamed Abdel': 'hd7', '2010|Lions|Abdel Azim Mohammed': 'hd7',
+    '2009|Lions|Ramon A.Azim Mohamed': 'hd7', '2008|Lions|R. Abdel Azim Mohamed': 'hd7',
+    '2007|Lions|Abdel Azim Mohamed': 'hd7', '2006|Lions|R. Abdel Azim Mohamed': 'hd7',
+    '2005|Falcons|R. Abdel Azim Mohamed': 'hd7',
+    # bestätigt bzw. abgelehnt am 30.09.2026
+    '2005|Dragons|Phillip Sommer': None, '2004|Dragons|Philipp Sommer': ('2005', 'Dragons', 'Phillip Sommer'),
+    '2005|Dragons|Sascha Steurer': ('2011', 'Lions', 'Sascha Steurer'),
+    '2004|Dragons|Sascha Steurer': ('2011', 'Lions', 'Sascha Steurer'),
+    '2004|Vikings|Stefan Withalm': ('2012', 'Dragons', 'Stefan Withalm'),
+    '2005|Blue Devils|Michael Steffani': 'hd1135', '2004|Blue Devils|Michael Steffani': 'hd1135',
+    '2005|Raiders|Mark Falger': ('2008', 'Blue Devils', 'Marc Falger'),
+    '2004|Raiders|Mark Falger': ('2008', 'Blue Devils', 'Marc Falger'),
+    '2009|Blue Devils|Nic Haritonenko': 'hd849', '2008|Blue Devils|Nic Haritonenko': 'hd849',
+    '2008|Blue Devils|A Haritonenko': None,          # nicht Alexander Haritonenko (2016)
+    '2009|Blue Devils|Petr Vitrovec': None,           # nicht Petr Vitovec (Black Panthers 2015/16)
+    '2008|Blue Devils|Petr Vitovec': ('2009', 'Blue Devils', 'Petr Vitrovec'),
+    '2009|Vikings|Emil Cakic': 'hd717',
+    '2009|Raiders|T Hunt': None,                      # nicht Tony Hunt (Vikings 2011)
+    '2008|Raiders|Markus Pichler': None,              # nicht "M. Pichler" (Raiders 2012)
+    '2006|Giants|Guido Peterson': ('2012', 'Giants', 'G. Peterson'),
+    '2009|Giants|Manuel Sabathi': 'hd2328',
+}
+# Anzeigename für Personen, die nur in StatCrew-Saisons vorkommen (sonst Schreibweise der neuesten Saison)
+STATCREW_PERSON_NAMES = {}
+statcrew_keys = {}   # (Saison, Team, Name) -> Archiv-Schlüssel (für Verweise in LINKS_STATCREW)
+
+
+def resolve_manual(target):
+    """'hd630' -> kanonischer Schlüssel (nach Zusammenführen doppelter IDs); (Saison, Team, Name) -> Schlüssel dieses Eintrags"""
+    if isinstance(target, tuple):
+        return statcrew_keys.get(target)
+    m = re.match(r'^hd(\d+)$', target or '')
+    if m and int(m.group(1)) < 900000:
+        return person_key(canon(int(m.group(1))))
+    return target
+PLAYER_SORT = {'Passing': 'Pass Attempts', 'Receiving': 'Receptions', 'Rushing': 'Rush Attempts',
+               'Defense': 'Total Tackles', 'Returns': 'Kickoff Return Yards',
+               'Kicking': 'Punkte durch Kicks (FG × 3 + XP)', 'Punting': 'Punts'}
+links_statcrew = []
+statcrew_files = {}
+statcrew_team_names = defaultdict(set)   # hd-Team -> alle Namen aus den StatCrew-Saisons (für "gleiches Team")
+statcrew_aliases = []   # (Schlüssel, Schreibweise in der StatCrew-Saison) – für die Suche nach Namen (MVP-Liste)
+new_person_i = [0]
+
+
+def fold(s):
+    """Vergleichsform für Namen: ohne Akzente, ä/ae, ö/oe, ü/ue gleich"""
+    s = norm(s)
+    for a, b in (('ae', 'a'), ('oe', 'o'), ('ue', 'u')):
+        s = s.replace(a, b)
+    return s
+
+
+def season_team_name(yr, tid):
+    if tid in SEASON_TEAM_NAMES.get(yr, {}):
+        return SEASON_TEAM_NAMES[yr][tid]
+    for y in SEASONS:
+        if (y, tid) in team_name:
+            return team_name[(y, tid)]
+    return tname('2025', tid)
+
+
+def add_statcrew_season(YR, S, cfg):
+    # Teamnamen: wie auf den Teamseiten der Saison (2004–2009) bzw. wie in SEASON_TEAM_NAMES / Hockeydata
+    team_nm = {tid: (clean_name(nm) if cfg.get('page_names') else season_team_name(YR, tid))
+               for tid, nm in S['team_names'].items()}
+    for tid, nm in team_nm.items():
+        statcrew_team_names[tid].add(nm)
+    def names_of(tid):
+        return ({tname(y, tid) for y in SEASONS if (y, tid) in team_name}
+                | {season_team_name(y, tid) for y in list(STATCREW_SEASONS) if tid in SEASON_TEAM_NAMES.get(y, {})}
+                | statcrew_team_names[tid])
+    club_names = {tid: set().union(*(names_of(t) for t in CLUB_GROUPS.get(tid, {tid}))) for tid in team_nm}
+
+    # Namensvarianten der Archiv-Personen (inkl. Personen, die nur in späteren StatCrew-Saisons vorkommen)
+    variants = defaultdict(set)     # key -> {(first, last)}
+    # 2004–2009: auch die Schreibweisen aus den späteren StatCrew-Saisons (z. B. "Andreas Dueringer" für "Düringer");
+    # 2010–2013 bleiben dafür unverändert
+    later = defaultdict(list)
+    if cfg.get('page_names'):
+        for k_, nm_ in statcrew_aliases:
+            later[k_].append(nm_)
+    for k, p in people.items():
+        for pid in p['ids']:
+            sp = spieler.get(pid, {})
+            variants[k].add((clean_name(sp.get('Firstname')), clean_name(sp.get('Lastname'))))
+        for nm in [p['name']] + p.get('aliases', []) + later.get(k, []):
+            parts = re.sub(r'\.(?=[A-Za-zÄÖÜäöü])', '. ', nm).split()
+            if len(parts) > 1:
+                variants[k].add((parts[0], ' '.join(parts[1:])))
+            elif parts:
+                variants[k].add(('', parts[0]))
+    by_full = defaultdict(set)
+    by_last = defaultdict(set)
+    for k, vs in variants.items():
+        for f, l in vs:
+            by_full[fold(f + ' ' + l)].add(k)
+            for part in [l] + l.replace('-', ' ').split():
+                by_last[fold(part)].add(k)
+
+    def same_club(k, tid):
+        return any(t in club_names[tid] for ts in people[k]['teams'].values() for t in ts)
+
+    def gap(k):
+        """Jahre bis zur nächsten Saison der Person"""
+        ys = [int(y) for y in people[k]['teams'] if y != YR]
+        return min(ys) - int(YR) if ys else 99
+
+    def link(pl):
+        """-> (key or None, status)"""
+        tid = pl['tid']
+        manual = LINKS_STATCREW.get(f"{YR}|{pl['team']}|{pl['name']}", 'offen')
+        if manual != 'offen':
+            k = resolve_manual(manual) if manual else None
+            if manual and k not in people:
+                return None, f'prüfen: bestätigte Zuordnung {manual} nicht gefunden'
+            return k, ('sicher: manuell bestätigt' if k else 'eigene Person: manuell bestätigt')
+        parts = re.sub(r'\.(?=[A-Za-zÄÖÜäöü])', '. ', pl['name']).split()
+        if pl['full_name'] and len(parts) > 1:
+            ks = set()
+            for n in pl['names'] + [pl['name']]:
+                if not statcrew.looks_abbrev(n):
+                    ks |= by_full.get(fold(n), set())
+            if len(ks) == 1:
+                k = next(iter(ks))
+                if same_club(k, tid):
+                    return k, 'sicher: gleicher Name, gleiches Team'
+                # gleicher (eindeutiger) Name bei einem anderen Verein wenige Jahre später: Vereinswechsel
+                # (2013 vom Ligamanagement in allen solchen Fällen bestätigt)
+                return k, ('wahrscheinlich: gleicher Name, Vereinswechsel' if gap(k) <= 5 else 'prüfen: gleicher Name, anderes Team')
+            if len(ks) > 1:
+                same = [k for k in ks if same_club(k, tid)]
+                if len(same) == 1:
+                    return same[0], 'sicher: gleicher Name, gleiches Team'
+                return None, 'prüfen: mehrere Archiv-Personen mit diesem Namen: ' + ', '.join(sorted(ks))
+            # ähnliche Schreibweise (Tippfehler, Kurzform, Spitzname, Umlaut, Doppelname, vertauscht)
+            first, last = parts[0], ' '.join(parts[1:])
+            found = []
+            for k, vs in variants.items():
+                best = None
+                for f, l in vs:
+                    if fold(first) == fold(l) and fold(last) == fold(f):
+                        cand = (1.9, 'Vor- und Nachname vertauscht', True)
+                    else:
+                        ls, lkind = dedupe.last_sim(last, l)
+                        if ls < 0.85:
+                            continue
+                        if not f:
+                            fs, fkind = 0.75, 'im Archiv ohne Vorname'
+                        else:
+                            fs, fkind = dedupe.first_sim(first, f)
+                        if fs < 0.7:
+                            continue
+                        # stark: Vorname gleich/Kurzform/Spitzname, offensichtlicher Tippfehler bei gleichem Nachnamen
+                        # ("Stafean"/"Stefan") oder Vorname im Archiv nicht erfasst
+                        cand = (fs + ls, f'Vorname {fkind or "Tippfehler"}, Nachname {lkind}',
+                                fs >= 0.85 or (ls >= 0.99 and fs >= 0.75) or (not f and ls >= 0.99))
+                    if best is None or cand[0] > best[0]:
+                        best = cand
+                if best:
+                    found.append((k,) + best)
+            if found:
+                def rank(x):
+                    return (same_club(x[0], pl['tid']), x[1])
+                found.sort(key=rank, reverse=True)
+                same = [x for x in found if same_club(x[0], pl['tid'])]
+                pick = same if same else found
+                k, _, why, strong = pick[0]
+                if len(pick) > 1 and pick[1][1] >= pick[0][1] - 0.05:
+                    return None, 'prüfen: mehrere ähnliche Namen: ' + ', '.join(f"{x[0]} {people[x[0]]['name']}" for x in pick[:3])
+                if strong and same and gap(k) <= 3:
+                    return k, f'wahrscheinlich: ähnlicher Name ({why}), gleiches Team'
+                return k, f"prüfen: ähnlicher Name ({why}), {'gleiches' if same else 'anderes'} Team"
+            return None, f'neu: nur {YR}'
+        # nur Kurzname (Initiale + Nachname) oder nur Nachname: eindeutige Archiv-Person desselben Teams, die nicht
+        # schon einem anderen Eintrag dieses Teams zugeordnet ist (z. B. "Da. Krejbich" neben Daniel Krejbich)
+        if pl['full_name']:
+            ini, last = None, norm(pl['name'])
+        else:
+            ini, last = statcrew.abbrev_parts(pl['abbrevs'][0] if pl['abbrevs'] else pl['name'])
+        ks = [k for k in by_last.get(fold(last), set()) if same_club(k, tid)
+              and not (set(pl['games']) & used.get(pl['team'], {}).get(k, set()))
+              and any(fold(f).startswith(fold(ini or '')) for f, l in variants[k] if fold(l).split()[-1:] == fold(last).split()[-1:] or fold(l) == fold(last))]
+        ks = [k for k in ks if gap(k) <= 2]
+        if len(ks) == 1:
+            return ks[0], ('wahrscheinlich: nur Nachname, gleiches Team' if pl['full_name'] else
+                           'wahrscheinlich: Initiale + Nachname, gleiches Team')
+        return None, (f'neu: nur {YR} (nur Kurzname)' if not ks else 'prüfen: mehrere Archiv-Personen: ' + ', '.join(ks))
+
+    # Zuordnung je Eintrag; mehrere Einträge derselben Person: ohne gemeinsames Spiel zusammenfassen,
+    # sonst bleibt nur der Eintrag mit dem vollen Namen verknüpft
+    links = []
+    assigned = []
+    used = defaultdict(dict)     # Team -> Archiv-Schlüssel -> Spiele des schon zugeordneten Eintrags
+    linked = {}
+    for pl in sorted(S['players'], key=lambda p: not p['full_name']):   # volle Namen zuerst
+        linked[id(pl)] = link(pl)
+        k, status = linked[id(pl)]
+        if k and status.startswith(('sicher', 'wahrscheinlich')):
+            used[pl['team']].setdefault(k, set()).update(pl['games'])
+    for pl in S['players']:
+        k, status = linked[id(pl)]
+        auto_ok = status.startswith(('sicher', 'wahrscheinlich', 'eigene Person'))
+        links.append([pl, k, status])
+        assigned.append([pl, k if auto_ok else None, status])
+    by_key = defaultdict(list)
+    for a in assigned:
+        if a[1]:
+            by_key[a[1]].append(a)
+    for k, lst in by_key.items():
+        if len(lst) < 2:
+            continue
+        overlap = any(set(x[0]['games']) & set(y[0]['games']) for i, x in enumerate(lst) for y in lst[i + 1:])
+        if overlap:
+            lst.sort(key=lambda a: (not a[0]['full_name'], -a[0]['gp']))
+            for a in lst[1:]:
+                a[1] = None
+                for l in links:
+                    if l[0] is a[0]:
+                        l[1], l[2] = None, 'neu: gleiche Person wie ein anderer Eintrag ausgeschlossen (gemeinsame Spiele)'
+        else:
+            merged = statcrew.merge_players([a[0] for a in lst])
+            lst[0][0] = merged
+            for a in lst[1:]:
+                a[1] = 'skip'
+    rows = defaultdict(list)
+    for pl, k, status in assigned:
+        if k == 'skip':
+            continue
+        if k is None:
+            if not pl['v']:
+                continue      # nur Einsatz, kein Name/keine Werte: keine eigene Person
+            new_person_i[0] += 1
+            k = f'hd{900000 + new_person_i[0]}'
+            people[k] = {'name': STATCREW_PERSON_NAMES.get(f"{YR}|{pl['team']}|{pl['name']}", pl['name']),
+                         'ids': [], 'teams': {}}
+        elif pl['full_name'] and statcrew.looks_abbrev(people[k]['name']) and not people[k]['ids']:
+            people[k]['name'] = pl['name']    # "J. Geser" (nur Kurzname in einer späteren Saison) -> "Johannes Geser"
+        if pl['full_name']:
+            statcrew_aliases.append((k, pl['name']))
+        statcrew_keys[(YR, pl['team'], pl['name'])] = k
+        lst = people[k]['teams'].setdefault(YR, [])
+        if team_nm[pl['tid']] not in lst:
+            lst.append(team_nm[pl['tid']])
+        gm = people[k].setdefault('games', {})
+        gm[YR] = gm.get(YR, 0) + pl['gp']
+        for cat, v in pl['v'].items():
+            rows[cat].append({'pid': k, 'name': people[k]['name'], 'team_id': f"hd-{pl['tid']}", 'v': v})
+    pblocks = []
+    for cat in ['Passing', 'Receiving', 'Rushing', 'Defense', 'Returns', 'Kicking', 'Punting']:
+        extra = KICK_COLS if cat == 'Kicking' else PUNT_COLS if cat == 'Punting' else None
+        calc = {'Spiele mit Kick'} if cat == 'Kicking' else {'Spiele mit Punt'} if cat == 'Punting' else set()
+        pblocks.append(block('players', cat, rows.get(cat, []), calc, PLAYER_SORT[cat], extra))
+    tblocks = []
+    trows = defaultdict(list)
+    for t in S['teams']:
+        for cat, v in t['v'].items():
+            trows[cat].append({'team_id': f"hd-{t['tid']}", 'name': team_nm[t['tid']], 'v': v})
+    for cat in [b['name'] for b in afl['stats']['teams']]:
+        if cat not in trows:
+            continue
+        b = block('teams', cat, trows[cat], set(), TEAM_SORT[cat])
+        if cat in TEAM_ASC:
+            si = [c['title'] for c in b['columns']].index(TEAM_SORT[cat])
+            b['rows'].sort(key=lambda r: (r['values'][si] is None, r['values'][si] or 0))
+        tblocks.append(b)
+    teams_out = [{'id': f'hd-{tid}', 'name': team_nm[tid], 'short': SHORT.get(tid, ''), 'club': CLUB_KEY.get(tid)}
+                 for tid in sorted(team_nm)]
+    for t in teams_out:
+        e = index['teams'].setdefault(t['id'], {'name': t['name'], 'club': t['club'], 'short': t['short']})
+        if t['name'] != e['name']:
+            e.setdefault('names', [])
+            if t['name'] not in e['names']:
+                e['names'].append(t['name'])
+    data = {'season': {'id': f'sc-{YR}', 'name': YR}, 'source': 'statcrew', 'note': cfg['note'],
+            'note_en': cfg['note_en'], 'teams': teams_out, 'games': S['games'],
+            'stats': {'players': pblocks, 'teams': tblocks}}
+    statcrew_files[YR] = data      # geschrieben nach allen StatCrew-Saisons (Namen können sich noch ändern)
+    index['seasons'].append({'name': YR, 'file': f'data/archive/season-{YR}.json', 'games': S['games'],
+                             'source': 'statcrew', 'note': cfg['note'], 'note_en': cfg['note_en']})
+    for b in pblocks:
+        for r in b['rows']:
+            career[r['pid']][YR][b['name']] = r['values']
+    seasons_out[YR] = pblocks
+    for l in links:
+        links_statcrew.append([YR] + l)
+    st = Counter(x[2].split(':')[0] for x in links)
+    print(f'{YR}:', S['games'], 'Spiele |', [(b['name'], len(b['rows'])) for b in pblocks], '| Zuordnung:', dict(st),
+          '| Boxscores:', len(S['files']['boxes']), 'zusätzlich,', len(S['files']['covered']), 'zur Kontrolle')
+
+
+if STATCREW_DIR:
+    import statcrew  # noqa: E402
+    for YR in sorted(STATCREW_SEASONS, reverse=True):
+        folder = os.path.join(STATCREW_DIR, YR)
+        if not os.path.isdir(folder):
+            continue
+        add_statcrew_season(YR, statcrew.season_from_folder(folder, STATCREW_SEASONS[YR]['exclude'],
+                                                            STATCREW_SEASONS[YR].get('fixes')), STATCREW_SEASONS[YR])
+    for k, nm in statcrew_aliases:   # erst am Ende, damit die Zuordnung der Saisons unverändert bleibt
+        p = people[k]
+        names = [p['name']] + p.get('aliases', [])
+        if fold(nm) not in {fold(x) for x in names}:
+            p['aliases'] = (p.get('aliases') or [p['name']]) + [nm]
+    # Hockeydata-Namen ohne Vorname ("Düringer") bzw. mit vertauschten Vor-/Nachnamen ("Grein Florian"): Schreibweise
+    # aus den StatCrew-Saisons übernehmen ("Andreas Düringer", "Florian Grein")
+    alias_cnt = defaultdict(Counter)
+    for k, nm in statcrew_aliases:
+        alias_cnt[k][nm] += 1
+    renamed = {}
+    for k, cnt in alias_cnt.items():
+        p = people[k]
+        if not p['ids']:
+            continue
+        toks = p['name'].split()
+        for a, n in cnt.most_common():
+            at = a.split()
+            if len(toks) == 1 and len(at) >= 2 and fold(at[-1]) == fold(toks[0]):
+                renamed[k] = ' '.join(at[:-1] + toks)
+                break
+            if len(toks) == 2 and n >= 2 and [fold(x) for x in at] == [fold(toks[1]), fold(toks[0])]:
+                renamed[k] = f'{toks[1]} {toks[0]}'
+                break
+    for k, nm in renamed.items():
+        p = people[k]
+        p['aliases'] = [nm] + [a for a in (p.get('aliases') or [p['name']]) if a != nm]
+        p['name'] = nm
+    for yr in SEASONS:      # Hockeydata-Saisons sind schon geschrieben: Namen dort nachziehen
+        f = f'{OUT}/season-{yr}.json'
+        if not renamed or not os.path.exists(f):
+            continue
+        data = json.load(open(f))
+        hit = False
+        for b in data['stats']['players']:
+            for r in b['rows']:
+                if r.get('pid') in renamed:
+                    r['name'] = renamed[r['pid']]
+                    hit = True
+        if hit:
+            with open(f, 'w') as fh:
+                json.dump(data, fh, ensure_ascii=False, separators=(',', ':'))
+    print('Namen aus StatCrew übernommen:', renamed)
+    for YR, data in statcrew_files.items():
+        for b in data['stats']['players']:
+            for r in b['rows']:
+                r['name'] = people[r['pid']]['name']
+        with open(f'{OUT}/season-{YR}.json', 'w') as fh:
+            json.dump(data, fh, ensure_ascii=False, separators=(',', ':'))
+    for YR in sorted(STATCREW_SEASONS):
+        if YR in seasons_out and YR not in SEASONS:
+            SEASONS.insert(sorted(SEASONS + [YR]).index(YR), YR)
+    with open(f'{REPORT_DIR}/Pruefliste-StatCrew-Saisons.csv', 'w', newline='', encoding='utf-8-sig') as fh:
+        w = csv.writer(fh, delimiter=';')
+        w.writerow(['Saison', 'Status', 'Team', 'Name', 'Schreibweisen', 'Spiele', 'Archiv-Schlüssel',
+                    'Name im Archiv', 'Weitere Saisons', 'Teams in weiteren Saisons'])
+        order = {'prüfen': 0, 'wahrscheinlich': 1, 'sicher': 2, 'neu': 3, 'eigene Person': 4}
+        for yr, pl, k, status in sorted(links_statcrew, key=lambda x: (x[0], order.get(x[3].split(':')[0], 9), x[1]['team'], x[1]['name'])):
+            p = people.get(k) if k else None
+            w.writerow([yr, status, pl['team'], pl['name'], ', '.join(pl['names'] or pl['abbrevs']), pl['gp'], k or '',
+                        p['name'] if p else '', ', '.join(sorted(y for y in p['teams'] if y != yr)) if p else '',
+                        ', '.join(sorted({t for y, ts in p['teams'].items() if y != yr for t in ts})) if p else ''])
 
 # ---------------------------------------------------------------- Zuordnung zu Clubee
 clubee = {}
@@ -843,16 +1355,25 @@ for k, u in CONFIRMED.items():
     if k in people and u in clubee and not any(l['key'] == k and l['user_id'] == u for l in links):
         links.append({'user_id': u, 'key': k, 'conf': 'sicher: manuell bestätigt', 'c': clubee[u], 'full': people[k]['name']})
 
-# Konflikte: ein Archiv-Spieler -> mehrere Clubee-Profile
-cnt = Counter(l['key'] for l in links if l['key'] and not l['conf'].startswith(('abgelehnt', 'mehrdeutig')))
-player_map = {}
+# Konflikte: ein Archiv-Spieler -> mehrere Clubee-Profile. Ist genau eines davon sicher (z. B. gleiches
+# Geburtsdatum) und die übrigen nur wahrscheinlich/zu prüfen (doppeltes Clubee-Profil ohne Geburtsdatum), wird das
+# sichere verknüpft; sonst keines.
+by_key_links = defaultdict(list)
 for l in links:
-    if not l['key'] or l['conf'].startswith(('abgelehnt', 'mehrdeutig')):
+    if l['key'] and not l['conf'].startswith(('abgelehnt', 'mehrdeutig')):
+        by_key_links[l['key']].append(l)
+player_map = {}
+for k, ls in by_key_links.items():
+    top = [l for l in ls if l['conf'].startswith('sicher')]
+    if len(ls) == 1 or len(top) == 1:
+        win = ls[0] if len(ls) == 1 else top[0]
+        player_map[k] = win['user_id']
+        for l in ls:
+            if l is not win:
+                l['conf'] = f"doppeltes Clubee-Profil – verknüpft ist {win['user_id']}"
         continue
-    if cnt[l['key']] > 1:
+    for l in ls:
         l['conf'] = 'KONFLIKT: mehrere Clubee-Profile – nicht verknüpft'
-        continue
-    player_map[l['key']] = l['user_id']
 
 with open(f'{OUT}/player-map.json', 'w') as fh:
     json.dump(dict(sorted(player_map.items(), key=lambda x: int(x[0][2:]))), fh, ensure_ascii=False, indent=0)
