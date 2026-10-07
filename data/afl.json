@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T10:17:02.414Z",
+ "updated_at": "2026-10-07T10:16:45.230Z",
  "competition_id": 13931,
  "season": {
   "id": 217,
@@ -39,8 +39,8 @@
   {
    "id": 355142,
    "name": "Danube Dragons",
-   "logo": "https://clubee-websites-prod.s3.eu-central-1.amazonaws.com/17538/logo/danube-dragons-355142_1771512928_small.png",
-   "logo_big": "https://clubee-websites-prod.s3.eu-central-1.amazonaws.com/17538/logo/danube-dragons-355142_1771512928_big.png"
+   "logo": "https://clubee-websites-prod.s3.eu-central-1.amazonaws.com/17583/logo/96x96_danube-dragons_1791134627.png",
+   "logo_big": "https://clubee-websites-prod.s3.eu-central-1.amazonaws.com/17583/logo/480x480_danube-dragons_1791134627.png"
   },
   {
    "id": 355285,
@@ -4460,18 +4460,6 @@
    "license": null
   },
   {
-   "id": 983174,
-   "team_id": 355129,
-   "firstname": "Christian",
-   "lastname": "MUCH",
-   "birth_year": 1993,
-   "nationality": "AUT",
-   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/167_6872a0785e/38481_19e25a4ed1/MUCH-Christian-Foto.jpg",
-   "jersey_number": null,
-   "positions": [],
-   "license": null
-  },
-  {
    "id": 983303,
    "team_id": 355129,
    "firstname": "Alexander",
@@ -5568,6 +5556,18 @@
    "license": null
   },
   {
+   "id": 983627,
+   "team_id": 355142,
+   "firstname": "Martin",
+   "lastname": "SCHLAGENHAUFEN",
+   "birth_year": 1975,
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/118_23476681ba/39010_adac55bb45/Schlagenhaufen_Martin.jpg",
+   "jersey_number": 42,
+   "positions": [],
+   "license": null
+  },
+  {
    "id": 984219,
    "team_id": 355142,
    "firstname": "Alexander",
@@ -5604,6 +5604,20 @@
    "jersey_number": 74,
    "positions": [],
    "license": "Homegrown"
+  },
+  {
+   "id": 985166,
+   "team_id": 355142,
+   "firstname": "Thorsten",
+   "lastname": "TANNERT",
+   "birth_year": 2001,
+   "nationality": "AUT",
+   "photo": "https://d9b2mk6trz4qa.cloudfront.net/afbo/118_23476681ba/40817_36e3f4042c/Tannert-Thorsten_SP_25.jpg",
+   "jersey_number": 46,
+   "positions": [
+    "K"
+   ],
+   "license": null
   },
   {
    "id": 986688,
