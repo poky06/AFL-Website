@@ -1381,6 +1381,13 @@
     if (players.some(p => p.id === "u" + u)) return "u" + u; // Live
     return null;
   }
+  // Passing/Rushing ohne Versuch bzw. Receiving ohne Catch: Spieler nicht in der Liste zeigen
+  const STAT_MIN_COL = { PASSING: "ATT", RUSHING: "ATT", RECEIVING: "REC" };
+  function statRowFilter(block) {
+    const need = STAT_MIN_COL[String(block?.name || "").trim().toUpperCase()];
+    const i = need ? (block.columns || []).findIndex(c => String(c.label).trim().toUpperCase() === need) : -1;
+    return i < 0 ? () => true : r => typeof r.values?.[i] === "number" && r.values[i] > 0;
+  }
   function fmtStat(v) {
     if (v === null || v === undefined) return "–";
     return Number.isInteger(v) ? String(v) : dec(v, 1);
@@ -1727,6 +1734,7 @@
         if (ctx.allTime && team) rows = block.byTeam?.[team] || [];   // All Time je Team: nur die Saisons für dieses Team
         rows = rows.filter(r => (!q || String(r.name || "").toLowerCase().includes(q)) && (!team || ctx.allTime || idStr(r.team_id) === team));
       }
+      if (kind === "players") rows = rows.filter(statRowFilter(block));
       if (state.sort !== null) {
         const k = state.sort;
         rows = [...rows].sort((a, b) => {
@@ -2498,7 +2506,7 @@
     </div>`;
   }
   function renderClubPlayerStats(id) {
-    const blocks = ((statsData && statsData.players) || []).map(b => ({ ...b, rows: b.rows.filter(r => idStr(r.team_id) === id) })).filter(b => b.rows.length);
+    const blocks = ((statsData && statsData.players) || []).map(b => { const keep = statRowFilter(b); return { ...b, rows: b.rows.filter(r => idStr(r.team_id) === id && keep(r)) }; }).filter(b => b.rows.length);
     document.getElementById("club-pstats").innerHTML = blocks.length ? blocks.map(b => `
       <h3 class="subheading">${esc(b.name)}</h3>
       <div class="tbl-wrap"><table class="standings stats-tbl"><thead><tr><th>Spieler</th>${b.columns.map(c => `<th title="${esc(c.title || "")}">${esc(c.label)}</th>`).join("")}</tr></thead>
