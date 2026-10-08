@@ -28,16 +28,35 @@ Ganz oben im Skriptteil von `index.html` steht ein Block **„Konfiguration – 
 | Eintrag | Wofür |
 |---|---|
 | `TEAM_WEBSITES` | Offizielle Vereins-Websites (Clubee-Team-ID → Adresse). Fehlt ein Team, erscheint kein Website-Knopf. |
-| `LAST_BOWL` | Banner auf der Startseite (letzte Austrian Bowl mit Ergebnis, Datum, Ort). |
-| `AUSTRIAN_BOWL` | Nächste Austrian Bowl: Datum, Venue, Adresse, Ticket-Link, Programm. |
+| `LAST_BOWL` | Letzte Austrian Bowl mit Ergebnis, Datum, Ort – Champion-Banner auf der Startseite. |
+| `AUSTRIAN_BOWL` | Nächste Austrian Bowl: Datum, Uhrzeit, Venue, Adresse, Paarung (`home`/`away` als Clubee-Team-IDs), Ticket-Link, Programm. |
 | `SOCIAL` | Links zu Instagram, Facebook, YouTube. |
 | `INSTAGRAM_POSTS` | Optional: Links zu einzelnen Instagram-Beiträgen, die in der Fußzeile eingebettet werden. |
 | `TEAM_STYLE` | Vereinsfarben und Kurznamen. |
 | `TEAM_LOGOS` | Optional: eigene hochauflösende Logos je Team (Datei im Ordner `logos` ablegen, z. B. `"354986": "logos/graz-giants.png"`). |
 | `MVPS`, `CHAMPIONS` | MVP- und Meisterliste. |
 
-Spielplan, Playoff-Baum, Tabelle inkl. Strength of Schedule, Teamseiten und League Leaders
+**Startseiten-Banner:** Solange bei `AUSTRIAN_BOWL` kein `date` eingetragen ist, zeigt die Startseite den Champion
+der letzten Bowl (`LAST_BOWL`). Mit Datum zeigt sie die Vorschau auf die nächste Bowl (Paarung, sobald `home`/`away`
+gesetzt sind, und den Ticket-Knopf, solange `ticketsUrl` gesetzt ist).
+
+Spielplan, Playoffs, Tabelle inkl. Strength of Schedule, Teamseiten und League Leaders
 kommen automatisch aus den Clubee-Daten.
+
+## Design und Navigation
+
+Das Design folgt dem V1-Prototyp aus `poky06/AFL-Homepage-Final` (Branch `prototype/v1`, `prototypes/v1/index.html`):
+Stil „Editorial“ (hell), Oswald kursiv für Überschriften, Rot `#dd010e` und Navy `#002e67`, am Handy Burger-Menü,
+Wisch-Tabellen mit stehender Namensspalte und Reiter als Kacheln.
+
+Jede Seite hat eine eigene Adresse, z. B. `#schedule` (Spielplan), `#competitions` (Tabelle), `#playoffs`,
+`#stats-players`, `#stats-teams`, `#alltime` (All-Time Leaders), `#teams`, `#club-<Clubee-Team-ID>`, `#players`,
+`#bowl`, `#liga`, `#archive`, `#champions`, `#mvps`. „← Zurück“ und die Zurück-Taste des Browsers führen zur
+vorherigen Seite; Filter und Sortierung bleiben dabei erhalten. Die Spielerseite schließt mit „← Zurück“ oder der
+Zurück-Taste.
+
+Noch nicht umgesetzt, weil es dafür keine Datenquelle gibt: News, Box Scores/Play-by-Play einzelner Spiele und
+Werbeflächen (laut Prototyp ohnehin unsichtbar, solange kein Banner aktiv ist).
 
 **Strength of Schedule (SOS):** kombinierte Siegquote aller Gegner eines Teams im Grunddurchgang
 (gespielte und noch offene Spiele, jede Begegnung zählt einzeln) auf Basis der aktuellen Tabelle.
