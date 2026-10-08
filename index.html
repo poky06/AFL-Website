@@ -152,8 +152,10 @@
 
   /* ---------- Leaders ---------- */
   .lead { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .lead.click { cursor: pointer; }
-  .lead.click:hover b { color: var(--red); }
+  .lead .ln { display: block; }
+  .lead b.click { cursor: pointer; }
+  .lead b.click:hover { color: var(--red); }
+  .lead small.more { display: block; text-transform: none; letter-spacing: 0; }
   .lead > div { min-width: 0; }
   .lead small { color: var(--dim); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
   .lead .v { margin-left: auto; font: 700 italic 34px 'Oswald', sans-serif; font-variant-numeric: tabular-nums; }
@@ -800,6 +802,7 @@
     [/^Finalserie: (.+) gegen (.+)$/, "Final series: $1 vs. $2"],
     [/^(.+) gegen (.+)$/, "$1 vs. $2"],
     [/^(\d+) von (\d+) Spielern$/, "$1 of $2 players"],
+    [/^\+ (\d+) weitere$/, "+ $1 more"],
     [/^(.*?)(\d+) Spieler im Kader$/, "$1$2 players on the roster"],
     [/^(\S+) Tabelle$/, "$1 standings"],
     [/^Saison (\S+) · Grunddurchgang$/, "Season $1 · Regular season"],
@@ -2474,13 +2477,19 @@
     const boards = leaderBoards();
     document.getElementById("leaders-intro").textContent = live ? `Saison ${live.season?.name || ""}` : "Demo-Daten";
     document.getElementById("leaders").innerHTML = boards.length ? boards.map(b => {
-      const top = b.rows[0];
-      const pid = personIdForStat(top.user_id);
-      const tr = teamRef(top.team_id, "");
-      return `<div class="lead ${pid ? "click" : ""}" ${pid ? `data-person="${esc(pid)}" role="button" tabindex="0"` : ""}>
-        <span class="stripe" style="background:${tr.color}"></span>
-        <div><small>${esc(b.title)}</small><br><b>${esc(top.name)}</b>${tr.t ? ` · ${esc(teamStyle(tr.t.id).short)}` : ""}</div>
-        <span class="v">${fmtStat(top.v)}</span></div>`;
+      // Gleichstand an der Spitze: bis zu drei Spieler zeigen, weitere als "+ N weitere"
+      const tied = b.rows.filter(r => r.v === b.rows[0].v);
+      const shown = tied.slice(0, 3);
+      const names = shown.map(r => {
+        const pid = personIdForStat(r.user_id);
+        const tr = teamRef(r.team_id, "");
+        return `<span class="ln"><b class="${pid ? "click" : ""}" ${pid ? `data-person="${esc(pid)}" role="button" tabindex="0"` : ""}>${esc(r.name)}</b>${tr.t ? ` · ${esc(teamStyle(tr.t.id).short)}` : ""}</span>`;
+      }).join("");
+      const more = tied.length > shown.length ? `<small class="more">+ ${tied.length - shown.length} weitere</small>` : "";
+      return `<div class="lead">
+        <span class="stripe" style="background:${teamRef(shown[0].team_id, "").color}"></span>
+        <div><small>${esc(b.title)}</small>${names}${more}</div>
+        <span class="v">${fmtStat(shown[0].v)}</span></div>`;
     }).join("") : `<div class="empty">Noch keine Statistiken verfügbar.</div>`;
   }
   document.getElementById("leaders").addEventListener("click", e => {
