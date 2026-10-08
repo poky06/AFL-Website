@@ -2466,6 +2466,7 @@
     boards.push({ title: "Total Touchdowns", rows: [...td.values()] });
     single("Total Tackles", /def/i, ["TOT", "TKL", "TOTAL", "TT", "TACKLES", "TOTTKL", "TOTALTACKLES"]);
     single("Sacks", /def|sack/i, ["SCK", "SACKS", "SACK", "SK"]);
+    single("Interceptions", /def|int/i, ["INT+", "INT", "INTS", "INTERCEPTIONS"]);
     boards.forEach(b => b.rows.sort((x, y) => y.v - x.v));
     return boards.filter(b => b.rows.length);
   }
