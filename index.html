@@ -1383,9 +1383,16 @@
   }
   // Passing/Rushing ohne Versuch bzw. Receiving ohne Catch: Spieler nicht in der Liste zeigen
   const STAT_MIN_COL = { PASSING: "ATT", RUSHING: "ATT", RECEIVING: "REC" };
+  // Defense/Returns: Spieler nur zeigen, wenn außer den Spielen (G) irgendein Wert vorhanden ist
+  const STAT_ANY_VALUE = ["DEFENSE", "RETURNS"];
   function statRowFilter(block) {
-    const need = STAT_MIN_COL[String(block?.name || "").trim().toUpperCase()];
-    const i = need ? (block.columns || []).findIndex(c => String(c.label).trim().toUpperCase() === need) : -1;
+    const cat = String(block?.name || "").trim().toUpperCase();
+    const labels = (block?.columns || []).map(c => String(c.label).trim().toUpperCase());
+    if (STAT_ANY_VALUE.includes(cat)) {
+      const g = labels.findIndex(l => l === "G" || l === "SP");
+      return r => (r.values || []).some((v, i) => i !== g && typeof v === "number" && v !== 0);
+    }
+    const i = STAT_MIN_COL[cat] ? labels.indexOf(STAT_MIN_COL[cat]) : -1;
     return i < 0 ? () => true : r => typeof r.values?.[i] === "number" && r.values[i] > 0;
   }
   function fmtStat(v) {
